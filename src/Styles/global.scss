@@ -24,15 +24,59 @@ h1 {
 
 ///////////////////////////////////////////////////////////
 /// Buttons
-button {
+.button {
   background-color: $branding-color;
   color: $background-default;
 }
 
-navButton {
+.navButton {
   color: $branding-colour-light;
 }
 
+.warningButton {
+  background-color: $warning-color;
+  color: $background-default;
+}
+
+.helpButton {
+}
+
+.errorButton {
+  background-color: $error-color;
+  color: $background-default;
+}
+
+.successButton {
+  background-color: $success-color;
+  color: $background-default;
+}
+
+.textButton {
+  background-color: transparent;
+  color: $branding-color;
+}
+
+///////////////////////////////////////////////////////////
+/// Modals
+.modal {
+  background-color: $background-default;
+  color: $secondary-color;
+  &.oneButton {
+    button {
+      background-color: $branding-color;
+      color: $background-default;
+    }
+  }
+  &.twoButton {
+    button {
+      background-color: $branding-color;
+      color: $background-default;
+    }
+  }
+  &.timed {
+
+  }
+}
 
 ///////////////////////////////////////////////////////////
 // Mobile styles
