@@ -33,7 +33,7 @@ const Modal: React.FC<ModalProps> = ({open, onClose, children, modalType, style,
           className={'modal clickAway'}
         >
           <Box sx={style}>
-          <CustomButton buttonType='closeButton' label='Close' onClick={onClose} />
+          <CustomButton buttonType='closeButton' label='Dismiss' onClick={onClose} />
             <Typography id="modal-modal-title" variant="h6" component="h2">
               {label}
             </Typography>
