@@ -14,7 +14,7 @@ type ButtonProps = {
   icon?: React.ReactNode;
   isActive?: boolean;
   style?: React.CSSProperties;
-  onClick?: () => void;
+  onClick?: (() => void) | ((event: any) => void);
 }
 
 const CustomButton: React.FC<ButtonProps> = ({ buttonType, label, withIcon, icon, withTooltip, tooltipText, isActive, style, onClick}) => {
