@@ -1,0 +1,68 @@
+
+.scroll-wrapper {
+  position: relative;
+  height: 100px;
+  width: fit-content;
+  left: calc(50% - 100px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.scroll-container {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  align-content: space-between;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  
+  // This is all to hide the scroll bar
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-right: 20px;
+  margin-right: -20px;
+  box-sizing: content-box;
+}
+
+.scroll-container .scroll-item:first-child {
+  padding-top: 40px;
+}
+
+.scroll-container .scroll-item:last-child {
+  padding-bottom: 40px;
+}
+
+.scroll-item {
+  font-size: 18px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.center-input {
+  height: 40px;
+  text-align: left;
+  padding-left: 10px;
+  margin-left: 150px;
+  width: 300px;
+  z-index: 1;
+  border: 1px solid orange;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.message {
+  position: absolute;
+  bottom: 0px;
+  left: calc(50% - 140px);
+  background: none;
+  padding: 5px 10px;
+  width:300px;
+  font-size: 14px;
+  color: red;
+  text-align: center;
+}
