@@ -1,9 +1,9 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { AppBar, Toolbar, Typography, useScrollTrigger, useTheme } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import  CustomButton from './Buttons';
+import { CustomButton, CustomModal } from './index';
 
 type ElevationScrollProps = {
     children: ReactElement;
@@ -30,30 +30,49 @@ function ElevationScroll(props: ElevationScrollProps) {
 const Navbar: React.FC = () => {
     const theme = useTheme();
     const location = useLocation();
+    // const isLoggedIn = true; // For testing purposes
     const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+    const [modalOpen, setModalOpen] = useState(false);
+    
 
     const isLocationActive = (path: string) => {
         return location.pathname === path;
     };
 
+    const toggleModal = () => {
+        setModalOpen(!modalOpen);
+    };
+
+    const handleLogout = () => {
+        console.log('Logging out...');
+        // dispatch(logout());
+        // history.push('/Home');
+        // TODO: Add logout functionality with API call
+        setModalOpen(false);
+    }
+
     return (
-        <ElevationScroll>
-            <AppBar position="fixed">
-                <Toolbar sx={{ backgroundColor: theme.palette.navBackground.main }}>
-                    <Typography variant="h5" sx={{ flexGrow: 1, color: theme.palette.branding.main }}>
-                        VisionCORE
-                    </Typography>
-                    <CustomButton label='Home' buttonType='navButton' isActive={isLocationActive('/')} />
-                    { !isLoggedIn? 
-                    (
-                        <>
-                            <CustomButton label='Register' buttonType='navButton' isActive={isLocationActive('/Register')}/>
-                            <CustomButton label='Login' buttonType='navButton' isActive={isLocationActive('/Login')}/> 
-                        </>
-                    ) : (<CustomButton label='Logout' buttonType='navButton' isActive={isLocationActive('/Logout')}/>)}
-                </Toolbar>
-            </AppBar>
-        </ElevationScroll>
+        <div>
+            <ElevationScroll>
+                <AppBar position="fixed">
+                    <Toolbar sx={{ backgroundColor: theme.palette.navBackground.main }}>
+                        <Typography variant="h5" sx={{ flexGrow: 1, color: theme.palette.branding.main }}>
+                            VisionCORE
+                        </Typography>
+                        <CustomButton label='Home' buttonType='navButton' isActive={isLocationActive('/Home')} />
+                        { !isLoggedIn?
+                        (
+                            <>
+                                <CustomButton label='Register' buttonType='navButton' isActive={isLocationActive('/Register')}/>
+                                <CustomButton label='Login' buttonType='navButton' isActive={isLocationActive('/Login')}/>
+                            </>
+                        ) : (<CustomButton label='Logout' buttonType='navButton' isActive={isLocationActive('/Logout')} onClick={toggleModal}/>)}
+                    </Toolbar>
+                </AppBar>
+            </ElevationScroll>
+
+            <CustomModal modalType='twoButton' open={modalOpen} onConfirm={handleLogout} onClose={toggleModal} children='Logout now?' label='Logout'/>
+        </div>
     );
 };
 

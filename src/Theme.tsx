@@ -35,13 +35,53 @@ const theme = createTheme({
       default: '#ffffff',
     },
     branding: {
-      main: '#ef4400',
+      main: '#f27a31',
       light: '#f27a31',
     },
     navBackground: {
       main: '#1f323e',
     },
   },
+  typography: {
+    body1: {
+      color: '#0b517d',
+    },
+  },
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#eff7fe',
+          '&:hover .MuiOutlinedInput-notchedOutline, &.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#93cdfe',
+          },
+        },
+      }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: 'transparent',
+          color: '#1f323e',
+          fontSize: '1.2rem',
+          fontWeight: 'bold',
+        }
+      }
+    },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          '&:not(.Mui-checked)': {
+            backgroundColor: 'transparent',
+            color: '#f27a31',
+          },
+          '&.Mui-checked': {
+            color: '#0b517d',
+          },
+        }
+      }
+    }
+  }
 });
 
 export default theme;

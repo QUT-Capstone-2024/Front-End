@@ -2,84 +2,43 @@ import React from "react";
 import { Button, Alert as MuiAlert } from "@mui/material";
 
 type CustomAlertProps = {
-  alertType?: "info" | "warning" | "error" | "success";
-  children: React.ReactNode;
-  style: React.CSSProperties;
+  type?: "info" | "warning" | "error" | "success";
+  message: React.ReactNode;
+  style?: React.CSSProperties;
   withButton?: boolean;
   buttonLabel?: string;
-  onClose: () => void;
+  onClose?: () => void;
+  isVisible?: boolean;
 };
 
 const CustomAlert: React.FC<CustomAlertProps> = ({
-  alertType,
-  children,
+  type: alertType,
+  message: children,
   style,
   onClose,
   withButton = false,
-  buttonLabel
+  buttonLabel,
+  isVisible = false,
 }) => {
   const action = withButton ? (
     <Button color="inherit" size="small" onClick={onClose}>
-      {buttonLabel || 'Close'}
+      {buttonLabel || "Close"}
     </Button>
   ) : null;
 
-  switch (alertType) {
-    case "info":
-      return (
-        <MuiAlert
-          variant="filled"
-          severity="info"
-          sx={style}
-          onClose={withButton ? onClose : undefined} 
-          action={action}
-        >
-          {children}
-        </MuiAlert>
-      );
-
-    case "warning":
-      return (
-        <MuiAlert
-          variant="filled"
-          severity="warning"
-          sx={style}
-          onClose={withButton ? onClose : undefined} 
-          action={action}
-        >
-          {children}
-        </MuiAlert>
-      );
-
-    case "error":
-      return (
-        <MuiAlert
-          variant="filled"
-          severity="error"
-          sx={style}
-          onClose={withButton ? onClose : undefined} 
-          action={action}
-        >
-          {children}
-        </MuiAlert>
-      );
-
-    case "success":
-      return (
-        <MuiAlert
-          variant="filled"
-          severity="success"
-          sx={style}
-          onClose={withButton ? onClose : undefined} 
-          action={action}
-        >
-          {children}
-        </MuiAlert>
-      );
-
-    default:
-      return null;
-  }
+  return (
+    <div style={{ visibility: isVisible ? 'visible' : 'hidden' }}>
+      <MuiAlert
+        variant="filled"
+        severity={alertType || 'info'}
+        sx={style}
+        onClose={withButton ? onClose : undefined}
+        action={action}
+      >
+        {children}
+      </MuiAlert>
+    </div>
+  );
 };
 
 export default CustomAlert;

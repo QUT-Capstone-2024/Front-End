@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Container, TextField, Typography, Box } from '@mui/material';
-import CustomButton from './Buttons';
-import { isNullOrUndefined } from 'util';
+import { useNavigate } from 'react-router-dom';
+import { Container, TextField, Typography, Box, Checkbox, FormControlLabel } from '@mui/material';
+import { CustomButton, Switch } from './';
 
 type FieldConfig = {
     name: string;
     label: string;
     type: string;
     required: boolean;
-    validator?: (value: string) => string | null;
+    validator?: (value: string | boolean) => string | null;
 };
 
 type BaseFormProps = {
@@ -16,19 +16,36 @@ type BaseFormProps = {
     initialValues: Record<string, any>;
     onSubmit: (values: Record<string, any>) => void;
     title: string;
+    withCheckbox?: boolean;
+    checkboxLabel?: string;
+    withSwitch?: boolean;
+    switchLabel?: string;
 };
 
-const BaseForm: React.FC<BaseFormProps> = ({ fields, initialValues, onSubmit, title }) => {
+const BaseForm: React.FC<BaseFormProps> = ({
+    fields,
+    initialValues,
+    onSubmit,
+    title,
+    withCheckbox = false,
+    checkboxLabel = 'Agree to terms',
+    withSwitch = false,
+    switchLabel = 'Enable feature'
+}) => {
     const [formData, setFormData] = useState<Record<string, any>>(initialValues);
     const [errors, setErrors] = useState<Record<string, string | null>>({});
+    const navigate = useNavigate();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-        if (fields.find(f => f.name === name)?.validator) {
-            const error = fields.find(f => f.name === name)?.validator!(value) ?? null;
+        const { name, type, checked, value } = event.target;
+        const newValue = type === 'checkbox' ? checked : value;
+        setFormData(prev => ({ ...prev, [name]: newValue }));
+        
+        // Check for field validator
+        const field = fields.find(f => f.name === name);
+        if (field?.validator) {
+            const error = field.validator(newValue);
             setErrors(prev => ({ ...prev, [name]: error }));
-            
         }
     };
     
@@ -50,6 +67,12 @@ const BaseForm: React.FC<BaseFormProps> = ({ fields, initialValues, onSubmit, ti
         if (isValid) {
             onSubmit(formData);
         }
+    };
+
+    const handleCancel = () => {
+        setFormData(initialValues);
+        setErrors({});
+        navigate('/');
     };
 
     return (
@@ -75,7 +98,27 @@ const BaseForm: React.FC<BaseFormProps> = ({ fields, initialValues, onSubmit, ti
                         helperText={errors[field.name]}
                     />
                 ))}
-                <CustomButton label='Submit' onClick={handleSubmit} />
+
+                {withSwitch &&
+                    <div style={{ marginTop: '30px' }}>
+                        <Typography variant="body1" gutterBottom>{switchLabel}</Typography>
+                        <Switch checked={!!formData['switch']} onChange={handleChange} name="switch" />
+                    </div>
+                }
+
+                {withCheckbox &&
+                    <FormControlLabel
+                        control={<Checkbox checked={!!formData['agree']} onChange={handleChange} name="agree" />}
+                        label={checkboxLabel}
+                        sx={{ marginTop: '30px' }}
+                        required
+                    />
+                }
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '30px' }}>
+                    <CustomButton label='Submit' onClick={handleSubmit} disabled={(withCheckbox && !formData['agree'])} />
+                    <CustomButton buttonType='cancelButton' label='Cancel' onClick={handleCancel} />
+                </div>
             </Box>
         </Container>
     );

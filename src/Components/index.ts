@@ -3,3 +3,7 @@ export { default as CustomButton } from './Buttons';
 export { default as CustomModal } from './Modal';
 export { default as CustomAlert } from './Alert';
 export { default as Help } from './Help';
+export { default as BaseForm } from './BaseForm';
+export { default as LoginForm } from './LoginForm';
+export { default as RegisterForm } from './RegisterForm';
+export { default as Switch } from './Switch';

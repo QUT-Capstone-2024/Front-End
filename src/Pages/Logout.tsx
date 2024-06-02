@@ -1,4 +1,5 @@
 import React from 'react';
+import { CustomModal } from '../Components';
 
 type LogoutProps = {};
 

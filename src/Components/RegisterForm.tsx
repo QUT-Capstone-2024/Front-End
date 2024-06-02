@@ -1,108 +1,77 @@
-import React, { useState } from 'react';
-import { Container, TextField, Typography, Box } from '@mui/material';
-import CustomButton from './Buttons';
+import React, { useEffect, useState } from "react";
+import { BaseForm, CustomAlert } from "./index";
 
-type FormData = {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    mobileNumber: string;
-    userType: 'internalUser';
+// TODO: Check if the user already exists - this is the email address being unique
+// TODO: Error on insecure password
+// TODO: Link to terms and conditions
+// TODO: Add data controls for the admin switch
+type registerFormProps = {};
+
+const registerFields = [
+  { name: "username", label: "User Name", type: "text", required: true },
+  { name: "email", label: "Email", type: "email", required: true },
+  { name: "password", label: "Password", type: "password", required: true },
+  {
+    name: "confirmPassword",
+    label: "Confirm Password",
+    type: "password",
+    required: true,
+  },
+];
+
+const initialValues = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
 };
 
-type FormErrors = {
-    id?: string;
-    name?: string;
-    email?: string;
-    password?: string;
-    confirmPassword?: string;
-    mobileNumber?: string;
+const RegisterForm: React.FC<registerFormProps> = () => {
+  const [errors, setErrors] = useState<React.ReactNode | null>(null);
+  const [showAlert, setShowAlert] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (showAlert) {
+      timer = setTimeout(() => {
+        setShowAlert(false);
+        setErrors(null);
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [showAlert]); 
+
+  const handleRegisterSubmit = (formData: Record<string, any>) => {
+    if (formData.password !== formData.confirmPassword) {
+      setShowAlert(true);
+      setErrors("Passwords do not match. Please try again.");
+      formData.confirmPassword = "";
+      return;
+    }
+
+    console.log("Registration Data:", formData);
+    // TODO: Add Api call to register user
+  };
+
+  return (
+    <div>
+      <CustomAlert
+        message={errors}
+        type="error"
+        isVisible={showAlert}
+      />
+
+      <BaseForm
+        fields={registerFields}
+        initialValues={initialValues}
+        onSubmit={handleRegisterSubmit}
+        title="Register"
+        withCheckbox={true}
+        checkboxLabel="I agree to the terms and conditions."
+        withSwitch={true}
+        switchLabel="Request Admin Access"
+      />
+    </div>
+  );
 };
-
-const RegisterForm = () => {
-    const [formData, setFormData] = useState<FormData>({
-        id: '',
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        mobileNumber: '',
-        userType: 'internalUser'
-    });
-
-    const [errors, setErrors] = useState<FormErrors>({});
-
-    const validate = () => {
-        let tempErrors: FormErrors = {};
-        if (!formData.id.trim()) tempErrors.id = 'User ID is required';
-        if (!formData.name.trim()) tempErrors.name = 'Name is required';
-         // Email validation
-        if (!formData.email.trim()) {
-          tempErrors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            tempErrors.email = 'Email is not valid';
-        }
-        // Password validation
-        if (formData.password.length < 10) {
-          tempErrors.password = 'Password must be at least 10 characters long';
-        } else if (!/(?=.*[!@#$%^&*])(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{10,}/.test(formData.password)) {
-            tempErrors.password = 'Password must contain at least 10 characters, one special character, one number, one uppercase letter, and one lowercase letter';
-        }
-        if (formData.confirmPassword !== formData.password) tempErrors.confirmPassword = 'Passwords must match';
-        // Optional fields do not necessarily need validation
-        return tempErrors;
-    };
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        let tempErrors = validate();
-        if (Object.keys(tempErrors).length === 0) {
-            console.log('Form Data:', formData);
-            //TODO: Send form data to server
-        } else {
-            setErrors(tempErrors);
-        }
-    };
-
-    return (
-        <Container component="main" maxWidth="sm">
-            <Typography component="h1" variant="h5" sx={{ mt: 2, mb: 2 }}>
-                Register
-            </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                {Object.entries(formData).map(([key, value]) => (
-                    key !== 'userType' && (
-                        <TextField
-                            key={key}
-                            margin="normal"
-                            required={key !== 'mobileNumber'}
-                            fullWidth
-                            id={key}
-                            label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1').trim()}
-                            name={key}
-                            type={key.includes('password') ? 'password' : 'text'}
-                            autoComplete={key}
-                            value={value}
-                            onChange={handleChange}
-                            error={!!errors[key as keyof FormErrors]}
-                            helperText={errors[key as keyof FormErrors]}
-                        />
-                    )
-                ))}
-                <CustomButton label='submit' onClick={handleSubmit}/>
-            </Box>
-        </Container>
-    );
-};
-
 export default RegisterForm;

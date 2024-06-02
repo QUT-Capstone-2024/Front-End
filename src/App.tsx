@@ -3,13 +3,14 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  Navigate
 } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material';
 import theme from './Theme';
 import './Styles/global.scss';
 
 import { Home, Login, Register, Logout, Users, Collections, ImageView, ImageApproval, Error401, Error404, Error501 } from './Pages';
-import { NavBar } from './Components';
+import { NavBar, CustomButton } from './Components';
 import { Provider } from 'react-redux';
 import store from './store';
 
@@ -19,8 +20,10 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <Router>
           <NavBar />
+          <CustomButton buttonType='helpButton' label='Help' />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Navigate replace to="/Home" />} />
+            <Route path="/Home" element={<Home />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Register" element={<Register />} />
             <Route path="/Logout" element={<Logout />} />

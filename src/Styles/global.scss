@@ -22,60 +22,144 @@ h1 {
   margin-top: 6rem;
 }
 
+.welcome-text {
+  margin-bottom: 3.5%;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,1);
+  font-size: 2rem;
+}
+
 ///////////////////////////////////////////////////////////
 /// Buttons
-.button {
-  background-color: $branding-color;
-  color: $background-default;
+.MuiButton-root.button {
+  background-color: $primary-color;
+  color: white;
+
+  &.disabled {
+    background-color: $background-lighter;
+    color: grey;
+    cursor: not-allowed;
+  }
 }
 
-.navButton {
-  color: $branding-colour-light;
+.MuiButton-root.navButton {
+  color: $branding-color;
 }
 
-.warningButton {
+.MuiButton-root.warningButton {
   background-color: $warning-color;
   color: $background-default;
 }
 
-.helpButton {
+.MuiIconButton-root.helpButton {
+  color: $branding-color;
+  background-color: transparent;
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1;
+  padding: 0px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $primary-color;
+  }
 }
 
-.errorButton {
+.MuiButton-root.errorButton {
   background-color: $error-color;
   color: $background-default;
 }
 
-.successButton {
+.MuiButton-root.successButton {
   background-color: $success-color;
   color: $background-default;
 }
 
-.textButton {
+.MuiButton-root.cancelButton {
+  background-color: white;
+  color: $primary-color;
+  border: $primary-color 1px solid;
+}
+
+.MuiButton-root.textButton {
   background-color: transparent;
   color: $branding-color;
 }
 
 ///////////////////////////////////////////////////////////
 /// Modals
-.modal {
-  background-color: $background-default;
-  color: $secondary-color;
-  &.oneButton {
-    button {
-      background-color: $branding-color;
-      color: $background-default;
-    }
-  }
-  &.twoButton {
-    button {
-      background-color: $branding-color;
-      color: $background-default;
-    }
-  }
-  &.timed {
 
-  }
+// Modal container
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+  padding: 1rem 2rem 2rem 2rem;
+  background-color: $background-default !important;
+  text-align: center;
+}
+
+// Modal title
+.css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
+  color: $branding-color;
+  padding-bottom: 15% !important;
+}
+
+.modal-2-button-container {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20%;
+  gap: 20px;
+}
+
+// Content
+.css-1t4vnk2-MuiDialogContent-root {
+  padding: 10% 0% !important;
+  background-color: $background-default;
+  color: $info-color;
+}
+
+// Dividers
+.css-1t4vnk2-MuiDialogContent-root {
+ border-color: $primary-color !important;
+}
+
+
+///////////////////////////////////////////////////////////
+/// Forms
+.formContainer-wholePage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  padding-bottom: 20vh;
+}
+
+.MuiFormControlLabel-asterisk {
+  color: $info-color;
+}
+
+///////////////////////////////////////////////////////////
+/// Alerts
+.MuiAlert-root {
+  z-index: 1000;
+}
+
+
+///////////////////////////////////////////////////////////
+/// Images
+.hero-image {
+    position: absolute;
+    background-image: url('../Images/hero_image.png');
+    background-size: cover;               
+    background-position: center center;  
+    background-repeat: no-repeat;        
+    height: 100vh;                      
+    width: 100%;                         
+    display: flex;                       
+    flex-direction: column;               
+    align-items: center;                  
+    justify-content: flex-end;
+    filter: brightness(90%) contrast(90%);
 }
 
 ///////////////////////////////////////////////////////////

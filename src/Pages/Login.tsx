@@ -1,13 +1,12 @@
 import React from 'react';
+import { LoginForm } from '../Components';
 
-type LoginProps = { 
-  // Define the props for the Login component
-};
+type LoginProps = {};
 
 const Login: React.FC<LoginProps> = () => {
   return (
-    <div>
-      <h1>Login Page</h1>
+    <div className='formContainer-wholePage'>
+      <LoginForm />
     </div>
   );
 };

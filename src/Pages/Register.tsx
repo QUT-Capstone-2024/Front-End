@@ -1,15 +1,12 @@
 import React from 'react';
-import RegisterForm from '../Components/RegisterForm';
+import { RegisterForm } from '../Components';
 
-type RegisterProps = {
-
-};
+type RegisterProps = {};
 
 const Register: React.FC<RegisterProps> = () => {
   return (
-    <div>
-      <h1>Register</h1>
-      <RegisterForm />
+    <div className='formContainer-wholePage'>
+      <RegisterForm/>
     </div>
   );
 };

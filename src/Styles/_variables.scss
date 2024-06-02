@@ -1,12 +1,19 @@
 // Global style variables
+
+// Base colours
 $primary-color: #93cdfe;
 $secondary-color: #8f9da3;
 $error-color: #ef4400;
 $warning-color: #f27a31;
 $info-color: #0b517d;
 $success-color: #1f323e;
-$background-default: #ffffff;
+$disabled-color: #d5dde4;
+$disabled-text-color: #808080;
 
+// Background colours
+$background-default: #e2eaf1;
+$background-darker: #d5dde4;
+$background-lighter: #d5dde4;
 
-$branding-color: #ef4400;
-$branding-colour-light: #f27a31;
+// Hero colours
+$branding-color: #f27a31;

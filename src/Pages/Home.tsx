@@ -1,12 +1,10 @@
 import React from "react";
 
-type HomeProps = { };
-
-const Home: React.FC<HomeProps> = () => {
+const Home: React.FC = () => {
   return (
-    <div>
-      <h1>Home </h1>
-    </div>
+      <div className='hero-image'>
+        <div className='welcome-text'>Welcome to VisionCORE ... the CoreLogic property image portal.</div>
+      </div>
   );
 };
 
