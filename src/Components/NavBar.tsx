@@ -1,8 +1,9 @@
 import React, { ReactElement, useState } from 'react';
 import { AppBar, Toolbar, Typography, useScrollTrigger, useTheme } from '@mui/material';
-import { useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
+import { logout } from '../Redux/authSlice';
 import { CustomButton, CustomModal } from './index';
 
 type ElevationScrollProps = {
@@ -30,8 +31,10 @@ function ElevationScroll(props: ElevationScrollProps) {
 const Navbar: React.FC = () => {
     const theme = useTheme();
     const location = useLocation();
-    // const isLoggedIn = true; // For testing purposes
-    const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const isLoggedIn = true; // For testing purposes
+    // const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
     const [modalOpen, setModalOpen] = useState(false);
     
 
@@ -45,8 +48,8 @@ const Navbar: React.FC = () => {
 
     const handleLogout = () => {
         console.log('Logging out...');
-        // dispatch(logout());
-        // history.push('/Home');
+        dispatch(logout());
+        navigate('/Home');
         // TODO: Add logout functionality with API call
         setModalOpen(false);
     }
@@ -66,7 +69,12 @@ const Navbar: React.FC = () => {
                                 <CustomButton label='Register' buttonType='navButton' isActive={isLocationActive('/Register')}/>
                                 <CustomButton label='Login' buttonType='navButton' isActive={isLocationActive('/Login')}/>
                             </>
-                        ) : (<CustomButton label='Logout' buttonType='navButton' isActive={isLocationActive('/Logout')} onClick={toggleModal}/>)}
+                        ) : (
+                            <>
+                                <CustomButton label='Collections' buttonType='navButton' isActive={isLocationActive('/Collections')}/>
+                                <CustomButton label='Logout' buttonType='navButton' isActive={isLocationActive('/Logout')} onClick={toggleModal}/>
+                            </>
+                        )}
                     </Toolbar>
                 </AppBar>
             </ElevationScroll>

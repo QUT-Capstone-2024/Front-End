@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 type ButtonProps = {
   buttonType?: 'navButton' | 'helpButton' | 'warningButton' | 'errorButton' | 'successButton' | 'closeButton' | 'textOnly' | 'cancelButton';
-  label: React.ReactNode;
+  label: string;
   withTooltip?: boolean;
   tooltipText?: string;
   withIcon?: 'left' | 'right';
@@ -33,7 +33,7 @@ const CustomButton: React.FC<ButtonProps> = ({ buttonType, label, withIcon, icon
       }
 
       return (
-        <Button component={Link} to={`/${label}`} sx={{ color: isActive ? theme.palette.branding.light : theme.palette.primary.main }}>
+        <Button component={Link} to={`/${label.replace(' ', '')}`} sx={{ color: isActive ? theme.palette.branding.light : theme.palette.primary.main }}>
           {label}
         </Button>
       );

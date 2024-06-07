@@ -46,6 +46,9 @@ const theme = createTheme({
     body1: {
       color: '#0b517d',
     },
+    body2: {
+      color: '#0b517d',
+    },
   },
   components: {
     MuiOutlinedInput: {

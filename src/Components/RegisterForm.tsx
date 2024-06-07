@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BaseForm, CustomAlert } from "./index";
+import { useNavigate } from "react-router-dom";
 
 // TODO: Check if the user already exists - this is the email address being unique
 // TODO: Error on insecure password
@@ -29,6 +30,7 @@ const initialValues = {
 const RegisterForm: React.FC<registerFormProps> = () => {
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
   const [showAlert, setShowAlert] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -49,7 +51,9 @@ const RegisterForm: React.FC<registerFormProps> = () => {
       return;
     }
 
+    // For testing purposes
     console.log("Registration Data:", formData);
+    navigate("/login");
     // TODO: Add Api call to register user
   };
 
