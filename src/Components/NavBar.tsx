@@ -33,8 +33,8 @@ const Navbar: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const isLoggedIn = true; // For testing purposes
-    // const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+    // const isLoggedIn = true; // For testing purposes
+    const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
     const [modalOpen, setModalOpen] = useState(false);
     
 
@@ -63,6 +63,7 @@ const Navbar: React.FC = () => {
                             VisionCORE
                         </Typography>
                         <CustomButton label='Home' buttonType='navButton' isActive={isLocationActive('/Home')} />
+                        <CustomButton label='Landing' buttonType='navButton' isActive={isLocationActive('/Landing')} />
                         { !isLoggedIn?
                         (
                             <>
