@@ -62,7 +62,6 @@ const Navbar: React.FC = () => {
                         <Typography variant="h5" sx={{ flexGrow: 1, color: theme.palette.branding.main }}>
                             VisionCORE
                         </Typography>
-                        <CustomButton label='Home' buttonType='navButton' isActive={isLocationActive('/Home')} />
                         <CustomButton label='Landing' buttonType='navButton' isActive={isLocationActive('/Landing')} />
                         { !isLoggedIn?
                         (
