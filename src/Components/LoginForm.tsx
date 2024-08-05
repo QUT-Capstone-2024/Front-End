@@ -30,14 +30,15 @@ const LoginForm: React.FC<loginFormProps> = () => {
     };
 
     return (
+        <>
         <BaseForm
             fields={loginFields}
             initialValues={initialValues}
             onSubmit={handleLoginSubmit}
             title="Login"
             withSwitch={true}
-            switchLabel="Request Admin Access"
-        />
+            switchLabel="Request Admin Access" />
+        </>
     );
 
 }

@@ -9,7 +9,7 @@ import { ThemeProvider } from '@mui/material';
 import theme from './Theme';
 import './Styles/global.scss';
 
-import { Home, LandingPage, Login, Register, Users, Collections, ImageView, ImageApproval, Error401, Error404, Error501 } from './Pages';
+import { LandingPage, Login, Register, Users, Collections, ImageView, ImageApproval, Error401, Error404, Error501 } from './Pages';
 import { NavBar, CustomButton } from './Components';
 import { Provider } from 'react-redux';
 import store from './store';
@@ -22,8 +22,7 @@ const App = () => {
           <NavBar />
           <CustomButton buttonType='helpButton' label='Help' />
           <Routes>
-            <Route path="/" element={<Navigate replace to="/Home" />} />
-            <Route path="/Home" element={<Home />} />
+            <Route path="/" element={<Navigate replace to="/Landing" />} />
             <Route path="/Landing" element={<LandingPage />} />
             <Route path="/Login" element={<Login />} />
             <Route path="/Register" element={<Register />} />
