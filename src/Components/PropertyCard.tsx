@@ -4,15 +4,17 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardActionArea, CardActions, useTheme } from "@mui/material";
+import { CardActions, useTheme, Box, IconButton } from "@mui/material";
 import { List, ListItem, ListItemIcon } from "@mui/material";
-import { CustomButton } from "./index";
+import { CustomButton, ImageApprovalCard, Spacer } from "./index";
 import {
   Bed as BedRoundedIcon,
   Shower as ShowerRoundedIcon,
   Garage as GarageRoundedIcon,
+  Settings as SettingsIcon,
 } from "@mui/icons-material";
-import localImage from "../Images/house_demo_hero_image.png"; // For testing purposes
+import SampleHouseHeroImage from "../Images/house_demo_hero_image.png";
+import SampleApartHeroImage from "../Images/apartment_demo_hero_image.png";
 
 type PropertyCardProps = {
   title: string;
@@ -24,6 +26,7 @@ type PropertyCardProps = {
   bathrooms: number;
   parkingSpaces: number;
   approvalStatus: "queued" | "approved" | "rejected";
+  propertyType: string;
 };
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
@@ -36,60 +39,61 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   bathrooms,
   parkingSpaces,
   approvalStatus,
+  propertyType,
 }) => {
   const theme = useTheme();
   const isAdmin = true; // For testing purposes
   // const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
   const navigate = useNavigate();
 
-  const getPropertyDetails = () => {
-    // For testing purposes
-    console.log(`Getting property details for collectionId: ${collectionId}`);
-    navigate(`/ImageView`);
-    // navigate(`/ImageView/${collectionId}`);
-  };
+  // Set default image if image prop is not provided based on the propertyType
+  const defaultImage = propertyType === 'house' ? SampleHouseHeroImage : SampleApartHeroImage;
 
   return (
-    <Card sx={{ width: 300, color: theme.palette.background.default }}>
-      <CardActionArea onClick={getPropertyDetails}>
-        <CardMedia
-          component="img"
-          image={imageUrl || localImage}
-          alt={title}
-          sx={{
-            height: "160px",
-            width: "100%",
-            objectFit: "cover",
-          }}
-        />
-        <CardContent>
+    <Card sx={{ backgroundColor: theme.palette.background.default, display: 'flex', borderRadius: '10px' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', flex: 1 }}>
+        <CardContent sx={{ marginLeft: 1 }}>
           <Typography gutterBottom variant="h5">
             {title}
           </Typography>
           <Typography gutterBottom variant="body1">
             {propertyAddress}
           </Typography>
+        </CardContent>
+        <CardMedia
+          component="img"
+          image={imageUrl || defaultImage}
+          alt={title}
+          sx={{
+            height: "240px",
+            width: "240px",
+            objectFit: "cover",
+            borderRadius: "10px",
+            marginLeft: 3,
+          }}
+        />
+        <CardContent>
+          <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: 1, marginLeft: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <ListItemIcon sx={{ color: theme.palette.info.main, minWidth: '30px' }}>
+                <BedRoundedIcon />
+              </ListItemIcon>
+              <Typography variant="body2">{bedrooms}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <ListItemIcon sx={{ color: theme.palette.info.main, minWidth: '30px' }}>
+                <ShowerRoundedIcon />
+              </ListItemIcon>
+              <Typography variant="body2">{bathrooms}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <ListItemIcon sx={{ color: theme.palette.info.main, minWidth: '30px' }}>
+                <GarageRoundedIcon />
+              </ListItemIcon>
+              <Typography variant="body2">{parkingSpaces}</Typography>
+            </Box>
+          </Box>
           <List sx={{ padding: 0 }}>
-            <ListItem>
-              <ListItem sx={{ padding: 0 }}>
-                <ListItemIcon sx={{ color: theme.palette.info.main, minWidth: '30px' }}>
-                  <BedRoundedIcon />
-                </ListItemIcon>
-                <Typography variant="body2">{bedrooms}</Typography>
-              </ListItem>
-              <ListItem sx={{ padding: 0 }}>
-                <ListItemIcon sx={{ color: theme.palette.info.main, minWidth: '30px' }}>
-                  <ShowerRoundedIcon />
-                </ListItemIcon>
-                <Typography variant="body2">{bathrooms}</Typography>
-              </ListItem>
-              <ListItem sx={{ padding: 0 }}>
-                <ListItemIcon sx={{ color: theme.palette.info.main, minWidth: '30px' }}>
-                  <GarageRoundedIcon />
-                </ListItemIcon>
-                <Typography variant="body2">{parkingSpaces}</Typography>
-              </ListItem>
-            </ListItem>
             <ListItem>
               <Typography variant="body2">
                 Property Id: {collectionId}
@@ -97,35 +101,56 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             </ListItem>
             <ListItem>
               <Typography variant="body2">
-                Property Owner Id: {propertyOwnerId}
+                Some description here. This will need to be pulled from the CL DB at some point.
               </Typography>
             </ListItem>
             <ListItem>
               <Typography
                 variant="body1"
                 color={
-                  approvalStatus === "approved" ? "" :
-                  approvalStatus === "queued" ? theme.palette.warning.main : 
+                  approvalStatus === "approved" ? theme.palette.primary.main :
+                  approvalStatus === "queued" ? theme.palette.warning.main :
                   approvalStatus === "rejected" ? theme.palette.error.main : ''
                 }
               >
-                Collection Status: {approvalStatus}
+                Collection Status: {approvalStatus.toUpperCase()}
               </Typography>
             </ListItem>
           </List>
         </CardContent>
-      </CardActionArea>
-      <CardActions
+        <CardActions
+          sx={{
+            justifyContent: "space-between",
+            borderTop: `1px solid ${theme.palette.divider}`,
+          }}
+        >
+          <IconButton aria-label="settings">
+            <SettingsIcon />
+          </IconButton>
+          <CustomButton
+            buttonType="successButton"
+            label={isAdmin ? "Image approval" : "Image view"}
+            style={{ marginTop: '10px'}}
+          />
+        </CardActions>
+      </Box>
+      <Box
         sx={{
-          justifyContent: "center",
-          borderTop: `1px solid ${theme.palette.divider}`,
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '10px',
+          padding: 2,
         }}
       >
-        <CustomButton
-          buttonType="navButton"
-          label={isAdmin ? "Image approval" : "Image view"}
-        />
-      </CardActions>
+        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Bedroom" imageId="" imageStatus="approved"/>
+        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Bathroom" imageId="" imageStatus="rejected"/>
+        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Dinning Room" imageId="" imageStatus="approved"/>
+        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Outside" imageId="" imageStatus="approved"/>
+        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Bedroom 2" imageId="" imageStatus="queued"/>
+        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Bedroom 3" imageId="" imageStatus="rejected"/>
+        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Ensuite" imageId="" imageStatus="approved"/>
+        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Pool" imageId="" imageStatus="approved"/>
+      </Box>
     </Card>
   );
 };

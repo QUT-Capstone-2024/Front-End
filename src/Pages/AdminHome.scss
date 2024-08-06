@@ -1,0 +1,24 @@
+
+.admin-home-container {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  width: 100%;
+}
+
+.property-card-container {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.empty-property-card, .property-card-container > * {
+  border: 1px solid none;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 10px;
+  width: 100%;
+  height: 95%;
+}

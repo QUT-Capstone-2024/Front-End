@@ -1,7 +1,5 @@
-// Import the global vars
 @import 'variables';
 
-///////////////////////////////////////////////////////////
 // Global styles - Desktop
 body {
   font-family: 'Roboto', sans-serif;
@@ -9,9 +7,7 @@ body {
   color: $secondary-color;
 }
 
-
-///////////////////////////////////////////////////////////
-/// Headings
+// Headings
 h1, h2, h3, h4, h5, h6 {
   color: $info-color;
 }
@@ -29,8 +25,55 @@ h1 {
   font-size: 2rem;
 }
 
-///////////////////////////////////////////////////////////
-/// Buttons
+// Search
+.search-box {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.property-search-container {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 10px;
+  border: 1px solid none;
+  border-radius: 10px;
+  width: 30%;
+  max-width: 300px;
+  margin-left: 40px;
+}
+
+// Cards
+.small-display-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  background: $background-lighter;
+}
+
+.small-display-card-text {
+  color: $info-color;
+  font-weight: bold;
+  font-size: 14px;
+  
+  p {
+    margin: 0;
+  }
+  p:first-child {
+    font-weight: normal;
+    margin-bottom: 5px;
+  }
+}
+
+// Buttons
 .MuiButton-root.button {
   background-color: $branding-color;
   color: white;
@@ -57,8 +100,7 @@ h1 {
   color: $branding-color;
   background-color: transparent;
   position: fixed;
-  top: 80px;
-  right: 20px;
+  bottom: 30px;
   z-index: 1;
   padding: 0px;
   transition: background-color 0.3s ease;
@@ -90,21 +132,20 @@ h1 {
 .MuiButton-root.textButton {
   background-color: transparent;
   color: $info-color;
-  font-weight: bold;
+  font-weight: bolder;
 
   &:hover {
     color: $branding-color;
   }
 }
 
-///////////////////////////////////////////////////////////
-/// Modals
-
+// Modals
 // Modal container
 .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
   padding: 1rem 2rem 2rem 2rem;
   background-color: $background-default !important;
   text-align: center;
+  border-radius: 20px;
 }
 
 // Modal title
@@ -129,12 +170,10 @@ h1 {
 
 // Dividers
 .css-1t4vnk2-MuiDialogContent-root {
- border-color: $primary-color !important;
+  border-color: $primary-color !important;
 }
 
-
-///////////////////////////////////////////////////////////
-/// Forms
+// Forms
 .formContainer-wholePage {
   display: flex;
   justify-content: center;
@@ -148,8 +187,7 @@ h1 {
   color: $info-color;
 }
 
-///////////////////////////////////////////////////////////
-/// Background overlay
+// Background overlay
 .overlay-container {
   position: relative;
   display: flex;
@@ -190,35 +228,99 @@ h1 {
   justify-content: center;
 }
 
-///////////////////////////////////////////////////////////
-/// Alerts
+// Alerts
 .MuiAlert-root {
   z-index: 1000;
 }
 
-
-///////////////////////////////////////////////////////////
-/// Images
+// Images
 .hero-image {
-    position: absolute;
-    background-image: url('../Images/VisionCORE_logo.png');
-    background-size: cover;               
-    background-position: center center;  
-    background-repeat: no-repeat;        
-    height: 100vh;                      
-    width: 100%;                         
-    display: flex;                       
-    flex-direction: column;               
-    align-items: center;                  
-    justify-content: flex-end;
-    filter: brightness(90%) contrast(90%);
+  position: absolute;
+  background-image: url('../Images/VisionCORE_logo.png');
+  background-size: cover;               
+  background-position: center center;  
+  background-repeat: no-repeat;        
+  height: 100vh;                      
+  width: 100%;                         
+  display: flex;                       
+  flex-direction: column;               
+  align-items: center;                  
+  justify-content: flex-end;
+  filter: brightness(90%) contrast(90%);
 }
 
-///////////////////////////////////////////////////////////
+.thumbnail-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+////////////////////////////////////////////////////////////////
+/// Image Approval Card
+.image-approval-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid none;
+  border-radius: 8px;
+  background-color: $background-default;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  width: 300px;
+  height: 120px;
+}
+
+.image-approval-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+}
+
+.image-approval-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  padding-left: 16px;
+  height: 100%;
+}
+
+.image-approval-text {
+  text-align: left;
+}
+
+.image-approval-button-wrapper {
+  align-self: flex-end;
+}
+
+.queued {
+  color: $queued-color;
+}
+
+.approved {
+  color: $approved-color;
+}
+
+.rejected {
+  color: $rejected-color;
+}
+
+////////////////////////////////////////////////////////////////
 /// Logo
 .logo {
-  width: 200px;
-  height: 150px;
+  &.small {
+    width: 100px;
+    height: 75px;
+  }
+  &.medium {
+    width: 150px;
+    height: 112.5px;
+  }
+  &.large {
+    width: 200px;
+    height: 150px;
+  }
 }
 
 .logo-container {
@@ -230,20 +332,26 @@ h1 {
 
 .logo-text {
   color: $branding-color;
-  font-size: 2rem;
   font-weight: bold;
   margin: 5px !important;
+  &.small {
+    font-size: 1rem;
+  }
+  &.medium {
+    font-size: 1.5rem;
+  }
+  &.large {
+    font-size: 2rem;
+  }
 }
 
-///////////////////////////////////////////////////////////
 // Mobile styles
 @media (max-width: 600px) {
   body {
   }
 }
 
-///////////////////////////////////////////////////////////
-/// Tablet styles
+// Tablet styles
 @media (min-width: 601px) and (max-width: 900px) {
   body {
   }

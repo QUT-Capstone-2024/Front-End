@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "title": "Beautiful Family House",
+    "propertyAddress": "123 Evergreen Terrace, Springfield, Oregon",
+    "imageUrl": "",
+    "collectionId": "col-001",
+    "propertyOwnerId": "owner-001",
+    "bedrooms": 4,
+    "bathrooms": 2,
+    "parkingSpaces": 2,
+    "approvalStatus": "approved",
+    "propertyType": "house"
+  },
+  {
+    "id": 2,
+    "title": "Modern Apartment",
+    "propertyAddress": "101 Apartment Complex, Springfield, Oregon",
+    "imageUrl": "",
+    "collectionId": "col-002",
+    "propertyOwnerId": "owner-002",
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "parkingSpaces": 1,
+    "approvalStatus": "approved",
+    "propertyType": "apartment"
+  },
+  {
+    "id": 3,
+    "title": "Cozy Cottage",
+    "propertyAddress": "456 Elm Street, Springfield, Oregon",
+    "imageUrl": "",
+    "collectionId": "col-003",
+    "propertyOwnerId": "owner-003",
+    "bedrooms": 3,
+    "bathrooms": 1,
+    "parkingSpaces": 1,
+    "approvalStatus": "queued",
+    "propertyType": "house"
+  },
+  {
+    "id": 4,
+    "title": "Luxury Condo",
+    "propertyAddress": "202 Pine Street, Springfield, Oregon",
+    "imageUrl": "",
+    "collectionId": "col-004",
+    "propertyOwnerId": "owner-004",
+    "bedrooms": 3,
+    "bathrooms": 2,
+    "parkingSpaces": 2,
+    "approvalStatus": "approved",
+    "propertyType": "apartment"
+  },
+  {
+    "id": 5,
+    "title": "Spacious Villa",
+    "propertyAddress": "789 Oak Street, Springfield, Oregon",
+    "imageUrl": "",
+    "collectionId": "col-005",
+    "propertyOwnerId": "owner-005",
+    "bedrooms": 5,
+    "bathrooms": 3,
+    "parkingSpaces": 3,
+    "approvalStatus": "rejected",
+    "propertyType": "house"
+  },
+  {
+    "id": 6,
+    "title": "Downtown Loft",
+    "propertyAddress": "303 Maple Street, Springfield, Oregon",
+    "imageUrl": "",
+    "collectionId": "col-006",
+    "propertyOwnerId": "owner-006",
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "parkingSpaces": 1,
+    "approvalStatus": "queued",
+    "propertyType": "apartment"
+  }
+]

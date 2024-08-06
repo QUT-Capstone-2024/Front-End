@@ -1,13 +1,15 @@
 import React from 'react';
 import VLLogo from "../Images/VisionCORE_logo.png";
 
-interface LogoProps {};
+interface LogoProps {
+    logoSize?: 'small' | 'medium' | 'large';
+};
 
-const Logo: React.FC = () => {
+const Logo: React.FC<LogoProps> = ({ logoSize = 'large' }) => {
     return (
         <div className="logo-container">
-            <img src={VLLogo} alt='VisionCore Logo' className="logo" /> 
-            <h1 className="logo-text">VisionCORE</h1>
+            <img src={VLLogo} alt='VisionCore Logo' className={`logo ${logoSize}`}/> 
+            <div className={`logo-text ${logoSize}`}>VisionCORE</div>
         </div>
     )
 };
