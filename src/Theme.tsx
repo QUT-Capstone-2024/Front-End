@@ -33,7 +33,7 @@ const theme = createTheme({
       main: '#1f323e',
     },
     background: {
-      default: '#ffffff',
+      default: '#eff7fe',
     },
     branding: {
       main: '#1f323e',

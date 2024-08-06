@@ -1,7 +1,6 @@
 // Standard page exports
 export { default as LandingPage } from "./LandingPage";
 export { default as Register } from "./Register";
-export { default as Collections } from "./Collections";
 export { default as ImageApproval } from "./ImageApproval";
 export { default as ImageView } from "./ImageView";
 export { default as Users } from "./Users";
