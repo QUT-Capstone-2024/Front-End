@@ -14,7 +14,8 @@ declare module '@mui/material/styles/createPalette' {
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#93cdfe',
+      main: '#0b517d',
+      light: '#93cdfe',
     },
     secondary: {
       main: '#8f9da3',
@@ -35,11 +36,11 @@ const theme = createTheme({
       default: '#ffffff',
     },
     branding: {
-      main: '#f27a31',
+      main: '#1f323e',
       light: '#f27a31',
     },
     navBackground: {
-      main: '#1f323e',
+      main: '#e2eaf1',
     },
   },
   typography: {
@@ -55,6 +56,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: '#eff7fe',
+          borderRadius: '10px',
           '&:hover .MuiOutlinedInput-notchedOutline, &.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: '#93cdfe',
           },

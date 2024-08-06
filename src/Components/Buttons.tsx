@@ -26,14 +26,14 @@ const CustomButton: React.FC<ButtonProps> = ({ buttonType, label, withIcon, icon
       if (label === 'Logout') { 
         console.log("Logout button clicked"); 
         return (
-          <Button sx={{ color: isActive ? theme.palette.branding.light : theme.palette.primary.main }} onClick={onClick}>
+          <Button sx={{ color: isActive ? theme.palette.primary.main : theme.palette.primary.light }} onClick={onClick}>
             {label}
           </Button>
         );
       }
 
       return (
-        <Button component={Link} to={`/${label.replace(' ', '')}`} sx={{ color: isActive ? theme.palette.branding.light : theme.palette.primary.main }}>
+        <Button component={Link} to={`/${label.replace(' ', '')}`} sx={{ color: isActive ? theme.palette.primary.main : theme.palette.primary.light }}>
           {label}
         </Button>
       );

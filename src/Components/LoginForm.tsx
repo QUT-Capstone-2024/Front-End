@@ -25,7 +25,7 @@ const LoginForm: React.FC<loginFormProps> = () => {
         // For testing purposes
         console.log('Login Data:', formData);
         dispatch(login());
-        navigate('/Home');
+        navigate('/AdminHome');
         // TODO: Add Api call to login user
     };
 

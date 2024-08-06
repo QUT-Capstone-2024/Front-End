@@ -10,8 +10,8 @@ import { ThemeProvider } from '@mui/material';
 import theme from './Theme';
 import './Styles/global.scss';
 
-import { LandingPage, Register, Users, Collections, ImageView, ImageApproval, Error401, Error404, Error501 } from './Pages';
-import { NavBar, CustomButton } from './Components';
+import { LandingPage, Register, AdminHome, Users, Collections, ImageView, ImageApproval, Error401, Error404, Error501 } from './Pages';
+import { NavBar } from './Components';
 import { Provider } from 'react-redux';
 import store from './store';
 
@@ -22,11 +22,11 @@ const AppContent = () => {
   return (
     <>
       {!noNavBarRoutes.includes(location.pathname) && <NavBar />}
-      {!noNavBarRoutes.includes(location.pathname) && <CustomButton buttonType='helpButton' label='Help' />}
       <Routes>
         <Route path="/" element={<Navigate replace to="/Landing" />} />
         <Route path="/Landing" element={<LandingPage />} />
         <Route path="/Register" element={<Register />} />
+        <Route path="/AdminHome" element={<AdminHome />} />
         <Route path="/Users" element={<Users />} />
         <Route path="/Collections" element={<Collections />} />
         <Route path="/ImageView" element={<ImageView />} />
