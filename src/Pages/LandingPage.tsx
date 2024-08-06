@@ -1,17 +1,34 @@
 import React from "react";
-import logo1 from "../Images/logo1.png";
 import { LoginForm } from "../Components";
+import { useNavigate } from "react-router-dom";
+import { CustomButton, Spacer, Logo } from "../Components";
 
-type LandingPageProps = {};
 const LandingPage: React.FC = () => {
+    const navigate = useNavigate();
+
+    const handleNeedAccount = () => {
+        navigate("/Register");
+    };
+    
     return (
-        <div style={{display:'flex',flexDirection:"column"}}>
-            <img src={logo1} alt='VisionCore Logo' style={{width:"150px", height:"150px", marginLeft:"30vw"}} /> 
-            <div>
-                <LoginForm />
-                <a> anything </a>
-             </div>
+        <div className="overlay-container">
+            <div className="background-overlay"></div>
+            <div className="overlay-content-container">
+                <Spacer height={2} />
+                <Logo />
+                <div className="overlay-button-container">
+                    <LoginForm />
+                    <Spacer height={2} />
+                    <CustomButton 
+                        label="No VisionCORE account? click here ..." 
+                        buttonType="textOnly" 
+                        onClick={handleNeedAccount}
+                    />
+                    <Spacer height={2} />
+                </div>
+            </div>
         </div>
     )
 };
-export default LandingPage; 
+
+export default LandingPage;

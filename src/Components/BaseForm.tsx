@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, TextField, Typography, Box, Checkbox, FormControlLabel } from '@mui/material';
 import { CustomButton, Switch } from './';
@@ -20,6 +20,8 @@ type BaseFormProps = {
     checkboxLabel?: string;
     withSwitch?: boolean;
     switchLabel?: string;
+    withCancelButton?: boolean;
+    buttonLabel?: string;
 };
 
 const BaseForm: React.FC<BaseFormProps> = ({
@@ -30,11 +32,24 @@ const BaseForm: React.FC<BaseFormProps> = ({
     withCheckbox = false,
     checkboxLabel = 'Agree to terms',
     withSwitch = false,
-    switchLabel = 'Enable feature'
+    switchLabel = 'Enable feature',
+    withCancelButton = true,
+    buttonLabel = 'Submit',
 }) => {
     const [formData, setFormData] = useState<Record<string, any>>(initialValues);
     const [errors, setErrors] = useState<Record<string, string | null>>({});
+    const [isFormValid, setIsFormValid] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // Check if all required fields are filled
+        const allRequiredFilled = fields.every(field => 
+            !field.required || (field.required && formData[field.name])
+        );
+        // Check if checkbox is required and checked
+        const isCheckboxValid = !withCheckbox || (withCheckbox && formData['agree']);
+        setIsFormValid(allRequiredFilled && isCheckboxValid);
+    }, [formData, fields, withCheckbox]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, type, checked, value } = event.target;
@@ -115,9 +130,16 @@ const BaseForm: React.FC<BaseFormProps> = ({
                     />
                 }
                 
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '30px' }}>
-                    <CustomButton label='Submit' onClick={handleSubmit} disabled={(withCheckbox && !formData['agree'])} />
-                    <CustomButton buttonType='cancelButton' label='Cancel' onClick={handleCancel} />
+                <div style={{ display: 'flex', justifyContent: withCancelButton? 'space-between' : 'center', marginTop: '30px' }}>
+                    <CustomButton 
+                        label={buttonLabel} 
+                        onClick={handleSubmit} 
+                        isActive={isFormValid} 
+                        disabled={!isFormValid}
+                    />
+                    {withCancelButton && (
+                        <CustomButton buttonType='cancelButton' label='Cancel' onClick={handleCancel} />
+                    )}
                 </div>
             </Box>
         </Container>

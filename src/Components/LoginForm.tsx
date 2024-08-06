@@ -35,9 +35,9 @@ const LoginForm: React.FC<loginFormProps> = () => {
             fields={loginFields}
             initialValues={initialValues}
             onSubmit={handleLoginSubmit}
-            title="Login"
-            withSwitch={true}
-            switchLabel="Request Admin Access" />
+            title=""
+            withCancelButton={false}
+            buttonLabel='Login' />
         </>
     );
 

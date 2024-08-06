@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { BaseForm, CustomAlert } from "./index";
 import { useNavigate } from "react-router-dom";
 
-// TODO: Check if the user already exists - this is the email address being unique
 // TODO: Error on insecure password
+// TODO: Error handling on api calls
 // TODO: Link to terms and conditions
 // TODO: Add data controls for the admin switch
 type registerFormProps = {};
@@ -21,7 +21,7 @@ const registerFields = [
 ];
 
 const initialValues = {
-  name: "",
+  username: "",
   email: "",
   password: "",
   confirmPassword: "",
@@ -48,12 +48,13 @@ const RegisterForm: React.FC<registerFormProps> = () => {
       setShowAlert(true);
       setErrors("Passwords do not match. Please try again.");
       formData.confirmPassword = "";
+      formData.password = "";
       return;
     }
 
     // For testing purposes
     console.log("Registration Data:", formData);
-    navigate("/login");
+    navigate("/Landing");
     // TODO: Add Api call to register user
   };
 
@@ -69,13 +70,15 @@ const RegisterForm: React.FC<registerFormProps> = () => {
         fields={registerFields}
         initialValues={initialValues}
         onSubmit={handleRegisterSubmit}
-        title="Register"
+        title=""
         withCheckbox={true}
         checkboxLabel="I agree to the terms and conditions."
         withSwitch={true}
         switchLabel="Request Admin Access"
+        buttonLabel="Register"
       />
     </div>
   );
 };
+
 export default RegisterForm;
