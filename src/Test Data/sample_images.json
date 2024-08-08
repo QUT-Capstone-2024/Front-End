@@ -1,44 +1,65 @@
-[
-  {
-    "propertyId": "1",
-    "imageId": "img1",
-    "imageTag": "Living Room",
-    "imageStatus": "approved",
-    "imageUrl": "https://via.placeholder.com/100"
-  },
-  {
-    "propertyId": "1",
-    "imageId": "img2",
-    "imageTag": "Kitchen",
-    "imageStatus": "queued",
-    "imageUrl": "https://via.placeholder.com/100"
-  },
-  {
-    "propertyId": "2",
-    "imageId": "img3",
-    "imageTag": "Bedroom",
-    "imageStatus": "rejected",
-    "imageUrl": "https://via.placeholder.com/100"
-  },
-  {
-    "propertyId": "2",
-    "imageId": "img4",
-    "imageTag": "Bathroom",
-    "imageStatus": "approved",
-    "imageUrl": "https://via.placeholder.com/100"
-  },
-  {
-    "propertyId": "3",
-    "imageId": "img5",
-    "imageTag": "Garage",
-    "imageStatus": "queued",
-    "imageUrl": "https://via.placeholder.com/100"
-  },
-  {
-    "propertyId": "3",
-    "imageId": "img6",
-    "imageTag": "Garden",
-    "imageStatus": "approved",
-    "imageUrl": "https://via.placeholder.com/100"
-  }
-]
+{
+  "propertyId": "1",
+  "images": [
+    {
+      "imageUrl": "https://via.placeholder.com/240",
+      "imageTag": "Bedroom",
+      "imageId": "img1",
+      "imageStatus": "approved"
+    },
+    {
+      "imageUrl": "https://via.placeholder.com/240",
+      "imageTag": "Bathroom",
+      "imageId": "img2",
+      "imageStatus": "rejected"
+    },
+    {
+      "imageUrl": "https://via.placeholder.com/240",
+      "imageTag": "Dining Room",
+      "imageId": "img3",
+      "imageStatus": "approved"
+    },
+    {
+      "imageUrl": "https://via.placeholder.com/240",
+      "imageTag": "Outside",
+      "imageId": "img4",
+      "imageStatus": "approved"
+    },
+    {
+      "imageUrl": "https://via.placeholder.com/240",
+      "imageTag": "Bedroom 2",
+      "imageId": "img5",
+      "imageStatus": "queued"
+    },
+    {
+      "imageUrl": "https://via.placeholder.com/240",
+      "imageTag": "Bedroom 3",
+      "imageId": "img6",
+      "imageStatus": "rejected"
+    },
+    {
+      "imageUrl": "https://via.placeholder.com/240",
+      "imageTag": "Ensuite",
+      "imageId": "img7",
+      "imageStatus": "approved"
+    },
+    {
+      "imageUrl": "https://via.placeholder.com/240",
+      "imageTag": "Pool",
+      "imageId": "img8",
+      "imageStatus": "approved"
+    },
+    {
+      "imageUrl": "https://via.placeholder.com/240",
+      "imageTag": "Living Room",
+      "imageId": "img9",
+      "imageStatus": "queued"
+    },
+    {
+      "imageUrl": "https://via.placeholder.com/240",
+      "imageTag": "Kitchen",
+      "imageId": "img10",
+      "imageStatus": "approved"
+    }
+  ]
+}

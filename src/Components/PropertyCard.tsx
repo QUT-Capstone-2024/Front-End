@@ -1,20 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardActions, useTheme, Box, IconButton } from "@mui/material";
+import { CardActions, useTheme, Box } from "@mui/material";
 import { List, ListItem, ListItemIcon } from "@mui/material";
-import { CustomButton, ImageApprovalCard, Spacer } from "./index";
+import { CustomButton, CustomModal, Dropdown, ImageApprovalCard, Spacer } from "./index";
 import {
   Bed as BedRoundedIcon,
   Shower as ShowerRoundedIcon,
   Garage as GarageRoundedIcon,
-  Settings as SettingsIcon,
 } from "@mui/icons-material";
 import SampleHouseHeroImage from "../Images/house_demo_hero_image.png";
 import SampleApartHeroImage from "../Images/apartment_demo_hero_image.png";
+
+// REMOVE: Test data
+import propertyImagesData from "../Test Data/sample_images.json";
 
 type PropertyCardProps = {
   title: string;
@@ -27,6 +29,7 @@ type PropertyCardProps = {
   parkingSpaces: number;
   approvalStatus: "queued" | "approved" | "rejected";
   propertyType: string;
+  propertyId?: string;
 };
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
@@ -40,14 +43,43 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   parkingSpaces,
   approvalStatus,
   propertyType,
+  propertyId,
 }) => {
   const theme = useTheme();
-  const isAdmin = true; // For testing purposes
+  const isAdmin = false; // For testing purposes
   // const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
   const navigate = useNavigate();
 
   // Set default image if image prop is not provided based on the propertyType
   const defaultImage = propertyType === 'house' ? SampleHouseHeroImage : SampleApartHeroImage;
+
+  // Filter, sort, and limit images to 8
+  const images = propertyImagesData.images
+    .filter(image => image.imageStatus !== 'approved') // Filter out approved images first
+    .concat(propertyImagesData.images.filter(image => image.imageStatus === 'approved')) // Add approved images at the end
+    .slice(0, 8); // Limit to 8 images
+
+  // Event handlers for dropdown menu items
+  const handleEditDetailsClick = () => {
+    console.log('Details clicked');
+  };
+
+  const handleEditPhotosClick = () => {
+    console.log('Photos clicked');
+  };
+ 
+  const handleRemovePropertyClick = () => {
+    console.log('Remove clicked');
+  };
+
+  const menuItems = [
+    { label: 'Edit Property Details', onClick: handleEditDetailsClick },
+    { label: 'Edit Property Photos', onClick: handleEditPhotosClick },
+    ...(isAdmin ? 
+      [{ label: 'Remove Ownership', onClick: handleRemovePropertyClick }] 
+        : 
+      [{ label: 'Remove Property', onClick: handleRemovePropertyClick }]),
+  ];
 
   return (
     <Card sx={{ backgroundColor: theme.palette.background.default, display: 'flex', borderRadius: '10px' }}>
@@ -72,7 +104,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             marginLeft: 3,
           }}
         />
-        <CardContent>
+        <CardContent sx={{ height: '35%'}}>
           <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: 1, marginLeft: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <ListItemIcon sx={{ color: theme.palette.info.main, minWidth: '30px' }}>
@@ -120,20 +152,20 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         </CardContent>
         <CardActions
           sx={{
-            justifyContent: "space-between",
             borderTop: `1px solid ${theme.palette.divider}`,
+            padding: '0px',
+            display: 'flex',
+            justifyContent: 'center', 
           }}
         >
-          <IconButton aria-label="settings">
-            <SettingsIcon />
-          </IconButton>
           <CustomButton
             buttonType="successButton"
-            label={isAdmin ? "Image approval" : "Image view"}
+            label={isAdmin ? "Image approval" : "View all images"}
             style={{ marginTop: '10px'}}
           />
         </CardActions>
       </Box>
+      
       <Box
         sx={{
           display: 'grid',
@@ -142,14 +174,24 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           padding: 2,
         }}
       >
-        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Bedroom" imageId="" imageStatus="approved"/>
-        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Bathroom" imageId="" imageStatus="rejected"/>
-        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Dinning Room" imageId="" imageStatus="approved"/>
-        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Outside" imageId="" imageStatus="approved"/>
-        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Bedroom 2" imageId="" imageStatus="queued"/>
-        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Bedroom 3" imageId="" imageStatus="rejected"/>
-        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Ensuite" imageId="" imageStatus="approved"/>
-        <ImageApprovalCard image={SampleApartHeroImage} imageTag="Pool" imageId="" imageStatus="approved"/>
+        <Spacer height={1}/>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+          <Dropdown
+            buttonLabel="Settings"
+            menuItems={menuItems}
+            settingsButton anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }} />
+        </Box>
+
+        {images.map(image => (
+            <ImageApprovalCard
+              key={image.imageId}
+              image={image.imageUrl}
+              imageTag={image.imageTag}
+              imageId={image.imageId}
+              imageStatus={image.imageStatus as "approved" | "queued" | "rejected"}
+            />
+          ))}
       </Box>
     </Card>
   );

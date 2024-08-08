@@ -6,6 +6,9 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../Redux/authSlice';
 import { CustomButton, CustomModal, Logo, Spacer } from './index';
 
+// For testing
+const isAdmin = true;
+
 type ElevationScrollProps = {
     children: ReactElement;
     window?: () => Window;
@@ -47,7 +50,7 @@ const Navbar: React.FC = () => {
     const handleLogout = () => {
         console.log('Logging out...');
         dispatch(logout());
-        navigate('/Landing');
+        navigate('/Home');
         setModalOpen(false);
     };
 
@@ -73,8 +76,7 @@ const Navbar: React.FC = () => {
                                 aria-label="open drawer" 
                                 edge="start" 
                                 onClick={toggleDrawer}
-                                sx={{ marginBottom: '2rem', 
-                                    color: theme.palette.branding.light }}
+                                sx={{ color: theme.palette.branding.light }}
                             >
                                 <MenuIcon />
                             </IconButton>
@@ -92,10 +94,10 @@ const Navbar: React.FC = () => {
                     onClick={toggleDrawer}
                     onKeyDown={toggleDrawer}
                 >
-                    <CustomButton label='Home' buttonType='navButton' isActive={isLocationActive('/Landing')} />
-                    <CustomButton label='Properties' buttonType='navButton' isActive={isLocationActive('/Properties')}/>
-                    <CustomButton label='My Properties' buttonType='navButton' isActive={isLocationActive('/MyProperties')}/>
-                    <CustomButton label='Admin Home' buttonType='navButton' isActive={isLocationActive('/AdminHome')}/>
+                    {isAdmin && <CustomButton label='Properties' buttonType='navButton' isActive={isLocationActive('/Properties')}/>}
+                    {isAdmin && <CustomButton label='User Management' buttonType='navButton' isActive={isLocationActive('/UserManagement')}/>}
+                    {!isAdmin && <CustomButton label='My Properties' buttonType='navButton' isActive={isLocationActive('/MyProperties')}/>}
+                    {isAdmin && <CustomButton label='Admin Home' buttonType='navButton' isActive={isLocationActive('/AdminHome')}/>}
                     <CustomButton label='Logout' buttonType='navButton' isActive={isLocationActive('/Logout')} onClick={toggleModal}/>
                     <CustomButton buttonType='helpButton' label='Help' />
                 </Box>
