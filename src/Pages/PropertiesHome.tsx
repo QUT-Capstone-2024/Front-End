@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, Logo } from '../Components';
-import propertiesData from '../Test Data/sample_properties.json'; // Adjust the import path as needed
-import '../Pages/AdminHome.scss';
+import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard, StatusStamp } from '../Components';
+import './PropertiesHome.scss';
+
+// REMOVE: Test data
+import propertiesData from '../Test Data/sample_properties.json';
 
 interface Property {
   id: number;
@@ -36,6 +38,7 @@ const AdminHome: React.FC<AdminHomeProps> = () => {
           <div className="property-search-container">
           <SearchBar placeholder="Search for a property" onSearch={(query) => console.log(query)} />
           <Spacer height={1}/>
+            <AddPropertyCard />
           {properties.map((property: Property) => (
               <div key={property.id} className="small-display-card-container" onClick={() => handleCardClick(property)}>
               <SmallDisplayCard

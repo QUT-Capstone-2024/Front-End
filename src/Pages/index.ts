@@ -4,7 +4,7 @@ export { default as Register } from "./Register";
 export { default as ImageApproval } from "./ImageApproval";
 export { default as ImageView } from "./ImageView";
 export { default as Users } from "./Users";
-export { default as AdminHome } from "./AdminHome";
+export { default as PropertiesHome } from "./PropertiesHome";
 
 // Error page exports
 export { default as Error401 } from "./ErrorPages/401";

@@ -57,6 +57,13 @@ h1 {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   width: 100%;
   background: $background-lighter;
+  min-height: 55px;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+    background-color: $hover-color;
+  }  
 }
 
 .small-display-card-text {
@@ -73,7 +80,64 @@ h1 {
   }
 }
 
+.add-property-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  background: $background-lighter;
+  min-height: 55px;
+  padding-right: 35px;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+    background-color: $hover-color;
+  }   
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .add-icon {
+    height: 60px;
+    width: 60px;
+    color: #f27a31;
+  }
+
+  .small-display-card-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .title {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 0;
+      color: #333;
+    }
+
+    .text {
+      font-size: 14px;
+      margin: 0;
+      color: #666;
+    }
+  }
+}
+
+
 // Buttons
+.css-bq05nv-MuiSvgIcon-root {
+  &:hover {
+    transform: scale(1.05);
+  }
+}
 .MuiButton-root.button {
   background-color: $branding-color;
   color: white;
@@ -83,6 +147,11 @@ h1 {
     background-color: $background-lighter;
     color: grey;
     cursor: not-allowed;
+  }
+
+  &:hover {
+    background-color: $primary-color;
+    color: $success-color;
   }
 }
 
@@ -110,6 +179,19 @@ h1 {
   }
 }
 
+.MuiIconButton-root.settingsButton {
+  color: $success-color;
+  background-color: transparent;
+  padding: 0px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: transparent;
+    color: $primary-color;
+    transform: scale(1.05);
+  }
+}
+
 .MuiButton-root.errorButton {
   background-color: $error-color;
   color: $background-default;
@@ -120,6 +202,11 @@ h1 {
   background-color: $success-color;
   color: $background-default;
   border-radius: 10px;
+
+  &:hover {
+    background-color: $primary-color;
+    color: $success-color;
+  }
 }
 
 .MuiButton-root.cancelButton {
@@ -133,9 +220,10 @@ h1 {
   background-color: transparent;
   color: $info-color;
   font-weight: bolder;
-
+  
   &:hover {
     color: $branding-color;
+    background-color: transparent;
   }
 }
 
@@ -233,22 +321,7 @@ h1 {
   z-index: 1000;
 }
 
-// Images
-.hero-image {
-  position: absolute;
-  background-image: url('../Images/VisionCORE_logo.png');
-  background-size: cover;               
-  background-position: center center;  
-  background-repeat: no-repeat;        
-  height: 100vh;                      
-  width: 100%;                         
-  display: flex;                       
-  flex-direction: column;               
-  align-items: center;                  
-  justify-content: flex-end;
-  filter: brightness(90%) contrast(90%);
-}
-
+// Images and Icons
 .thumbnail-image {
   width: 60px;
   height: 60px;
@@ -263,7 +336,6 @@ h1 {
   display: flex;
   align-items: center;
   padding: 10px;
-  border: 1px solid none;
   border-radius: 8px;
   background-color: $background-default;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -271,10 +343,27 @@ h1 {
   height: 120px;
 }
 
+.image-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .image-approval-image {
   width: 100px;
   height: 100px;
   border-radius: 8px;
+}
+
+.status-stamp {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .image-approval-content {
@@ -284,14 +373,24 @@ h1 {
   flex-grow: 1;
   padding-left: 16px;
   height: 100%;
-}
-
-.image-approval-text {
   text-align: left;
-}
 
-.image-approval-button-wrapper {
-  align-self: flex-end;
+  .image-tag {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .rejection-reason {
+    margin-top: 5px;
+    font-size: 12px;
+    color: $rejected-color;
+  }
+
+  .image-approval-button-wrapper {
+    align-self: flex-end;
+    margin-top: auto;
+  }
 }
 
 .queued {
@@ -305,6 +404,8 @@ h1 {
 .rejected {
   color: $rejected-color;
 }
+
+
 
 ////////////////////////////////////////////////////////////////
 /// Logo
@@ -367,6 +468,11 @@ h1 {
   background-color: $footer-background;
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1), 0 -1px 3px rgba(0, 0, 0, 0.08);
 
+  span {
+    color: $secondary-color;
+    font-weight: normal; 
+  }
+
   p:first-of-type {
     color: $success-color;
     font-weight: bold;
@@ -383,8 +489,6 @@ h1 {
   margin-left: 2rem;
   margin-right: 7rem;
 }
-
-
 
 // Mobile styles
 @media (max-width: 780px) {

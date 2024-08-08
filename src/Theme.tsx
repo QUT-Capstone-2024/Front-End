@@ -52,6 +52,29 @@ const theme = createTheme({
     },
   },
   components: {
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: '#f27a31',
+          color: 'white',
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: '10px',
+          minWidth: '150px',
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          fontSize: '14px',
+          color: '#e2eaf1',
+          '&:hover': {
+            color: '#e2eaf',
+            backgroundColor: '#f3b792',
+          },
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
