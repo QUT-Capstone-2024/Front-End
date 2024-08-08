@@ -11,20 +11,20 @@ import theme from './Theme';
 import './Styles/global.scss';
 
 import { LandingPage, Register, AdminHome, Users, ImageView, ImageApproval, Error401, Error404, Error501 } from './Pages';
-import { NavBar } from './Components';
+import { Header, Footer } from './Components';
 import { Provider } from 'react-redux';
 import store from './store';
 
 const AppContent = () => {
   const location = useLocation();
-  const noNavBarRoutes = ['/Landing', '/Register'];
+  const noHeaderRoutes = ['/Home', '/Register'];
 
   return (
     <>
-      {!noNavBarRoutes.includes(location.pathname) && <NavBar />}
+      {!noHeaderRoutes.includes(location.pathname) && <Header />}
       <Routes>
-        <Route path="/" element={<Navigate replace to="/Landing" />} />
-        <Route path="/Landing" element={<LandingPage />} />
+        <Route path="/" element={<Navigate replace to="/Home" />} />
+        <Route path="/Home" element={<LandingPage />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/AdminHome" element={<AdminHome />} />
         <Route path="/Users" element={<Users />} />
@@ -34,6 +34,7 @@ const AppContent = () => {
         <Route path="/Error404" element={<Error404 />} />
         <Route path="/Error501" element={<Error501 />} />
       </Routes>
+      {!noHeaderRoutes.includes(location.pathname) && <Footer />}
     </>
   );
 };

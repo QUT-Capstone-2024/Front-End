@@ -14,11 +14,13 @@ $disabled-text-color: #808080;
 $background-default: #e2eaf1;
 $background-darker: #d5dde4;
 $background-lighter: #eff7fe;
+$header-background: lighten($primary-color, 15%);
+$footer-background: lighten($primary-color, 12%);
 
 // Hero colours
 $branding-color: #f27a31;
 
 // Status colours
-$queued-color: #f27a31;
+$queued-color: $branding-color;
 $approved-color: $info-color;
-$rejected-color: #ef4400;
+$rejected-color: $error-color;

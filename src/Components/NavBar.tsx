@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
     const handleLogout = () => {
         console.log('Logging out...');
         dispatch(logout());
-        navigate('/Landing');
+        navigate('/Home');
         setModalOpen(false);
     };
 
@@ -73,8 +73,7 @@ const Navbar: React.FC = () => {
                                 aria-label="open drawer" 
                                 edge="start" 
                                 onClick={toggleDrawer}
-                                sx={{ marginBottom: '2rem', 
-                                    color: theme.palette.branding.light }}
+                                sx={{ color: theme.palette.branding.light }}
                             >
                                 <MenuIcon />
                             </IconButton>
