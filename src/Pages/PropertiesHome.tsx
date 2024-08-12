@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard, StatusStamp } from '../Components';
+import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard } from '../Components';
 import './PropertiesHome.scss';
 
 // REMOVE: Test data

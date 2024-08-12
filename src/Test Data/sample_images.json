@@ -2,64 +2,74 @@
   "propertyId": "1",
   "images": [
     {
-      "imageUrl": "https://via.placeholder.com/240",
+      "imageUrl": "/images/kitchen_sample.png",
       "imageTag": "Bedroom",
       "imageId": "img1",
-      "imageStatus": "approved"
+      "imageStatus": "approved",
+      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?, please submit a clearer image"
     },
     {
-      "imageUrl": "https://via.placeholder.com/240",
+      "imageUrl": "/images/kitchen_sample.png",
       "imageTag": "Bathroom",
       "imageId": "img2",
-      "imageStatus": "rejected"
+      "imageStatus": "rejected",
+      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "https://via.placeholder.com/240",
+      "imageUrl": "/images/kitchen_sample.png",
       "imageTag": "Dining Room",
       "imageId": "img3",
-      "imageStatus": "approved"
+      "imageStatus": "approved",
+      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "https://via.placeholder.com/240",
+      "imageUrl": "/images/kitchen_sample.png",
       "imageTag": "Outside",
       "imageId": "img4",
-      "imageStatus": "approved"
+      "imageStatus": "approved",
+      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "https://via.placeholder.com/240",
+      "imageUrl": "/images/kitchen_sample.png",
       "imageTag": "Bedroom 2",
       "imageId": "img5",
-      "imageStatus": "queued"
+      "imageStatus": "queued",
+      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "https://via.placeholder.com/240",
+      "imageUrl": "/images/kitchen_sample.png",
       "imageTag": "Bedroom 3",
       "imageId": "img6",
-      "imageStatus": "rejected"
+      "imageStatus": "rejected",
+      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "https://via.placeholder.com/240",
+      "imageUrl": "/images/kitchen_sample.png",
       "imageTag": "Ensuite",
       "imageId": "img7",
-      "imageStatus": "approved"
+      "imageStatus": "approved",
+      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "https://via.placeholder.com/240",
+      "imageUrl": "/images/kitchen_sample.png",
       "imageTag": "Pool",
       "imageId": "img8",
-      "imageStatus": "approved"
+      "imageStatus": "approved",
+      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "https://via.placeholder.com/240",
+      "imageUrl": "/images/kitchen_sample.png",
       "imageTag": "Living Room",
       "imageId": "img9",
-      "imageStatus": "queued"
+      "imageStatus": "queued",
+      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "https://via.placeholder.com/240",
+      "imageUrl": "/images/kitchen_sample.png",
       "imageTag": "Kitchen",
       "imageId": "img10",
-      "imageStatus": "approved"
+      "imageStatus": "approved",
+      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     }
   ]
 }
