@@ -190,6 +190,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
               imageTag={image.imageTag}
               imageId={image.imageId}
               imageStatus={image.imageStatus as "approved" | "queued" | "rejected"}
+              rejectionReason={image.rejectionReason}
             />
           ))}
       </Box>
