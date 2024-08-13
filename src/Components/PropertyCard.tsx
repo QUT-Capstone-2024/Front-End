@@ -4,9 +4,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardActions, useTheme, Box } from "@mui/material";
-import { List, ListItem, ListItemIcon } from "@mui/material";
-import { CustomButton, CustomModal, Dropdown, ImageApprovalCard, Spacer } from "./index";
+import { Box } from "@mui/material";
+import { CustomButton, CustomModal, Dropdown, ImageApprovalCard, Spacer, Carousel, ActionRequiredCard, SquareFootIcon } from "./index";
 import {
   Bed as BedRoundedIcon,
   Shower as ShowerRoundedIcon,
@@ -19,7 +18,6 @@ import SampleApartHeroImage from "../Images/apartment_demo_hero_image.png";
 import propertyImagesData from "../Test Data/sample_images.json";
 
 type PropertyCardProps = {
-  title: string;
   propertyAddress: string;
   imageUrl?: string;
   collectionId: string;
@@ -30,10 +28,11 @@ type PropertyCardProps = {
   approvalStatus: "queued" | "approved" | "rejected";
   propertyType: string;
   propertyId?: string;
+  propertyDescription: string;
+  propertySize: number;
 };
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
-  title,
   propertyAddress,
   imageUrl,
   collectionId,
@@ -44,20 +43,39 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   approvalStatus,
   propertyType,
   propertyId,
+  propertyDescription,
+  propertySize,
 }) => {
-  const theme = useTheme();
   const isAdmin = false; // For testing purposes
   // const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
   const navigate = useNavigate();
 
-  // Set default image if image prop is not provided based on the propertyType
-  const defaultImage = propertyType === 'house' ? SampleHouseHeroImage : SampleApartHeroImage;
+  // Order images by hero tag first
+  const heroTag = 'Hero';
+  const imageUrls = propertyImagesData.images
+    .filter(image => image.imageTag.toLowerCase().includes(heroTag.toLowerCase()))
+    .concat(
+      propertyImagesData.images
+        .filter(image => !image.imageTag.toLowerCase().includes(heroTag.toLowerCase()))
+    )
+    .map(image => image.imageUrl);
+  
+  // Get the latest pending image
+  const queuedImages = propertyImagesData.images.filter(image => image.imageStatus.toLowerCase() === 'queued');
+  const latestPendingImage = queuedImages.length > 0
+    ? queuedImages.reduce((latest, current) => {
+        return new Date(current.uploadTime) > new Date(latest.uploadTime) ? current : latest;
+      })
+    : null;
 
-  // Filter, sort, and limit images to 8
-  const images = propertyImagesData.images
-    .filter(image => image.imageStatus !== 'approved') // Filter out approved images first
-    .concat(propertyImagesData.images.filter(image => image.imageStatus === 'approved')) // Add approved images at the end
-    .slice(0, 8); // Limit to 8 images
+  // Get the most recently updated image
+  const mostRecentPhoto = propertyImagesData.images
+  .reduce((latest, current) => {
+    const latestDate = new Date(latest.uploadTime.trim().replace(" T", "T"));
+    const currentDate = new Date(current.uploadTime.trim().replace(" T", "T")); 
+    return currentDate > latestDate ? current : latest;
+  }, propertyImagesData.images[0]);
+
 
   // Event handlers for dropdown menu items
   const handleEditDetailsClick = () => {
@@ -82,118 +100,53 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   ];
 
   return (
-    <Card sx={{ backgroundColor: theme.palette.background.default, display: 'flex', borderRadius: '10px' }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', flex: 1 }}>
-        <CardContent sx={{ marginLeft: 1 }}>
-          <Typography gutterBottom variant="h5">
-            {title}
-          </Typography>
-          <Typography gutterBottom variant="body1">
+    <Card sx={{ padding: 0, margin: 0, width: '100%', maxWidth: '600px', height: 'auto' }}>
+        <div className="address-title">
+          <Typography variant="h5" sx={{ margin: '10px', maxWidth: '80%' }}>
             {propertyAddress}
           </Typography>
-        </CardContent>
-        <CardMedia
-          component="img"
-          image={imageUrl || defaultImage}
-          alt={title}
-          sx={{
-            height: "240px",
-            width: "240px",
-            objectFit: "cover",
-            borderRadius: "10px",
-            marginLeft: 3,
-          }}
-        />
-        <CardContent sx={{ height: '35%'}}>
-          <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: 1, marginLeft: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <ListItemIcon sx={{ color: theme.palette.info.main, minWidth: '30px' }}>
-                <BedRoundedIcon />
-              </ListItemIcon>
-              <Typography variant="body2">{bedrooms}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <ListItemIcon sx={{ color: theme.palette.info.main, minWidth: '30px' }}>
-                <ShowerRoundedIcon />
-              </ListItemIcon>
-              <Typography variant="body2">{bathrooms}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <ListItemIcon sx={{ color: theme.palette.info.main, minWidth: '30px' }}>
-                <GarageRoundedIcon />
-              </ListItemIcon>
-              <Typography variant="body2">{parkingSpaces}</Typography>
-            </Box>
-          </Box>
-          <List sx={{ padding: 0 }}>
-            <ListItem>
-              <Typography variant="body2">
-                Property Id: {collectionId}
-              </Typography>
-            </ListItem>
-            <ListItem>
-              <Typography variant="body2">
-                Some description here. This will need to be pulled from the CL DB at some point.
-              </Typography>
-            </ListItem>
-            <ListItem>
-              <Typography
-                variant="body1"
-                color={
-                  approvalStatus === "approved" ? theme.palette.primary.main :
-                  approvalStatus === "queued" ? theme.palette.warning.main :
-                  approvalStatus === "rejected" ? theme.palette.error.main : ''
-                }
-              >
-                Collection Status: {approvalStatus.toUpperCase()}
-              </Typography>
-            </ListItem>
-          </List>
-        </CardContent>
-        <CardActions
-          sx={{
-            borderTop: `1px solid ${theme.palette.divider}`,
-            padding: '0px',
-            display: 'flex',
-            justifyContent: 'center', 
-          }}
-        >
-          <CustomButton
-            buttonType="successButton"
-            label={isAdmin ? "Image approval" : "View all images"}
-            style={{ marginTop: '10px'}}
-          />
-        </CardActions>
-      </Box>
-      
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '10px',
-          padding: 2,
-        }}
-      >
-        <Spacer height={1}/>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
           <Dropdown
             buttonLabel="Settings"
             menuItems={menuItems}
             settingsButton anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             transformOrigin={{ vertical: 'top', horizontal: 'right' }} />
+        </div>
+      <Carousel images={imageUrls} height='300px' width='600px' />
+      <CardContent>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '16px 0' }} className="property-details-container">
+          <BedRoundedIcon sx={{ margin: '0 8px', fontSize: 24}} />
+          <span style={{ paddingRight: '1rem'}}>{bedrooms}</span>
+          <ShowerRoundedIcon sx={{ margin: '0 8px', fontSize: 24 }} />
+          <span style={{ paddingRight: '1rem'}}>{bathrooms}</span>
+          <GarageRoundedIcon sx={{ margin: '0 8px', fontSize: 24 }} />
+          <span style={{ paddingRight: '1rem'}}>{parkingSpaces}</span>
+          <SquareFootIcon />
+          <span style={{ paddingRight: '1rem', paddingLeft: '3px'}}>{propertySize}</span>
         </Box>
 
-        {images.map(image => (
-            <ImageApprovalCard
-              key={image.imageId}
-              image={image.imageUrl}
-              imageTag={image.imageTag}
-              imageId={image.imageId}
-              imageStatus={image.imageStatus as "approved" | "queued" | "rejected"}
-              rejectionReason={image.rejectionReason}
-            />
-          ))}
-      </Box>
+        <Spacer height={0.5} /> 
+        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+          {propertyDescription}
+        </Typography>
+      
+        {latestPendingImage !== null && 
+          <ActionRequiredCard
+            imageUrl={(latestPendingImage as any).imageUrl}
+            title="Photo requires review"
+            submittedDateTime={(latestPendingImage as any).uploadTime}
+            description="The Owner updated these photos."
+            onButtonClick={() => alert('Button clicked')}
+            cardType="Review" />
+        }
+
+        <ActionRequiredCard
+            imageUrl={(mostRecentPhoto as any).imageUrl}
+            title="Recent photo update"
+            submittedDateTime={(mostRecentPhoto as any).uploadTime}
+            description="The Owner updated these photos."
+            onButtonClick={() => alert('Button clicked')}
+          />
+      </CardContent>
     </Card>
   );
 };

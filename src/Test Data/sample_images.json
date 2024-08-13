@@ -2,70 +2,80 @@
   "propertyId": "1",
   "images": [
     {
-      "imageUrl": "/images/kitchen_sample.png",
-      "imageTag": "Bedroom",
+      "imageUrl": "/images/carousel_image_2.png",
+      "uploadTime": "2021-07-01 T01:00:00Z",
+      "imageTag": "Kitchen",
       "imageId": "img1",
       "imageStatus": "approved",
       "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?, please submit a clearer image"
     },
     {
-      "imageUrl": "/images/kitchen_sample.png",
-      "imageTag": "Bathroom",
+      "imageUrl": "/images/house_demo_hero_image.png",
+      "uploadTime": "2022-07-01 T00:00:00Z",
+      "imageTag": "Front Hero",
       "imageId": "img2",
       "imageStatus": "rejected",
       "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "/images/kitchen_sample.png",
+      "imageUrl": "/images/carousel_image_3.png",
+      "uploadTime": "2023-07-01 T00:00:00Z",
       "imageTag": "Dining Room",
       "imageId": "img3",
       "imageStatus": "approved",
       "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "/images/kitchen_sample.png",
+      "imageUrl": "/images/carousel_image_1.png",
+      "uploadTime": "2024-07-01 T00:00:00Z",
       "imageTag": "Outside",
       "imageId": "img4",
       "imageStatus": "approved",
       "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "/images/kitchen_sample.png",
+      "imageUrl": "/images/carousel_image_4.png",
+      "uploadTime": "2023-07-01 T00:00:00Z",
       "imageTag": "Bedroom 2",
       "imageId": "img5",
       "imageStatus": "queued",
       "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "/images/kitchen_sample.png",
+      "imageUrl": "/images/carousel_image_5.png",
+      "uploadTime": "2021-07-01 T00:00:00Z",
       "imageTag": "Bedroom 3",
       "imageId": "img6",
       "imageStatus": "rejected",
       "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "/images/kitchen_sample.png",
+      "imageUrl": "/images/carousel_image_2.png",
+      "uploadTime": "2021-07-01 T00:00:00Z",
       "imageTag": "Ensuite",
       "imageId": "img7",
       "imageStatus": "approved",
       "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "/images/kitchen_sample.png",
+      "imageUrl": "/images/carousel_image_3.png",
+      "uploadTime": "2021-07-01 T00:00:00Z",
       "imageTag": "Pool",
       "imageId": "img8",
       "imageStatus": "approved",
       "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "/images/kitchen_sample.png",
+      "imageUrl": "/images/carousel_image_1.png",
+      "uploadTime": "2021-07-01 T00:00:00Z",
       "imageTag": "Living Room",
       "imageId": "img9",
       "imageStatus": "queued",
       "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
     },
     {
-      "imageUrl": "/images/kitchen_sample.png",
+      "imageUrl": "/images/carousel_image_4.png",
+      "uploadTime": "2021-07-01 T00:00:00Z",
       "imageTag": "Kitchen",
       "imageId": "img10",
       "imageStatus": "approved",

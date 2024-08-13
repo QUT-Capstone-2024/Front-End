@@ -50,7 +50,7 @@ const Navbar: React.FC = () => {
     const handleLogout = () => {
         console.log('Logging out...');
         dispatch(logout());
-        navigate('/Home');
+        navigate('/');
         setModalOpen(false);
     };
 

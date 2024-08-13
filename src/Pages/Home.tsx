@@ -5,9 +5,11 @@ import './PropertiesHome.scss';
 // REMOVE: Test data
 import propertiesData from '../Test Data/sample_properties.json';
 
+// REMOVE: Testing states - Pull from store
+const isAdmin = true;
+
 interface Property {
   id: number;
-  title: string;
   propertyAddress: string;
   imageUrl?: string;
   collectionId: string;
@@ -17,14 +19,16 @@ interface Property {
   parkingSpaces: number;
   approvalStatus: "queued" | "approved" | "rejected";
   propertyType: string;
+  propertyDescription: string;
+  propertySize: number;
 }
 
-interface AdminHomeProps {}
+interface HomeProps {}
 
 // Type cast the imported JSON data
 const properties: Property[] = propertiesData as Property[];
 
-const AdminHome: React.FC<AdminHomeProps> = () => {
+const Home: React.FC<HomeProps> = () => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
 
   const handleCardClick = (property: Property) => {
@@ -36,23 +40,24 @@ const AdminHome: React.FC<AdminHomeProps> = () => {
         <Spacer height={2}/>
         <div className='admin-home-container'>
           <div className="property-search-container">
-          <SearchBar placeholder="Search for a property" onSearch={(query) => console.log(query)} />
-          <Spacer height={1}/>
-            <AddPropertyCard />
-          {properties.map((property: Property) => (
-              <div key={property.id} className="small-display-card-container" onClick={() => handleCardClick(property)}>
-              <SmallDisplayCard
-                  image={property.imageUrl}
-                  propertyType={property.propertyType}
-                  propertyAddress={property.propertyAddress}
-              />
+            {isAdmin && <SearchBar placeholder="Search for a property" onSearch={(query) => console.log(query)} />}
+            {!isAdmin && <AddPropertyCard />}
+            <Spacer height={1}/>
+            <h2 className="left">{isAdmin? 'Properties' : 'My Properties'}</h2>
+            <Spacer height={0.5}/>
+            {properties.map((property: Property) => (
+                <div key={property.id} className="small-display-card-container" onClick={() => handleCardClick(property)}>
+                <SmallDisplayCard
+                    image={property.imageUrl}
+                    propertyType={property.propertyType}
+                    propertyAddress={property.propertyAddress}
+                />
               </div>
-          ))}
+            ))}
           </div>
           <div style={{marginTop: '10px', width: '60%'}}>
               {selectedProperty && (
               <PropertyCard
-                  title={selectedProperty.title}
                   propertyAddress={selectedProperty.propertyAddress}
                   imageUrl={selectedProperty.imageUrl}
                   collectionId={selectedProperty.collectionId}
@@ -62,11 +67,14 @@ const AdminHome: React.FC<AdminHomeProps> = () => {
                   parkingSpaces={selectedProperty.parkingSpaces}
                   approvalStatus={selectedProperty.approvalStatus}
                   propertyType={selectedProperty.propertyType}
+                  propertyDescription={selectedProperty.propertyDescription}
+                  propertySize={selectedProperty.propertySize}
               />
               )}
               {!selectedProperty && (
                   <div className="empty-property-card">
-                      <h2>No property selected</h2>
+                    <Spacer height={2}/>
+                    <h2>No property selected</h2>
                   <div>Select a property to view details</div>
                   </div>)}
           </div>
@@ -75,4 +83,4 @@ const AdminHome: React.FC<AdminHomeProps> = () => {
   );
 };
 
-export default AdminHome;
+export default Home;

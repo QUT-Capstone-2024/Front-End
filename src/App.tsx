@@ -10,7 +10,7 @@ import { ThemeProvider } from '@mui/material';
 import theme from './Theme';
 import './Styles/global.scss';
 
-import { LandingPage, Register, PropertiesHome, Users, ImageView, ImageApproval, Error401, Error404, Error501 } from './Pages';
+import { LandingPage, Register, Home, Users, ImageView, ImageApproval, Error401, Error404, Error501 } from './Pages';
 import { Header, Footer } from './Components';
 import { Provider } from 'react-redux';
 import store from './store';
@@ -20,17 +20,17 @@ const isAdmin = true;
 
 const AppContent = () => {
   const location = useLocation();
-  const noHeaderRoutes = ['/Home', '/Register'];
+  const noHeaderRoutes = ['/login', '/register', '/'];
+  const currentPath = location.pathname.toLowerCase();
 
   return (
     <>
-      {!noHeaderRoutes.includes(location.pathname) && <Header />}
+      {!noHeaderRoutes.includes(currentPath) && <Header />}
       <Routes>
-        <Route path="/" element={<Navigate replace to="/Home" />} />
-        <Route path="/Home" element={<LandingPage />} />
+        <Route path="/" element={<Navigate replace to="/Login" />} />
+        <Route path="/Login" element={<LandingPage />} />
         <Route path="/Register" element={<Register />} />
-        {isAdmin && <Route path="/AdminHome" element={<PropertiesHome />} />}
-        {!isAdmin && <Route path="/Properties" element={<PropertiesHome />} />}
+        <Route path="/Home" element={<Home />} />
         <Route path="/Users" element={<Users />} />
         <Route path="/ImageView" element={<ImageView />} />
         <Route path="/ImageApproval" element={<ImageApproval />} />
@@ -38,7 +38,7 @@ const AppContent = () => {
         <Route path="/Error404" element={<Error404 />} />
         <Route path="/Error501" element={<Error501 />} />
       </Routes>
-      {!noHeaderRoutes.includes(location.pathname) && <Footer />}
+      {!noHeaderRoutes.includes(currentPath) && <Footer />}
     </>
   );
 };
