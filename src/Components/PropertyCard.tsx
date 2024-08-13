@@ -80,10 +80,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   // Event handlers for dropdown menu items
   const handleEditDetailsClick = () => {
     console.log('Details clicked');
+    navigate(`/property/${propertyId}`);
   };
 
   const handleEditPhotosClick = () => {
     console.log('Photos clicked');
+    navigate(`/property/${propertyId}/photos`);
   };
  
   const handleRemovePropertyClick = () => {
@@ -100,7 +102,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   ];
 
   return (
-    <Card sx={{ padding: 0, margin: 0, width: '100%', maxWidth: '600px', height: 'auto' }}>
+    <Card sx={{ padding: 0, margin: 0, width: '100%', maxWidth: '600px', height: 'auto', borderRadius: '8px', backgroundColor: '#eff7fe', boxShadow: 5 }}>
         <div className="address-title">
           <Typography variant="h5" sx={{ margin: '10px', maxWidth: '80%' }}>
             {propertyAddress}
@@ -132,20 +134,20 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         {latestPendingImage !== null && 
           <ActionRequiredCard
             imageUrl={(latestPendingImage as any).imageUrl}
-            title="Photo requires review"
+            title={isAdmin ? 'Photo requires review' : 'Pending photo update'}
             submittedDateTime={(latestPendingImage as any).uploadTime}
             description="The Owner updated these photos."
             onButtonClick={() => alert('Button clicked')}
             cardType="Review" />
         }
 
-        <ActionRequiredCard
+        {isAdmin && <ActionRequiredCard
             imageUrl={(mostRecentPhoto as any).imageUrl}
             title="Recent photo update"
             submittedDateTime={(mostRecentPhoto as any).uploadTime}
             description="The Owner updated these photos."
             onButtonClick={() => alert('Button clicked')}
-          />
+          />}
       </CardContent>
     </Card>
   );

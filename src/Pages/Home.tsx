@@ -6,7 +6,7 @@ import './PropertiesHome.scss';
 import propertiesData from '../Test Data/sample_properties.json';
 
 // REMOVE: Testing states - Pull from store
-const isAdmin = true;
+const isAdmin = false;
 
 interface Property {
   id: number;
@@ -46,7 +46,7 @@ const Home: React.FC<HomeProps> = () => {
             <h2 className="left">{isAdmin? 'Properties' : 'My Properties'}</h2>
             <Spacer height={0.5}/>
             {properties.map((property: Property) => (
-                <div key={property.id} className="small-display-card-container" onClick={() => handleCardClick(property)}>
+              <div key={property.id} className="small-display-card-container" onClick={() => handleCardClick(property)}>
                 <SmallDisplayCard
                     image={property.imageUrl}
                     propertyType={property.propertyType}
@@ -57,7 +57,7 @@ const Home: React.FC<HomeProps> = () => {
           </div>
           <div style={{marginTop: '10px', width: '60%'}}>
               {selectedProperty && (
-              <PropertyCard
+                <PropertyCard
                   propertyAddress={selectedProperty.propertyAddress}
                   imageUrl={selectedProperty.imageUrl}
                   collectionId={selectedProperty.collectionId}
@@ -69,8 +69,8 @@ const Home: React.FC<HomeProps> = () => {
                   propertyType={selectedProperty.propertyType}
                   propertyDescription={selectedProperty.propertyDescription}
                   propertySize={selectedProperty.propertySize}
-              />
-              )}
+                  />
+                )}
               {!selectedProperty && (
                   <div className="empty-property-card">
                     <Spacer height={2}/>
@@ -79,6 +79,7 @@ const Home: React.FC<HomeProps> = () => {
                   </div>)}
           </div>
         </div>
+        <Spacer height={4}/>
     </div>
   );
 };
