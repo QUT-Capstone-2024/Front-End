@@ -44,8 +44,32 @@ const theme = createTheme({
     },
   },
   typography: {
-    body1: {
+    h1: {
+      color: '#1f323e',
+    },
+    h2: {
+      color: '#1f323e',
+    },
+    h3: {
+      color: '#1f323e',
+    },
+    h4: {
+      color: '#1f323e',
+    },
+    h5: {
+      color: '#1f323e',
+    },
+    h6: {
+      color: '#1f323e',
+    },
+    subtitle1: {
       color: '#0b517d',
+    },
+    subtitle2: {
+      color: '#1f323e',
+    },
+    body1: {
+      color: '#1f323e',
     },
     body2: {
       color: '#0b517d',

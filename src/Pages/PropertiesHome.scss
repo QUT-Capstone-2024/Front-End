@@ -2,8 +2,12 @@
 .admin-home-container {
   display: flex;
   flex-direction: row;
-  gap: 4rem;
-  width: 100%;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  margin-left: 5%;
+  gap: 10rem;
+  width: 80vw;
 }
 
 .property-card-container {

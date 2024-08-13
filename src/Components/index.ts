@@ -20,3 +20,7 @@ export { default as Footer } from './Footer';
 export { default as Dropdown } from './Dropdown';
 export { default as StatusStamp } from './StatusStamp';
 export {default as AddPropertyCard} from './AddPropertyCard';
+export {default as Carousel} from './Carousel';
+export {default as ActionRequiredCard} from './ActionRequiredCard';
+export {NextArrow, PrevArrow} from './Arrows';
+export {default as SquareFootIcon } from './SquareFootIcon';
