@@ -368,9 +368,9 @@ h2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: $border-radius;
   background-color: $background-default;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: $box-shadow-heavy;
   width: 300px;
   height: 120px;
 }

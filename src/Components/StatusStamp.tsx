@@ -44,7 +44,9 @@ const StatusStamp: React.FC<StatusStampProps> = ({ status, className }) => {
         color: getStatusColor(),
         boxShadow: '0 0 5px rgba(0, 0, 0, 0.2)',
         backdropFilter: 'blur(1px)',
-        backgroundColor: 'rgba(255, 255, 255, 0.6)',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        borderRadius: '8px 8px 0px 0px',
+        position: 'absolute',
       }}
     >
       <Typography sx={{ color: getStatusColor() }}>{getStatusLabel()}</Typography>

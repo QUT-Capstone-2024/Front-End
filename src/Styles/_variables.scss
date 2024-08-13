@@ -15,6 +15,7 @@ $hover-color: #f3b792;
 $background-default: #e2eaf1;
 $background-darker: #d5dde4;
 $background-lighter: #eff7fe;
+$background-opaque: rgba(255, 255, 255, 0.5);
 $header-background: lighten($primary-color, 15%);
 $footer-background: lighten($primary-color, 12%);
 
@@ -25,3 +26,9 @@ $branding-color: #f27a31;
 $queued-color: #f3b792;
 $approved-color: #1f323e;
 $rejected-color: #ef4400;
+
+// Borders
+$border-primary: 1px solid #cccccc;
+$box-shadow-heavy: 0 4px 6px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.5); 
+$box-shadow-light: 0 4px 6px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3); 
+$border-radius: 8px;

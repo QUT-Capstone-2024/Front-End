@@ -6,7 +6,7 @@ import './PropertiesHome.scss';
 import propertiesData from '../Test Data/sample_properties.json';
 
 // REMOVE: Testing states - Pull from store
-const isAdmin = false;
+const isAdmin = true;
 
 interface Property {
   id: number;

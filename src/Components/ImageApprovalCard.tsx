@@ -11,18 +11,8 @@ interface ImageApprovalCardProps {
 
 const ImageApprovalCard: React.FC<ImageApprovalCardProps> = ({ image, imageTag, imageId, imageStatus, rejectionReason }) => {
   return (
-    <div className={`image-approval-container ${imageStatus}`}>
-      <div className="image-wrapper">
-        <StatusStamp status={imageStatus} className="status-stamp" />
-        <img className="image-approval-image" src={image} alt="house details" />
-        <p className="image-tag">{imageTag}</p>
-      </div>
-      <div className="image-approval-content">
-        {imageStatus === "rejected" && rejectionReason && (
-          <p className="rejection-reason">{rejectionReason}</p>
-        )}
-          <CustomButton label="View" buttonType="textOnly" />
-      </div>
+    <div className="image-approval-card">
+      <h1>Image approval card</h1>
     </div>
   );
 };
