@@ -17,15 +17,15 @@ type ButtonProps = {
   disabled?: boolean;
   onClick?: (() => void) | ((event: any) => void);
   className?: string;
+  navigationPath?: string;
 }
 
-const CustomButton: React.FC<ButtonProps> = ({ buttonType, label, withIcon, icon, withTooltip = false, tooltipText, isActive, style, onClick, disabled = false, className }) => {
+const CustomButton: React.FC<ButtonProps> = ({ buttonType, label, withIcon, icon, withTooltip = false, tooltipText, isActive, style, onClick, disabled = false, className, navigationPath }) => {
   const theme = useTheme(); 
   
   switch (buttonType) {
     case 'navButton':
       if (label === 'Logout') { 
-        console.log("Logout button clicked"); 
         return (
           <Button className={className} sx={{ color: isActive ? theme.palette.primary.main : theme.palette.primary.light }} onClick={onClick}>
             {label}
@@ -34,7 +34,7 @@ const CustomButton: React.FC<ButtonProps> = ({ buttonType, label, withIcon, icon
       }
 
       return (
-        <Button className={className} component={Link} to={`/${label.replace(' ', '')}`} sx={{ color: isActive ? theme.palette.primary.main : theme.palette.primary.light }}>
+        <Button className={className} href={navigationPath} sx={{ color: isActive ? theme.palette.primary.main : theme.palette.primary.light }}>
           {label}
         </Button>
       );

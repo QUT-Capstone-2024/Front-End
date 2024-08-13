@@ -10,7 +10,7 @@ import { ThemeProvider } from '@mui/material';
 import theme from './Theme';
 import './Styles/global.scss';
 
-import { LandingPage, Register, Home, Users, ImageView, ImageApproval, Error401, Error404, Error501 } from './Pages';
+import { LandingPage, Register, Home, Users, ImageView, ImageApproval, Error401, Error404, Error501, Gallery } from './Pages';
 import { Header, Footer } from './Components';
 import { Provider } from 'react-redux';
 import store from './store';
@@ -20,7 +20,7 @@ const isAdmin = true;
 
 const AppContent = () => {
   const location = useLocation();
-  const noHeaderRoutes = ['/login', '/register', '/'];
+  const noHeaderRoutes = ['/login', '/register', '/error401', '/error404', '/error501'];
   const currentPath = location.pathname.toLowerCase();
 
   return (
@@ -31,6 +31,7 @@ const AppContent = () => {
         <Route path="/Login" element={<LandingPage />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/Home" element={<Home />} />
+        <Route path="/Gallery" element={<Gallery />} />
         <Route path="/Users" element={<Users />} />
         <Route path="/ImageView" element={<ImageView />} />
         <Route path="/ImageApproval" element={<ImageApproval />} />

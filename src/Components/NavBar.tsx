@@ -94,10 +94,8 @@ const Navbar: React.FC = () => {
                     onClick={toggleDrawer}
                     onKeyDown={toggleDrawer}
                 >
-                    {isAdmin && <CustomButton label='Properties' buttonType='navButton' isActive={isLocationActive('/Properties')}/>}
-                    {isAdmin && <CustomButton label='User Management' buttonType='navButton' isActive={isLocationActive('/UserManagement')}/>}
-                    {!isAdmin && <CustomButton label='My Properties' buttonType='navButton' isActive={isLocationActive('/MyProperties')}/>}
-                    {isAdmin && <CustomButton label='Admin Home' buttonType='navButton' isActive={isLocationActive('/AdminHome')}/>}
+                    {isAdmin && <CustomButton label='User Management' navigationPath='/UserManagement' buttonType='navButton' isActive={isLocationActive('/UserManagement')}/>}
+                    <CustomButton label={isAdmin? 'Home' : 'My Properties'} navigationPath='/Home' buttonType='navButton' isActive={isLocationActive('/Home')}/>
                     <CustomButton label='Logout' buttonType='navButton' isActive={isLocationActive('/Logout')} onClick={toggleModal}/>
                     <CustomButton buttonType='helpButton' label='Help' />
                 </Box>

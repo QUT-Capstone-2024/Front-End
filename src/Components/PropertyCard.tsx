@@ -79,13 +79,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 
   // Event handlers for dropdown menu items
   const handleEditDetailsClick = () => {
-    console.log('Details clicked');
-    navigate(`/property/${propertyId}`);
+    navigate('/');
   };
 
   const handleEditPhotosClick = () => {
     console.log('Photos clicked');
-    navigate(`/property/${propertyId}/photos`);
+    navigate('/gallery');
   };
  
   const handleRemovePropertyClick = () => {
