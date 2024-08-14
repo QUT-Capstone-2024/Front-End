@@ -4,6 +4,7 @@ import BedRoundedIcon from '@mui/icons-material/BedRounded';
 import ShowerRoundedIcon from '@mui/icons-material/ShowerRounded';
 import GarageRoundedIcon from '@mui/icons-material/GarageRounded';
 
+
 // Test data
 import propertiesData from '../Test Data/sample_properties.json';
 import imagesData from '../Test Data/sample_images.json';

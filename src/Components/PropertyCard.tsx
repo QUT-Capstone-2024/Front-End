@@ -1,18 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
-import { CustomButton, CustomModal, Dropdown, ImageApprovalCard, Spacer, Carousel, ActionRequiredCard, SquareFootIcon } from "./index";
+import { CustomButton, CustomModal, Dropdown, Spacer, Carousel, ActionRequiredCard, SquareFootIcon } from "./index";
 import {
   Bed as BedRoundedIcon,
   Shower as ShowerRoundedIcon,
   Garage as GarageRoundedIcon,
 } from "@mui/icons-material";
-import SampleHouseHeroImage from "../Images/house_demo_hero_image.png";
-import SampleApartHeroImage from "../Images/apartment_demo_hero_image.png";
 
 // REMOVE: Test data
 import propertyImagesData from "../Test Data/sample_images.json";
@@ -34,19 +31,13 @@ type PropertyCardProps = {
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
   propertyAddress,
-  imageUrl,
-  collectionId,
-  propertyOwnerId,
   bedrooms,
   bathrooms,
   parkingSpaces,
-  approvalStatus,
-  propertyType,
-  propertyId,
   propertyDescription,
   propertySize,
 }) => {
-  const isAdmin = false; // For testing purposes
+  const isAdmin = true; // For testing purposes
   // const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
   const navigate = useNavigate();
 
@@ -75,7 +66,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     const currentDate = new Date(current.uploadTime.trim().replace(" T", "T")); 
     return currentDate > latestDate ? current : latest;
   }, propertyImagesData.images[0]);
-
 
   // Event handlers for dropdown menu items
   const handleEditDetailsClick = () => {
@@ -136,7 +126,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             title={isAdmin ? 'Photo requires review' : 'Pending photo update'}
             submittedDateTime={(latestPendingImage as any).uploadTime}
             description="The Owner updated these photos."
-            onButtonClick={() => alert('Button clicked')}
+            onButtonClick={() => navigate('/Gallery')}
             cardType="Review" />
         }
 
@@ -145,7 +135,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             title="Recent photo update"
             submittedDateTime={(mostRecentPhoto as any).uploadTime}
             description="The Owner updated these photos."
-            onButtonClick={() => alert('Button clicked')}
+            onButtonClick={() => navigate('/ImageApproval')}
           />}
       </CardContent>
     </Card>

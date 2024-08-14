@@ -40,7 +40,7 @@ const Navbar: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const isLocationActive = (path: string) => {
-        return location.pathname === path;
+        return location.pathname.toLowerCase() === path.toLowerCase();
     };
 
     const toggleModal = () => {
@@ -96,6 +96,7 @@ const Navbar: React.FC = () => {
                 >
                     {isAdmin && <CustomButton label='User Management' navigationPath='/UserManagement' buttonType='navButton' isActive={isLocationActive('/UserManagement')}/>}
                     <CustomButton label={isAdmin? 'Home' : 'My Properties'} navigationPath='/Home' buttonType='navButton' isActive={isLocationActive('/Home')}/>
+                    {isLocationActive('/Gallery') && <CustomButton label='Gallery' navigationPath='/Gallery' buttonType='navButton' isActive={isLocationActive('/Gallery')}/>}
                     <CustomButton label='Logout' buttonType='navButton' isActive={isLocationActive('/Logout')} onClick={toggleModal}/>
                     <CustomButton buttonType='helpButton' label='Help' />
                 </Box>
