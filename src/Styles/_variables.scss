@@ -16,6 +16,7 @@ $background-default: #e2eaf1;
 $background-darker: #d5dde4;
 $background-lighter: #eff7fe;
 $background-opaque: rgba(255, 255, 255, 0.5);
+$background-semi-opaque: rgba(255, 255, 255, 0.8);
 $header-background: lighten($primary-color, 15%);
 $footer-background: lighten($primary-color, 12%);
 
@@ -32,3 +33,7 @@ $border-primary: 1px solid #cccccc;
 $box-shadow-heavy: 0 4px 6px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.5); 
 $box-shadow-light: 0 4px 6px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3); 
 $border-radius: 8px;
+
+// Gallery card sizes
+$image-size: 150px;
+$hero-image-size: 300px;

@@ -1,8 +1,5 @@
 @import "../Styles/variables";
 
-$image-size: 150px;
-$hero-image-size: 300px;
-
 .gallery-card-container {
   margin: 5rem 40rem;
 }
@@ -45,6 +42,7 @@ $hero-image-size: 300px;
   bottom: 4px !important;
   color: $primary-color;
   cursor: pointer;
+  z-index: 1001;
   &:hover {
     color: $hover-color;
   }

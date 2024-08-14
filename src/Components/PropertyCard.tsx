@@ -126,7 +126,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             title={isAdmin ? 'Photo requires review' : 'Pending photo update'}
             submittedDateTime={(latestPendingImage as any).uploadTime}
             description="The Owner updated these photos."
-            onButtonClick={() => navigate('/Gallery')}
+            onButtonClick={() => navigate('/ImageApproval')}
             cardType="Review" />
         }
 
@@ -135,7 +135,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             title="Recent photo update"
             submittedDateTime={(mostRecentPhoto as any).uploadTime}
             description="The Owner updated these photos."
-            onButtonClick={() => navigate('/ImageApproval')}
+            onButtonClick={() => navigate('/Gallery')}
           />}
       </CardContent>
     </Card>
