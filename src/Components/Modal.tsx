@@ -11,7 +11,7 @@ type ModalProps = {
   children: React.ReactNode;
   label?: string;
   buttonLabel?: string;
-  modalType?: 'oneButton' | 'twoButton' | 'timed';
+  modalType?: 'oneButton' | 'twoButton' | 'timed' | 'editDetails' | 'editPhotos';
   style?: React.CSSProperties;
 }
 
@@ -31,8 +31,8 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm, children, modal
       onClose={onClose} 
       sx={style}
     >
-      <DialogTitle>{label}</DialogTitle>
-      <DialogContent dividers>
+      {modalType !== 'editDetails' && <DialogTitle>{label}</DialogTitle>}
+      <DialogContent>
         {children}
       </DialogContent>
       {modalType === 'oneButton' && <CustomButton label={buttonLabel || 'Close'} onClick={onClose} />}

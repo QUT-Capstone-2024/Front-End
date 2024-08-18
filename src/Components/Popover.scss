@@ -1,0 +1,39 @@
+@import "../Styles/variables";
+
+
+.popover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: $background-semi-opaque;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  border-radius: $border-radius;
+  color: $success-color;
+  &.gallery {
+    height: $image-size;
+    width: $image-size;
+  }
+  &.hero {
+    height: $hero-image-size;
+    width: $hero-image-size;
+  }
+}
+
+.popover-content {
+  background: transparent;
+  border: none;
+  padding: 5px;
+  &.gallery {
+    padding: 5px;
+    height: $image-size;
+    width: $image-size;
+  }
+  &.hero {
+    padding: 2px;
+    height: $hero-image-size;
+    width: $hero-image-size;
+  }
+}

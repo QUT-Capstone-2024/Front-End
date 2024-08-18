@@ -1,12 +1,5 @@
 @import "../Styles/variables";
 
-$image-size: 150px;
-$hero-image-size: 300px;
-
-.gallery-card-container {
-  margin: 5rem 40rem;
-}
-
 .gallery-image-container {
   display: block;
   position: relative;
@@ -45,6 +38,7 @@ $hero-image-size: 300px;
   bottom: 4px !important;
   color: $primary-color;
   cursor: pointer;
+  z-index: 1001;
   &:hover {
     color: $hover-color;
   }
@@ -74,16 +68,36 @@ $hero-image-size: 300px;
 }
 
 .gallery-card-image {
-  border-radius: 8px;
+  border-radius: $border-radius;
+  object-fit: cover;
+  &.small {
+    height: $image-size;
+    width: $image-size;
+    max-width: 100%;
+    max-height: 100%;
+    box-shadow: $box-shadow-light;
+  }
   &.gallery {
     height: $image-size;
     width: $image-size;
+    max-width: 100%;
+    max-height: 100%;
     box-shadow: $box-shadow-light;
   } 
   &.hero {
     height: $hero-image-size;
     width: $hero-image-size;
+    max-width: 100%;
+    max-height: 100%;
     box-shadow: $box-shadow-heavy;
   }
-  
+}
+
+.gallery-card-tag {
+  & p {
+    color: $success-color;
+    font-weight: 600;
+    padding: 0;
+    margin: 5px;
+  }
 }

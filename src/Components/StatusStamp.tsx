@@ -12,7 +12,7 @@ const StatusStamp: React.FC<StatusStampProps> = ({ status, className }) => {
       case 'approved':
         return '#1f323e';
       case 'queued':
-        return '#f3b792';
+        return '#1f323e';
       case 'rejected':
         return '#ef4400';
       default:
