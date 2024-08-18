@@ -1,37 +1,57 @@
-import React from 'react';
-import { GalleryCard } from '../Components';
-import imageUrl from '../Images/carousel_image_3.png';
-import heroImageUrl from '../Images/house_demo_hero_image.png';
+import React, { useState } from 'react';
+import { GalleryCard, Spacer, Dropdown} from '../Components';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import './Gallery.scss';
 
 // REMOVE: for testing purposes only
-import data from "../Test Data/sample_images.json";
+import sampleImageData from "../Test Data/sample_images.json";
+import samplePropertyData from "../Test Data/sample_properties.json";
+import { useNavigate } from 'react-router-dom';
+console.log(samplePropertyData);
 
-const sortedImageData = data.images.sort((a, b) => {
-  // Hero images first
-  if (a.imageTag.includes('Hero') && !b.imageTag.includes('Hero')) return -1;
-  if (!a.imageTag.includes('Hero') && b.imageTag.includes('Hero')) return 1;
+// REMOVE: for testing purposes only
+const isAdmin = true;
 
-  // Status order: pending, rejected, approved
-  const statusOrder = ['pending', 'rejected', 'approved'];
-  const statusA = statusOrder.indexOf(a.imageStatus);
-  const statusB = statusOrder.indexOf(b.imageStatus);
+const handleEditDetailsClick = () => {
+  console.log('Edit Details clicked');
+};
 
-  if (statusA < statusB) return -1;
-  if (statusA > statusB) return 1;
+const handleEditPhotosClick = () => {
+  console.log('Edit Photos clicked');
+};
 
-  // Upload time order (oldest first)
-  return new Date(a.uploadTime).getTime() - new Date(b.uploadTime).getTime();
-});
+const handleRemovePropertyClick = () => {
+  console.log('Remove Property clicked');
+};
 
-interface GalleryProps {}
+const menuItems = [
+  { label: 'Download Selected', onClick: handleEditDetailsClick },
+  { label: isAdmin ? 'Remove Selected' : 'Request removal of Selected', onClick: handleEditPhotosClick },
+];
 
-const Gallery: React.FC<GalleryProps> = () => {
-  const sortedImageData = data.images.sort((a, b) => {
-    // Hero images first
-    if (a.imageTag.includes('Hero') && !b.imageTag.includes('Hero')) return -1;
-    if (!a.imageTag.includes('Hero') && b.imageTag.includes('Hero')) return 1;
+interface GalleryProps {
+  propertyId: number;
+}
 
-    // Status order: pending, rejected, approved
+
+
+
+const Gallery: React.FC<GalleryProps> = ({propertyId = 1}) => {
+  const navigate = useNavigate();
+  const property = samplePropertyData.find((prop) => prop.id === propertyId);
+  
+
+
+  if (!property) {
+    return <div>Property not found</div>;
+  }
+  
+  // Separate the Hero card from the rest
+  const heroCard = sampleImageData.images.find(image => image.imageTag.includes('Hero'));
+  const otherCards = sampleImageData.images.filter(image => !image.imageTag.includes('Hero'));
+
+  // Sort other cards based on status and upload time
+  const sortedOtherCards = otherCards.sort((a, b) => {
     const statusOrder = ['pending', 'rejected', 'approved'];
     const statusA = statusOrder.indexOf(a.imageStatus);
     const statusB = statusOrder.indexOf(b.imageStatus);
@@ -39,22 +59,52 @@ const Gallery: React.FC<GalleryProps> = () => {
     if (statusA < statusB) return -1;
     if (statusA > statusB) return 1;
 
-    // Upload time order (oldest first)
     return new Date(a.uploadTime).getTime() - new Date(b.uploadTime).getTime();
   });
 
+
   return (
-    <div>
-      {sortedImageData.map((imageData) => (
-        <GalleryCard
-          key={imageData.imageId}
-          image={imageData.imageUrl}
-          imageTag={imageData.imageTag}
-          imageStatus={imageData.imageStatus as 'queued' | 'approved' | 'rejected'}
-          cardType={imageData.imageTag.includes('Hero') ? 'hero' : 'gallery'}
-          rejectionReason={imageData.rejectionReason}
+    <div className='gallery-container'>
+      <Spacer />
+      <div className="button-container" >
+        <ArrowBackIcon className='back-arrow' onClick={() => navigate(-1)} />
+        <Dropdown
+              buttonLabel="Settings"
+              menuItems={menuItems}
+              settingsButton anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }} 
         />
-      ))}
+      </div>
+      {/* Render the Hero card separately */}
+      {heroCard && (
+        <>
+        <h2 className='address'>{property.propertyAddress}</h2>
+        <div className='hero-card-container'>
+            <GalleryCard
+              key={heroCard.imageId}
+              image={heroCard.imageUrl}
+              imageTag={heroCard.imageTag.replace('Hero','')}
+              imageStatus={heroCard.imageStatus as 'queued' | 'approved' | 'rejected'}
+              cardType='hero'
+              rejectionReason={heroCard.rejectionReason} />
+            <p>{property.propertyDescription}</p>
+        </div>
+        </>
+      )}
+
+      {/* Render the other sorted cards */}
+      <div className='other-cards-container'>
+        {sortedOtherCards.map((imageData) => (
+          <GalleryCard
+            key={imageData.imageId}
+            image={imageData.imageUrl}
+            imageTag={imageData.imageTag}
+            imageStatus={imageData.imageStatus as 'queued' | 'approved' | 'rejected'}
+            cardType='gallery'
+            rejectionReason={imageData.rejectionReason}
+          />
+        ))}
+      </div>
     </div>
   );
 };

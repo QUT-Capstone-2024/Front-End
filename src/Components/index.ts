@@ -26,3 +26,4 @@ export {NextArrow, PrevArrow} from './Arrows';
 export {default as SquareFootIcon } from './SquareFootIcon';
 export {default as GalleryCard} from './GalleryCard';
 export {default as Popover} from './Popover';
+export {default as EditImageModalContent} from './EditImageModalContent';

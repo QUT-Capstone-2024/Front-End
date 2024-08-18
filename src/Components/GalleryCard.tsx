@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { CustomButton, StatusStamp, Popover } from "./index";
+import { CustomButton, StatusStamp, Popover, CustomModal, EditImageModalContent as ModalContent } from "./index";
 import EditIcon from '@mui/icons-material/Edit';
 import "./GalleryCard.scss";
 
@@ -13,7 +13,12 @@ interface GalleryCardProps {
 
 const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus, rejectionReason, cardType = 'gallery' }) => {
   const [popoverVisible, setPopoverVisible] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+  };
 
   const handlePopoverClick = () => {
     setPopoverVisible(!popoverVisible);
@@ -21,9 +26,9 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus,
 
 
   return (
-    <div className="gallery-card-container" ref={cardRef}>
+    <div ref={cardRef}>
       <div className="gallery-image-container"> 
-        <StatusStamp status={imageStatus} className={`stamp ${cardType}`}/>
+        {imageStatus !== 'approved' && <StatusStamp status={imageStatus} className={`stamp ${cardType}`}/>}
         
         <img className={`${cardType} gallery-card-image`} src={image} alt={imageTag} />
         
@@ -34,7 +39,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus,
           onClick={handlePopoverClick}
         />
         
-        <EditIcon className={`edit-icon ${cardType}`} />
+        <EditIcon className={`edit-icon ${cardType}`} onClick={() => setModalOpen(true)} />
         
         <Popover
           content={imageStatus === "rejected" && <p>Reason: {rejectionReason}</p>}
@@ -43,9 +48,23 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus,
           type={cardType}
         />
       </div>
-      <div className="gallery-card-info">
+      <div className="gallery-card-tag">
         <p>{imageTag}</p>
       </div>
+
+      <CustomModal
+        modalType='editDetails'
+        open={modalOpen}
+        onConfirm={() => console.log('clicked')}
+        onClose={toggleModal}
+        label={imageTag}
+      >
+        <ModalContent 
+          image={image} 
+          imageTag={imageTag} 
+          toggleModal={toggleModal} 
+        />
+      </CustomModal>
     </div>
   );
 };

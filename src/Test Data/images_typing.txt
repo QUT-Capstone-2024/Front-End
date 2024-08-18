@@ -1,0 +1,13 @@
+{
+  "propertyId": integer auto-incremented,
+  "images": [
+    {
+      "imageUrl": url as string,
+      "uploadTime": timestamp column in mysql,
+      "imageTag": string only allows values in ImageTags enum (add more as required),
+      "imageId": integer auto-incremented,
+      "imageStatus": string only allows values in Status enum (add more as required),
+      "rejectionReason": string
+    }
+  ]
+}

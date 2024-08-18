@@ -1,0 +1,59 @@
+@import "../Styles/variables";
+
+$padding: 5rem;
+
+.gallery-container {
+  display: flex;
+  flex-direction: column;
+  margin: 2rem auto;
+  width: calc(100vw - 10rem);
+  box-sizing: border-box;
+  background: $background-lighter;
+  align-self: center;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow-heavy;
+}
+
+.hero-card-container {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  // margin: 1rem 2rem;
+  padding: 0 $padding;
+}
+
+.other-cards-container {
+  display: flex;
+  overflow-x: hidden;
+  flex-wrap: wrap;
+  flex-direction: row;
+  column-gap: 2rem;
+  row-gap: 1rem;
+  padding: 1rem $padding;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 $padding - 3rem;
+  align-items: center;
+}
+
+.back-arrow {
+  color: $branding-color;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: transparent;
+    color: $primary-color;
+    font-size: 28px;
+  }
+}
+
+.address {
+  text-align: left;
+  margin-bottom: 15px;
+  padding: 0 $padding;
+}

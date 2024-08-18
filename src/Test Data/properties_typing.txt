@@ -1,0 +1,16 @@
+[
+  {
+    "id": integer auto-increment,
+    "propertyDescription": string,
+    "propertyAddress": string,
+    "collectionId": integer auto-increment,
+    "creationTime": timestamp col,
+    "propertySize": integer,
+    "propertyOwnerId": "owner-001",
+    "bedrooms": integer,
+    "bathrooms": integer,
+    "parkingSpaces": integer,
+    "approvalStatus": string only allows values from Status enum,
+    "propertyType": string only allows values from propertyType enum (this needs to be created)
+  },
+]

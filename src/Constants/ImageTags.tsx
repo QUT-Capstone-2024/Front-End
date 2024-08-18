@@ -6,7 +6,7 @@ export const ImageTags = [
   { name: "Ensuite", key: 3 },
   { name: "Lounge Room", key: 4 },
   { name: "Dining Room", key: 5 },
-  { name: "Front view", key: 6 },
+  { name: "Front", key: 6 },
   { name: "Front Garden", key: 7 },
   { name: "Backyard", key: 8 },
   { name: "Pool", key: 9 },

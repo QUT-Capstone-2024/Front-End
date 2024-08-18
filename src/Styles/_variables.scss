@@ -20,11 +20,16 @@ $background-semi-opaque: rgba(255, 255, 255, 0.8);
 $header-background: lighten($primary-color, 15%);
 $footer-background: lighten($primary-color, 12%);
 
+// Scrollbar colours
+$scrollbar-thumb: $info-color;
+$scrollbar-track: $background-opaque;
+$scrollbar-thumb-hover: #c8d4db;
+
 // Hero colours
 $branding-color: #f27a31;
 
 // Status colours
-$queued-color: #f3b792;
+$queued-color: #93cdfe;
 $approved-color: #1f323e;
 $rejected-color: #ef4400;
 
@@ -35,5 +40,6 @@ $box-shadow-light: 0 4px 6px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
 $border-radius: 8px;
 
 // Gallery card sizes
-$image-size: 150px;
+$small-image-size: 100px;
+$image-size: 200px;
 $hero-image-size: 300px;

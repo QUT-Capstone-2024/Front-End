@@ -1,0 +1,12 @@
+[
+  {
+    "id": integer auto-increment,
+    "userType": string from UserType enum,
+    "userRole": string from UserRole enum,
+    "ownedProperties": int[] containing all properties owned by this user,
+    "creationTime": timestamp col,
+    "email": string,
+    "password": hashed & salted string,
+    "phoneNumber": string,
+  },
+]
