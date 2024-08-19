@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { useNavigate } from 'react-router-dom';
 import BedRoundedIcon from '@mui/icons-material/BedRounded';
 import ShowerRoundedIcon from '@mui/icons-material/ShowerRounded';
 import GarageRoundedIcon from '@mui/icons-material/GarageRounded';
 import { CustomButton } from '../Components';
-
 
 // Test data
 import propertiesData from '../Test Data/sample_properties.json';
@@ -34,12 +33,14 @@ type Image = {
 };
 
 const ImageApproval: React.FC = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
+  
+  // Find the first property with "queued" approval status
   const property: Property | undefined = propertiesData.find(
     (prop) => prop.approvalStatus === "queued"
   ) as Property | undefined;
-  
-    
+
+  // Get queued images
   const [queuedImages, setQueuedImages] = useState<Image[]>(
     imagesData.images
       .filter((image) => image.imageStatus === "queued")
@@ -87,6 +88,11 @@ const ImageApproval: React.FC = () => {
       <div style={{ backgroundColor: '#eff7fe', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', width: '100%', maxWidth: '800px' }}>
         {property && queuedImages.length > 0 ? (
           <>
+            {/* New Title - aligned left and removed top margin */}
+            <h1 style={{ textAlign: 'left', color: '#0b517d', fontSize: '2rem', marginBottom: '20px', marginTop: '0' }}>
+              PROPERTY: {property.collectionId.toUpperCase()}
+            </h1>
+
             <header style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
               <div style={{ position: 'relative', width: '100%', height: '300px', borderRadius: '8px', overflow: 'hidden', marginBottom: '20px' }}>
                 <img src={houseDemoHeroImage} alt="Property" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -96,7 +102,6 @@ const ImageApproval: React.FC = () => {
                     <h2 style={{ fontSize: '1.2rem', marginTop: '5px', fontWeight: 'normal', color: '#0b517d' }}>
                       {property.propertyAddress.split(',')[1].trim()},{" "}{property.propertyAddress.split(',')[2].trim()}
                     </h2>
-                    <p style={{ color: '#0b517d', fontSize: '1rem', marginTop: '5px', fontWeight: 'bold' }}>Property ID: {property.collectionId}</p>
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
                     <div style={{ display: 'flex', gap: '10px', fontSize: '14px', marginTop: '10px' }}>
