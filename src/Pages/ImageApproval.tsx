@@ -35,13 +35,11 @@ type Image = {
 
 const ImageApproval: React.FC = () => {
   const navigate = useNavigate(); // Initialize useNavigate
-  const property: Property | undefined = propertiesData.length > 0
-    ? {
-        ...propertiesData[0],
-        approvalStatus: propertiesData[0].approvalStatus as "queued" | "approved" | "rejected",
-      }
-    : undefined;
-
+  const property: Property | undefined = propertiesData.find(
+    (prop) => prop.approvalStatus === "queued"
+  ) as Property | undefined;
+  
+    
   const [queuedImages, setQueuedImages] = useState<Image[]>(
     imagesData.images
       .filter((image) => image.imageStatus === "queued")
@@ -149,7 +147,7 @@ const ImageApproval: React.FC = () => {
             </div>
           </>
         ) : (
-          <p>No property data available.</p>
+          <p></p>
         )}
       </div>
     </div>
