@@ -52,7 +52,7 @@ const ImageApproval: React.FC = () => {
 
   useEffect(() => {
     if (queuedImages.length === 0) {
-      navigate('/home'); // Redirect to the home page if no images are available
+      navigate(-1); // Redirect to previous page
     }
   }, [queuedImages, navigate]);
 
@@ -94,8 +94,8 @@ const ImageApproval: React.FC = () => {
             </h1>
 
             <header style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
-              <div style={{ position: 'relative', width: '100%', height: '300px', borderRadius: '8px', overflow: 'hidden', marginBottom: '20px' }}>
-                <img src={houseDemoHeroImage} alt="Property" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '8px', overflow: 'hidden', marginBottom: '2px' }}>
+                <img src={houseDemoHeroImage} alt="Property" style={{ width: '100%', height: '375px', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', bottom: '20px', left: '30px', width: '90%', backgroundColor: 'rgba(255, 255, 255, 0.5)', padding: '10px', borderRadius: '8px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                     <h1 style={{ fontSize: '2.5rem', margin: '0', color: '#0b517d' }}>{property.propertyAddress.split(',')[0]}</h1>
@@ -133,14 +133,14 @@ const ImageApproval: React.FC = () => {
               {queuedImages.map((image) => (
                 <div key={image.imageId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', backgroundColor: '#ffffff', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
                   <div style={{ position: 'relative' }}>
-                    <img src={image.imageUrl} alt={image.imageTag} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
-                    <div style={{ position: 'absolute', top: '0', left: '0', backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', padding: '5px', fontSize: '0.75rem', borderRadius: '8px', textAlign: 'center', width: '82%' }}>
+                    <img src={image.imageUrl} alt={image.imageTag} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }} />
+                    <div style={{ position: 'absolute', top: '0', left: '0', backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', padding: '5px', fontSize: '0.75rem', borderRadius: '8px', textAlign: 'center', width: '89%' }}>
                       QUEUED
                     </div>
                   </div>
                   <div style={{ flexGrow: 1, marginLeft: '20px', color: '#8f9da3', backgroundColor: 'transparent' }}>
                     <h3>{image.imageTag.toUpperCase()}</h3>
-                    <p>Status: {image.imageStatus}</p>
+                    <p>Status: {image.imageStatus.toUpperCase()}</p>
                   </div>
                   <div style={{ display: 'flex', gap: '15px' }}>
                     <CustomButton buttonType="successButton" label="Approve" onClick={() => handleApprove(image.imageId)} />
