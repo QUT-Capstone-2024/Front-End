@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate from react
 import BedRoundedIcon from '@mui/icons-material/BedRounded';
 import ShowerRoundedIcon from '@mui/icons-material/ShowerRounded';
 import GarageRoundedIcon from '@mui/icons-material/GarageRounded';
+import { CustomButton } from '../Components';
 
 // Test data
 import propertiesData from '../Test Data/sample_properties.json';
 import imagesData from '../Test Data/sample_images.json';
 import houseDemoHeroImage from '../Images/house_demo_hero_image.png';
-import { CustomButton } from '../Components';
 
 type Property = {
   id: number;
