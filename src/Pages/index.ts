@@ -6,6 +6,7 @@ export { default as ImageView } from "./ImageView";
 export { default as Users } from "./Users";
 export { default as Home } from "./Home";
 export { default as Gallery } from "./Gallery";
+export { default as UploadManagement } from "./UploadManagement";
 
 // Error page exports
 export { default as Error401 } from "./ErrorPages/401";

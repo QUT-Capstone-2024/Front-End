@@ -1,5 +1,4 @@
 import React from "react";
-/* import { CustomButton, ActionRequiredCard } from "./index"; */
 
 const UploadManagement = () => {
   return (
