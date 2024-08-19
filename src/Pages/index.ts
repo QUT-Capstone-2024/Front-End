@@ -7,6 +7,7 @@ export { default as Users } from "./Users";
 export { default as Home } from "./Home";
 export { default as Gallery } from "./Gallery";
 export { default as UploadManagement } from "./UploadManagement";
+export { default as EditUser } from "./EditUser";
 
 // Error page exports
 export { default as Error401 } from "./ErrorPages/401";

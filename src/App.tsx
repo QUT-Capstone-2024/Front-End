@@ -10,7 +10,7 @@ import { ThemeProvider } from '@mui/material';
 import theme from './Theme';
 import './Styles/global.scss';
 
-import { LandingPage, Register, Home, Users, ImageView, ImageApproval, UploadManagement, Error401, Error404, Error501, Gallery } from './Pages';
+import { LandingPage, Register, Home, Users, EditUser, ImageView, ImageApproval, UploadManagement, Error401, Error404, Error501, Gallery } from './Pages';
 import { Header, Footer, Spacer } from './Components';
 import { Provider } from 'react-redux';
 import store from './store';
@@ -34,6 +34,7 @@ const AppContent = () => {
           <Route path="/Home" element={<Home />} />
           <Route path="/Gallery" element={<Gallery propertyId={1}/>} />
           <Route path="/Users" element={<Users />} />
+          <Route path="/EditUser" element={<EditUser />} />
           <Route path="/ImageView" element={<ImageView />} />
           <Route path="/ImageApproval" element={<ImageApproval />} />
           <Route path="/UploadManagement" element={<UploadManagement />} />
