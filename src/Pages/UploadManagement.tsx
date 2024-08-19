@@ -2,6 +2,7 @@ import React from "react";
 import { ActionRequiredCard } from "../Components";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Box } from "@mui/material";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Import back arrow icon
 
 // Test data
 import propertiesData from "../Test Data/sample_properties.json";
@@ -36,7 +37,7 @@ const UploadManagement = () => {
   });
 
   return (
-    <div style={{ padding: '10px', backgroundColor: '#e2eaf1', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minHeight: '100vh' }}>
+    <div style={{ padding: '20px', backgroundColor: '#e2eaf1', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minHeight: '100vh' }}>
       <Card sx={{ 
           backgroundColor: "#eff7fe", 
           padding: "16px", 
@@ -47,7 +48,14 @@ const UploadManagement = () => {
         }}
       >
         <CardContent>
-          <h1 style={{ fontSize: '2rem', marginBottom: '20px', marginTop: '10px', textAlign: 'left', color: '#0b517d' }}>UPLOAD MANAGEMENT</h1>
+          {/* New Title with Back Button */}
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+            <ArrowBackIcon style={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => navigate(-1)} />
+            <h1 style={{ textAlign: 'left', color: '#0b517d', fontSize: '2rem', margin: '0' }}>
+              UPLOAD MANAGEMENT
+            </h1>
+          </div>
+
           {collectionsNeedingReview.map((collection) => (
             <Box 
               key={collection.collectionId} 

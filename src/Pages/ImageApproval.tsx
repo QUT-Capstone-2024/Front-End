@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import BedRoundedIcon from '@mui/icons-material/BedRounded';
 import ShowerRoundedIcon from '@mui/icons-material/ShowerRounded';
 import GarageRoundedIcon from '@mui/icons-material/GarageRounded';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Import back arrow icon
 import { CustomButton } from '../Components';
 
 // Test data
@@ -10,44 +11,15 @@ import propertiesData from '../Test Data/sample_properties.json';
 import imagesData from '../Test Data/sample_images.json';
 import houseDemoHeroImage from '../Images/house_demo_hero_image.png';
 
-type Property = {
-  id: number;
-  propertyDescription: string;
-  propertyAddress: string;
-  imageUrl: string;
-  collectionId: string;
-  propertySize: number;
-  propertyOwnerId: string;
-  bedrooms: number;
-  bathrooms: number;
-  parkingSpaces: number;
-  approvalStatus: "queued" | "approved" | "rejected";
-  propertyType: string;
-};
-
-type Image = {
-  imageUrl: string;
-  imageTag: string;
-  imageId: string;
-  imageStatus: "approved" | "rejected" | "queued";
-};
-
 const ImageApproval: React.FC = () => {
   const navigate = useNavigate();
-  
-  // Find the first property with "queued" approval status
-  const property: Property | undefined = propertiesData.find(
-    (prop) => prop.approvalStatus === "queued"
-  ) as Property | undefined;
 
-  // Get queued images
-  const [queuedImages, setQueuedImages] = useState<Image[]>(
-    imagesData.images
-      .filter((image) => image.imageStatus === "queued")
-      .map((image) => ({
-        ...image,
-        imageStatus: image.imageStatus as "queued" | "approved" | "rejected",
-      }))
+  const property = propertiesData.find(
+    (prop) => prop.approvalStatus === 'queued'
+  );
+
+  const [queuedImages, setQueuedImages] = useState(
+    imagesData.images.filter((image) => image.imageStatus === 'queued')
   );
 
   useEffect(() => {
@@ -61,26 +33,29 @@ const ImageApproval: React.FC = () => {
   };
 
   const handleRejectAll = () => {
-    const comment = prompt("Please enter a rejection comment for all images:");
+    const comment = prompt('Please enter a rejection comment for all images:');
     if (comment) {
       setQueuedImages([]);
     }
   };
 
   const handleApprove = (imageId: string) => {
-    setQueuedImages((prevImages) => prevImages.filter((image) => image.imageId !== imageId));
+    setQueuedImages((prevImages) =>
+      prevImages.filter((image) => image.imageId !== imageId)
+    );
   };
 
   const handleReject = (imageId: string) => {
-    const comment = prompt("Please enter a rejection comment:");
+    const comment = prompt('Please enter a rejection comment:');
     if (comment) {
-      setQueuedImages((prevImages) => prevImages.filter((image) => image.imageId !== imageId));
+      setQueuedImages((prevImages) =>
+        prevImages.filter((image) => image.imageId !== imageId)
+      );
     }
   };
 
   const handleEdit = (imageId: string) => {
     alert(`Editing image with ID: ${imageId}`);
-    // Add your edit logic here, like opening a modal to edit the image details
   };
 
   return (
@@ -88,11 +63,15 @@ const ImageApproval: React.FC = () => {
       <div style={{ backgroundColor: '#eff7fe', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', width: '100%', maxWidth: '800px' }}>
         {property && queuedImages.length > 0 ? (
           <>
-            {/* New Title - aligned left and removed top margin */}
-            <h1 style={{ textAlign: 'left', color: '#0b517d', fontSize: '2rem', marginBottom: '20px', marginTop: '0' }}>
-              PROPERTY: {property.collectionId.toUpperCase()}
-            </h1>
+            {/* New Title with Back Button */}
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+              <ArrowBackIcon style={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => navigate(-1)} />
+              <h1 style={{ textAlign: 'left', color: '#0b517d', fontSize: '2rem', margin: '0' }}>
+                PROPERTY: {property.collectionId.toUpperCase()}
+              </h1>
+            </div>
 
+            {/* Property Header */}
             <header style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
               <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '8px', overflow: 'hidden', marginBottom: '2px' }}>
                 <img src={houseDemoHeroImage} alt="Property" style={{ width: '100%', height: '375px', objectFit: 'cover' }} />
@@ -133,8 +112,8 @@ const ImageApproval: React.FC = () => {
               {queuedImages.map((image) => (
                 <div key={image.imageId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', backgroundColor: '#ffffff', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
                   <div style={{ position: 'relative' }}>
-                    <img src={image.imageUrl} alt={image.imageTag} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }} />
-                    <div style={{ position: 'absolute', top: '0', left: '0', backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', padding: '5px', fontSize: '0.75rem', borderRadius: '8px', textAlign: 'center', width: '89%' }}>
+                    <img src={image.imageUrl} alt={image.imageTag} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
+                    <div style={{ position: 'absolute', top: '0', left: '0', backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', padding: '5px', fontSize: '0.75rem', borderRadius: '8px', textAlign: 'center', width: '82%' }}>
                       QUEUED
                     </div>
                   </div>

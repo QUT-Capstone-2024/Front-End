@@ -1,6 +1,6 @@
 import React from 'react';
 
-const EditUser = () => {
+const EditUser: React.FC = () => {
     return (
         <div>
             <h1> User Management </h1>
