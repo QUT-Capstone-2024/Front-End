@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { Dropdown, Spacer, Carousel, ActionRequiredCard, IconBar } from "./index";
+import { Dropdown, Spacer, Carousel, ActionRequiredCard, IconBar, CustomModal, EditPropertyModalContent as ModalContent } from "./index";
 
 // REMOVE: Test data
 import propertyImagesData from "../Test Data/sample_images.json";
@@ -33,9 +33,14 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   internalPropertySize,
   externalPropertySize,
 }) => {
+  const [modalOpen, setModalOpen] = useState(false);
   const isAdmin = true; // For testing purposes
   // const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
   const navigate = useNavigate();
+
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+  };
 
   // Order images by hero tag first
   const heroTag = 'Hero';
@@ -65,7 +70,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 
   // Event handlers for dropdown menu items
   const handleEditDetailsClick = () => {
-    navigate('/');
+    setModalOpen(true);
   };
 
   const handleEditPhotosClick = () => {
@@ -125,6 +130,18 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             onButtonClick={() => navigate('/Gallery')}
           />}
       </CardContent>
+      <CustomModal
+        modalType='editDetails'
+        open={modalOpen}
+        onConfirm={() => console.log('clicked')}
+        onClose={() => setModalOpen(false)}
+      >
+        <ModalContent 
+          toggleModal={toggleModal}
+          propertyAddress={propertyAddress}
+          propertyDescription={propertyDescription}
+          />
+      </CustomModal>
     </Card>
   );
 };
