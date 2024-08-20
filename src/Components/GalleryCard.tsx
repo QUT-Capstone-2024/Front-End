@@ -82,6 +82,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus,
         <ModalContent 
           image={image} 
           imageTag={imageTag} 
+          description={imageComments}
           toggleModal={toggleModal} 
           onUpdate={handleUpdate}
         />
