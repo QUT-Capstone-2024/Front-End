@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { useNavigate } from 'react-router-dom';
 import BedRoundedIcon from '@mui/icons-material/BedRounded';
 import ShowerRoundedIcon from '@mui/icons-material/ShowerRounded';
 import GarageRoundedIcon from '@mui/icons-material/GarageRounded';
+
 import { CustomButton, IconBar } from '../Components';
 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Import back arrow icon
 
 // Test data
 import propertiesData from '../Test Data/sample_properties.json';
@@ -34,27 +36,21 @@ type Image = {
   imageStatus: "approved" | "rejected" | "queued";
 };
 
-const ImageApproval: React.FC = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
-  const property: Property | undefined = propertiesData.length > 0
-    ? {
-        ...propertiesData[0],
-        approvalStatus: propertiesData[0].approvalStatus as "queued" | "approved" | "rejected",
-      }
-    : undefined;
 
-  const [queuedImages, setQueuedImages] = useState<Image[]>(
-    imagesData.images
-      .filter((image) => image.imageStatus === "queued")
-      .map((image) => ({
-        ...image,
-        imageStatus: image.imageStatus as "queued" | "approved" | "rejected",
-      }))
+const ImageApproval: React.FC = () => {
+  const navigate = useNavigate();
+
+  const property = propertiesData.find(
+    (prop) => prop.approvalStatus === 'queued'
+  );
+
+  const [queuedImages, setQueuedImages] = useState(
+    imagesData.images.filter((image) => image.imageStatus === 'queued')
   );
 
   useEffect(() => {
     if (queuedImages.length === 0) {
-      navigate('/home'); // Redirect to the home page if no images are available
+      navigate(-1); // Redirect to previous page
     }
   }, [queuedImages, navigate]);
 
@@ -63,26 +59,29 @@ const ImageApproval: React.FC = () => {
   };
 
   const handleRejectAll = () => {
-    const comment = prompt("Please enter a rejection comment for all images:");
+    const comment = prompt('Please enter a rejection comment for all images:');
     if (comment) {
       setQueuedImages([]);
     }
   };
 
   const handleApprove = (imageId: string) => {
-    setQueuedImages((prevImages) => prevImages.filter((image) => image.imageId !== imageId));
+    setQueuedImages((prevImages) =>
+      prevImages.filter((image) => image.imageId !== imageId)
+    );
   };
 
   const handleReject = (imageId: string) => {
-    const comment = prompt("Please enter a rejection comment:");
+    const comment = prompt('Please enter a rejection comment:');
     if (comment) {
-      setQueuedImages((prevImages) => prevImages.filter((image) => image.imageId !== imageId));
+      setQueuedImages((prevImages) =>
+        prevImages.filter((image) => image.imageId !== imageId)
+      );
     }
   };
 
   const handleEdit = (imageId: string) => {
     alert(`Editing image with ID: ${imageId}`);
-    // Add your edit logic here, like opening a modal to edit the image details
   };
 
   return (
@@ -90,16 +89,24 @@ const ImageApproval: React.FC = () => {
       <div style={{ backgroundColor: '#eff7fe', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', width: '100%', maxWidth: '800px' }}>
         {property && queuedImages.length > 0 ? (
           <>
+            {/* New Title with Back Button */}
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+              <ArrowBackIcon style={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => navigate(-1)} />
+              <h1 style={{ textAlign: 'left', color: '#0b517d', fontSize: '2rem', margin: '0' }}>
+                PROPERTY: {property.collectionId.toUpperCase()}
+              </h1>
+            </div>
+
+            {/* Property Header */}
             <header style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
-              <div style={{ position: 'relative', width: '100%', height: '300px', borderRadius: '8px', overflow: 'hidden', marginBottom: '20px' }}>
-                <img src={houseDemoHeroImage} alt="Property" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <div style={{ position: 'relative', width: '100%', height: '100%', borderRadius: '8px', overflow: 'hidden', marginBottom: '2px' }}>
+                <img src={houseDemoHeroImage} alt="Property" style={{ width: '100%', height: '375px', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', bottom: '20px', left: '30px', width: '90%', backgroundColor: 'rgba(255, 255, 255, 0.5)', padding: '10px', borderRadius: '8px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                     <h1 style={{ fontSize: '2.5rem', margin: '0', color: '#0b517d' }}>{property.propertyAddress.split(',')[0]}</h1>
                     <h2 style={{ fontSize: '1.2rem', marginTop: '5px', fontWeight: 'normal', color: '#0b517d' }}>
                       {property.propertyAddress.split(',')[1].trim()},{" "}{property.propertyAddress.split(',')[2].trim()}
                     </h2>
-                    <p style={{ color: '#0b517d', fontSize: '1rem', marginTop: '5px', fontWeight: 'bold' }}>Property ID: {property.collectionId}</p>
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
                     <div style={{ display: 'flex', gap: '10px', fontSize: '14px', marginTop: '10px' }}>
@@ -136,7 +143,7 @@ const ImageApproval: React.FC = () => {
                   </div>
                   <div style={{ flexGrow: 1, marginLeft: '20px', color: '#8f9da3', backgroundColor: 'transparent' }}>
                     <h3>{image.imageTag.toUpperCase()}</h3>
-                    <p>Status: {image.imageStatus}</p>
+                    <p>Status: {image.imageStatus.toUpperCase()}</p>
                   </div>
                   <div style={{ display: 'flex', gap: '15px' }}>
                     <CustomButton buttonType="successButton" label="Approve" onClick={() => handleApprove(image.imageId)} />
@@ -148,7 +155,7 @@ const ImageApproval: React.FC = () => {
             </div>
           </>
         ) : (
-          <p>No property data available.</p>
+          <p></p>
         )}
       </div>
     </div>
