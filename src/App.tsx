@@ -11,10 +11,9 @@ import theme from './Theme';
 import './Styles/global.scss';
 
 import { LandingPage, Register, Home, Users, ImageView, ImageApproval, Error401, Error404, Error501, Gallery } from './Pages';
-import { Header, Footer, Spacer } from './Components';
+import { Header, Footer } from './Components';
 import { Provider } from 'react-redux';
 import store from './store';
-import { Spa } from '@mui/icons-material';
 
 // For testing
 const isAdmin = true;
@@ -40,12 +39,12 @@ const AppContent = () => {
           <Route path="/Error404" element={<Error404 />} />
           <Route path="/Error501" element={<Error501 />} />
         </Routes>
-      {/* {!noHeaderRoutes.includes(currentPath) && <>
+      {!noHeaderRoutes.includes(currentPath) && <>
         <footer style={{ position: 'relative', left: '0', bottom: '0'}}>
           <Footer />
         </footer>
       </>
-      } */}
+      }
     </>
   );
 };

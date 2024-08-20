@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate from react
 import BedRoundedIcon from '@mui/icons-material/BedRounded';
 import ShowerRoundedIcon from '@mui/icons-material/ShowerRounded';
 import GarageRoundedIcon from '@mui/icons-material/GarageRounded';
-import { CustomButton } from '../Components';
+import { CustomButton, IconBar } from '../Components';
 
 
 // Test data
@@ -17,7 +17,8 @@ type Property = {
   propertyAddress: string;
   imageUrl: string;
   collectionId: string;
-  propertySize: number;
+  internalPropertySize: number;
+  externalPropertySize: number;
   propertyOwnerId: string;
   bedrooms: number;
   bathrooms: number;
@@ -102,15 +103,13 @@ const ImageApproval: React.FC = () => {
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
                     <div style={{ display: 'flex', gap: '10px', fontSize: '14px', marginTop: '10px' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', backgroundColor: '#0b517d', padding: '5px 10px', borderRadius: '5px', color: 'white' }}>
-                        <BedRoundedIcon style={{ marginRight: '8px' }} /> {property.bedrooms}
-                      </span>
-                      <span style={{ display: 'flex', alignItems: 'center', backgroundColor: '#0b517d', padding: '5px 10px', borderRadius: '5px', color: 'white' }}>
-                        <ShowerRoundedIcon style={{ marginRight: '8px' }} /> {property.bathrooms}
-                      </span>
-                      <span style={{ display: 'flex', alignItems: 'center', backgroundColor: '#0b517d', padding: '5px 10px', borderRadius: '5px', color: 'white' }}>
-                        <GarageRoundedIcon style={{ marginRight: '8px' }} /> {property.parkingSpaces}
-                      </span>
+                      <IconBar
+                        bedrooms={property.bedrooms}
+                        bathrooms={property.bathrooms}
+                        parkingSpaces={property.parkingSpaces}
+                        internalPropertySize={property.internalPropertySize}
+                        externalPropertySize={property.externalPropertySize}
+                      />
                     </div>
                     <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                       <CustomButton buttonType="successButton" label="View Property" />

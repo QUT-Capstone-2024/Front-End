@@ -27,3 +27,8 @@ export {default as SquareFootIcon } from './SquareFootIcon';
 export {default as GalleryCard} from './GalleryCard';
 export {default as Popover} from './Popover';
 export {default as EditImageModalContent} from './EditImageModalContent';
+export {default as IconBar} from './IconBar';
+export {default as NavBarToggle} from './NavBarToggle';
+export {default as CategorySelector} from './CategorySelector';
+export {default as TextInput} from './TextInput';
+export {default as FileUpload} from './FileUpload';

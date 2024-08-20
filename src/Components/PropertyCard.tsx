@@ -3,13 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { Box } from "@mui/material";
-import { CustomButton, CustomModal, Dropdown, Spacer, Carousel, ActionRequiredCard, SquareFootIcon } from "./index";
-import {
-  Bed as BedRoundedIcon,
-  Shower as ShowerRoundedIcon,
-  Garage as GarageRoundedIcon,
-} from "@mui/icons-material";
+import { Dropdown, Spacer, Carousel, ActionRequiredCard, IconBar } from "./index";
 
 // REMOVE: Test data
 import propertyImagesData from "../Test Data/sample_images.json";
@@ -26,7 +20,8 @@ type PropertyCardProps = {
   propertyType: string;
   propertyId?: string;
   propertyDescription: string;
-  propertySize: number;
+  internalPropertySize: number;
+  externalPropertySize: number;
 };
 
 const PropertyCard: React.FC<PropertyCardProps> = ({
@@ -35,7 +30,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   bathrooms,
   parkingSpaces,
   propertyDescription,
-  propertySize,
+  internalPropertySize,
+  externalPropertySize,
 }) => {
   const isAdmin = true; // For testing purposes
   // const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
@@ -104,16 +100,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         </div>
       <Carousel images={imageUrls} height='300px' width='600px' />
       <CardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '16px 0' }} className="property-details-container">
-          <BedRoundedIcon sx={{ margin: '0 8px', fontSize: 24}} />
-          <span style={{ paddingRight: '1rem'}}>{bedrooms}</span>
-          <ShowerRoundedIcon sx={{ margin: '0 8px', fontSize: 24 }} />
-          <span style={{ paddingRight: '1rem'}}>{bathrooms}</span>
-          <GarageRoundedIcon sx={{ margin: '0 8px', fontSize: 24 }} />
-          <span style={{ paddingRight: '1rem'}}>{parkingSpaces}</span>
-          <SquareFootIcon />
-          <span style={{ paddingRight: '1rem', paddingLeft: '3px'}}>{propertySize}</span>
-        </Box>
+        <IconBar bedrooms={bedrooms} bathrooms={bathrooms} parkingSpaces={parkingSpaces} internalPropertySize={internalPropertySize} externalPropertySize={externalPropertySize} />
 
         <Spacer height={0.5} /> 
         <Typography variant="body1" sx={{ fontWeight: 'bold' }}>

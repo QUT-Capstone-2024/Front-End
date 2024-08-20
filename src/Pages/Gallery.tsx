@@ -62,6 +62,10 @@ const Gallery: React.FC<GalleryProps> = ({propertyId = 1}) => {
     return new Date(a.uploadTime).getTime() - new Date(b.uploadTime).getTime();
   });
 
+  const cleanDate = (date: string) => {
+    return date.split('T')[0]
+  };
+  
 
   return (
     <div className='gallery-container'>
@@ -86,8 +90,10 @@ const Gallery: React.FC<GalleryProps> = ({propertyId = 1}) => {
               imageTag={heroCard.imageTag.replace('Hero','')}
               imageStatus={heroCard.imageStatus as 'queued' | 'approved' | 'rejected'}
               cardType='hero'
-              rejectionReason={heroCard.rejectionReason} />
-            <p>{property.propertyDescription}</p>
+              rejectionReason={heroCard.rejectionReason} 
+              imageComments={heroCard.imageComments}
+              imageDate={cleanDate(heroCard.uploadTime)}
+            />
         </div>
         </>
       )}
@@ -102,6 +108,8 @@ const Gallery: React.FC<GalleryProps> = ({propertyId = 1}) => {
             imageStatus={imageData.imageStatus as 'queued' | 'approved' | 'rejected'}
             cardType='gallery'
             rejectionReason={imageData.rejectionReason}
+            imageComments={imageData.imageComments}
+            imageDate={cleanDate(imageData.uploadTime)}
           />
         ))}
       </div>
