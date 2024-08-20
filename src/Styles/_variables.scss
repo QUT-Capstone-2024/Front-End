@@ -21,7 +21,7 @@ $header-background: lighten($primary-color, 15%);
 $footer-background: lighten($primary-color, 12%);
 
 // Scrollbar colours
-$scrollbar-thumb: $info-color;
+$scrollbar-thumb: $primary-color;
 $scrollbar-track: $background-opaque;
 $scrollbar-thumb-hover: #c8d4db;
 
@@ -38,6 +38,7 @@ $border-primary: 1px solid #cccccc;
 $box-shadow-heavy: 0 4px 6px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.5); 
 $box-shadow-light: 0 4px 6px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3); 
 $box-shadow-subtle: 0 4px 6px rgba(0, 0, 0, 0.1); 
+$box-shadow-light-inset: inset 4px 0 6px rgba(0, 0, 0, 0.3), inset 0 4px 6px rgba(0, 0, 0, 0.3), inset 1px 1px 3px rgba(0, 0, 0, 0.1);
 $border-radius: 8px;
 
 // Gallery card sizes

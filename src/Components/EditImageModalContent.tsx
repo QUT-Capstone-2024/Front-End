@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { CustomButton, CategorySelector } from './';
+import React, { useEffect, useState } from 'react';
+import { CustomButton, CategorySelector, FileUpload, TextInput } from './';
 import { SelectChangeEvent } from '@mui/material';
 import { ImageTags } from '../Constants/ImageTags';
 
@@ -12,24 +12,28 @@ interface EditImageModalContentProps {
 }
 
 const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, imageTag, description = '', toggleModal, onUpdate }) => {
-  // Step 1: Find the key based on imageTag (name) and use it for the initial state
   const initialCategoryKey = ImageTags.find(tag => tag.name === imageTag)?.key.toString() || '';
   const [selectedCategory, setSelectedCategory] = useState(initialCategoryKey);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [descriptionText, setDescriptionText] = useState(description);
 
-  // Step 2: Handle changes to the selected category
+  useEffect(() => {
+    const filename = image.split('/').pop();
+    setSelectedFileName(filename || null);
+    setDescriptionText(description);
+  }, [image, description]);
+
   const handleCategoryChange = (event: SelectChangeEvent<string>) => {
     setSelectedCategory(event.target.value as string);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setSelectedFile(event.target.files[0]);
-    }
+  const handleFileChange = (file: File) => {
+    setSelectedFile(file);
+    setSelectedFileName(file.name);
   };
 
-  const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setDescriptionText(event.target.value);
   };
 
@@ -39,19 +43,14 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
   };
 
   return (
-    <div style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 0, margin: 0 }}>
       <img className="hero gallery-card-image" src={image} alt={imageTag} />
       
       <form>
         <div style={{ marginBottom: '20px', marginTop: '20px' }}>
-          <label htmlFor="imageUpload">Update Image:</label><br />
-          <input
-            type="file"
-            id="imageUpload"
-            name="imageUpload"
-            accept="image/*"
-            style={{ width: '100%', marginTop: '10px' }}
-            onChange={handleFileChange}
+          <FileUpload 
+            onFileSelect={handleFileChange} 
+            initialFileName={selectedFileName ? selectedFileName : ''} 
           />
         </div>
 
@@ -64,12 +63,9 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
         </div>
 
         <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="descriptionInput">Update Description:</label><br />
-          <textarea
-            id="descriptionInput"
-            name="descriptionInput"
-            rows={4}
-            style={{ width: '100%', marginTop: '10px', resize: 'none' }}
+          <TextInput 
+            size='large'
+            label="Description"
             value={descriptionText}
             onChange={handleDescriptionChange}
           />
