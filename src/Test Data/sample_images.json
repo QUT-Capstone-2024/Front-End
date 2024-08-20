@@ -7,7 +7,8 @@
       "imageTag": "Kitchen",
       "imageId": "img1",
       "imageStatus": "approved",
-      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?, please submit a clearer image"
+      "imageComments": "This is a user provided comment on the image. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "rejectionReason": "Image is blurry and needs better resolution."
     },
     {
       "imageUrl": "/images/house_demo_hero_image.png",
@@ -15,7 +16,8 @@
       "imageTag": "Front Hero",
       "imageId": "img2",
       "imageStatus": "rejected",
-      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
+      "imageComments": "This is a user provided comment on the image. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "rejectionReason": "Image is blurry and needs better resolution."
     },
     {
       "imageUrl": "/images/carousel_image_3.png",
@@ -23,7 +25,8 @@
       "imageTag": "Dining Room",
       "imageId": "img3",
       "imageStatus": "approved",
-      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
+      "imageComments": "This is a user provided comment on the image. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "rejectionReason": "Image is blurry and needs better resolution."
     },
     {
       "imageUrl": "/images/carousel_image_1.png",
@@ -31,7 +34,8 @@
       "imageTag": "Outside",
       "imageId": "img4",
       "imageStatus": "approved",
-      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
+      "imageComments": "This is a user provided comment on the image. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "rejectionReason": "Image is blurry and needs better resolution."
     },
     {
       "imageUrl": "/images/carousel_image_4.png",
@@ -39,7 +43,8 @@
       "imageTag": "Bedroom 2",
       "imageId": "img5",
       "imageStatus": "queued",
-      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
+      "imageComments": "This is a user provided comment on the image. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "rejectionReason": "Image is blurry and needs better resolution."
     },
     {
       "imageUrl": "/images/carousel_image_5.png",
@@ -47,7 +52,8 @@
       "imageTag": "Bedroom 3",
       "imageId": "img6",
       "imageStatus": "rejected",
-      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
+      "imageComments": "This is a user provided comment on the image. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "rejectionReason": "Image is blurry and needs better resolution."
     },
     {
       "imageUrl": "/images/carousel_image_2.png",
@@ -55,7 +61,8 @@
       "imageTag": "Ensuite",
       "imageId": "img7",
       "imageStatus": "approved",
-      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
+      "imageComments": "This is a user provided comment on the image. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "rejectionReason": "Image is blurry and needs better resolution."
     },
     {
       "imageUrl": "/images/carousel_image_3.png",
@@ -63,7 +70,8 @@
       "imageTag": "Pool",
       "imageId": "img8",
       "imageStatus": "approved",
-      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
+      "imageComments": "This is a user provided comment on the image. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "rejectionReason": "Image is blurry and needs better resolution."
     },
     {
       "imageUrl": "/images/carousel_image_1.png",
@@ -71,7 +79,8 @@
       "imageTag": "Living Room",
       "imageId": "img9",
       "imageStatus": "queued",
-      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
+      "imageComments": "This is a user provided comment on the image. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "rejectionReason": "Image is blurry and needs better resolution."
     },
     {
       "imageUrl": "/images/carousel_image_4.png",
@@ -79,7 +88,8 @@
       "imageTag": "Kitchen",
       "imageId": "img10",
       "imageStatus": "approved",
-      "rejectionReason": "Image is blurry, please submit a clearer image. what happens if there is a lot of text here?Image is blurry, please submit a clearer image. what happens if there is a lot of text here?"
+      "imageComments": "This is a user provided comment on the image. lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "rejectionReason": "Image is blurry and needs better resolution."
     }
   ]
 }

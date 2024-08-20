@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard } from '../Components';
 import './PropertiesHome.scss';
 
@@ -20,7 +20,8 @@ interface Property {
   approvalStatus: "queued" | "approved" | "rejected";
   propertyType: string;
   propertyDescription: string;
-  propertySize: number;
+  internalPropertySize: number;
+  externalPropertySize: number;
 }
 
 interface HomeProps {}
@@ -30,6 +31,12 @@ const properties: Property[] = propertiesData as Property[];
 
 const Home: React.FC<HomeProps> = () => {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+
+  useEffect(() => {
+    if (properties.length > 0) {
+      setSelectedProperty(properties[0]);
+    }
+  }, []);
 
   const handleCardClick = (property: Property) => {
     setSelectedProperty(property);
@@ -43,7 +50,7 @@ const Home: React.FC<HomeProps> = () => {
             {isAdmin && <SearchBar placeholder="Search for a property" onSearch={(query) => console.log(query)} />}
             {!isAdmin && <AddPropertyCard />}
             <Spacer height={1}/>
-            <h2 className="left">{isAdmin? 'Properties' : 'My Properties'}</h2>
+            <h2 className="left">{isAdmin ? 'Properties' : 'My Properties'}</h2>
             <Spacer height={0.5}/>
             {properties.map((property: Property) => (
               <div key={property.id} className="small-display-card-container" onClick={() => handleCardClick(property)}>
@@ -55,8 +62,8 @@ const Home: React.FC<HomeProps> = () => {
               </div>
             ))}
           </div>
-          <div style={{marginTop: '10px', width: '60%'}}>
-              {selectedProperty && (
+          <div style={{ marginTop: '10px', width: '60%' }}>
+              {selectedProperty ? (
                 <PropertyCard
                   propertyAddress={selectedProperty.propertyAddress}
                   imageUrl={selectedProperty.imageUrl}
@@ -68,15 +75,16 @@ const Home: React.FC<HomeProps> = () => {
                   approvalStatus={selectedProperty.approvalStatus}
                   propertyType={selectedProperty.propertyType}
                   propertyDescription={selectedProperty.propertyDescription}
-                  propertySize={selectedProperty.propertySize}
-                  />
-                )}
-              {!selectedProperty && (
-                  <div className="empty-property-card">
-                    <Spacer height={2}/>
-                    <h2>No property selected</h2>
+                  internalPropertySize={selectedProperty.internalPropertySize}
+                  externalPropertySize={selectedProperty.externalPropertySize}
+                />
+              ) : (
+                <div className="empty-property-card">
+                  <Spacer height={2}/>
+                  <h2>No property selected</h2>
                   <div>Select a property to view details</div>
-                  </div>)}
+                </div>
+              )}
           </div>
         </div>
         <Spacer height={4}/>

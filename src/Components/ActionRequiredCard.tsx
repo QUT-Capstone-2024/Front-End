@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardMedia, Typography, Box } from '@mui/material';
 import { CustomButton } from './index';
+import theme from '../Theme';
 
 interface ActionRequiredCardProps {
   imageUrl: string;
@@ -13,10 +14,10 @@ interface ActionRequiredCardProps {
 
 const ActionRequiredCard: React.FC<ActionRequiredCardProps> = ({ imageUrl, title, submittedDateTime, description, onButtonClick, cardType = 'Update' }) => {
   return (
-    <Card sx={{ display: 'flex', alignItems: 'center', padding: 2, border: 'none', boxShadow: 0 }}>
+    <Card sx={{ display: 'flex', alignItems: 'center', padding: 2, border: 'none', boxShadow: 0, background: 'inherit' }}>
       <CardMedia
         component="img"
-        sx={{ width: 120, height: 120, borderRadius: '8px' }}
+        sx={{ width: 120, height: 120, borderRadius: '8px', boxShadow: 4 }}
         image={imageUrl}
         alt="Action required image"
       />

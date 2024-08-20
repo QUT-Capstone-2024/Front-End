@@ -1,16 +1,43 @@
-import React from 'react';
-import { CustomButton } from './index';
+import React, { useState } from 'react';
+import { CustomButton, CategorySelector } from './';
+import { SelectChangeEvent } from '@mui/material';
 import { ImageTags } from '../Constants/ImageTags';
 
 interface EditImageModalContentProps {
   image: string;
   imageTag: string;
+  description?: string;
   toggleModal: () => void;
+  onUpdate: (updatedImage: File | null, updatedTag: string, updatedDescription: string) => void;
 }
 
-const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, imageTag, toggleModal }) => {
-  console.log('EditImageModalContentProps:', image, imageTag);
-  console.log('ImageTags:', ImageTags);
+const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, imageTag, description = '', toggleModal, onUpdate }) => {
+  // Step 1: Find the key based on imageTag (name) and use it for the initial state
+  const initialCategoryKey = ImageTags.find(tag => tag.name === imageTag)?.key.toString() || '';
+  const [selectedCategory, setSelectedCategory] = useState(initialCategoryKey);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [descriptionText, setDescriptionText] = useState(description);
+
+  // Step 2: Handle changes to the selected category
+  const handleCategoryChange = (event: SelectChangeEvent<string>) => {
+    setSelectedCategory(event.target.value as string);
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescriptionText(event.target.value);
+  };
+
+  const handleUpdate = () => {
+    onUpdate(selectedFile, selectedCategory, descriptionText);
+    toggleModal();
+  };
+
   return (
     <div style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <img className="hero gallery-card-image" src={image} alt={imageTag} />
@@ -24,18 +51,16 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
             name="imageUpload"
             accept="image/*"
             style={{ width: '100%', marginTop: '10px' }}
+            onChange={handleFileChange}
           />
         </div>
 
         <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="categorySelect">Update Category:</label><br />
-          <select id="categorySelect" name="categorySelect" style={{ width: '100%', marginTop: '10px' }} defaultValue={imageTag}>
-            {ImageTags.map(tag => (
-              <option key={tag.key} value={tag.name}>
-                {tag.name}
-              </option>
-            ))}
-          </select>
+          <CategorySelector
+            label="Category"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+          />
         </div>
 
         <div style={{ marginBottom: '20px' }}>
@@ -45,12 +70,14 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
             name="descriptionInput"
             rows={4}
             style={{ width: '100%', marginTop: '10px', resize: 'none' }}
+            value={descriptionText}
+            onChange={handleDescriptionChange}
           />
         </div>
       </form>
 
       <div style={{ display: 'flex', gap: '40px', justifyContent: 'center' }}>
-        <CustomButton label="Update" onClick={toggleModal} />
+        <CustomButton label="Update" onClick={handleUpdate} />
         <CustomButton buttonType="cancelButton" label="Cancel" onClick={toggleModal} />
       </div>
     </div>

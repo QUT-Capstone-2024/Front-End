@@ -5,18 +5,31 @@
   position: absolute;
   top: 0;
   left: 0;
-  background: $background-semi-opaque;
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 10px;
+  box-sizing: border-box;
+  overflow-x: hidden; 
+  background-image: url('../Images/frosted_glass_bg.png');
+  background-size: cover;
+  background-blend-mode: soft-light;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   border-radius: $border-radius;
-  color: $success-color;
+  & p {
+    color: $success-color;
+    font-weight: bold;
+  }
   &.gallery {
+    padding: 2px;
     height: $image-size;
     width: $image-size;
   }
   &.hero {
+    padding: 10px;
     height: $hero-image-size;
     width: $hero-image-size;
   }

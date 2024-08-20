@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { CustomButton, StatusStamp, Popover, CustomModal, EditImageModalContent as ModalContent } from "./index";
 import EditIcon from '@mui/icons-material/Edit';
-import "./GalleryCard.scss";
+import "../Styles/GalleryCard.scss";
 
 interface GalleryCardProps {
   cardType: "hero" | "gallery";
@@ -9,9 +9,11 @@ interface GalleryCardProps {
   imageTag: string;
   imageStatus: "queued" | "approved" | "rejected";
   rejectionReason?: string;
+  imageComments?: string;
+  imageDate?: string;
 };
 
-const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus, rejectionReason, cardType = 'gallery' }) => {
+const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus, rejectionReason, cardType = 'gallery', imageComments, imageDate }) => {
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -24,6 +26,24 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus,
     setPopoverVisible(!popoverVisible);
   };
 
+  const handleUpdate = (updatedImage: File | null, updatedTag: string, updatedDescription: string) => {
+    console.log('Updated image:', updatedImage);
+    console.log('Updated category:', updatedTag);
+    console.log('Updated description:', updatedDescription);
+    // TODO: Implement update logic
+    toggleModal();
+  };
+
+  const popoverContent = (
+    <>
+      <p>Uploaded:<br />{imageDate}</p>
+      {imageStatus === "rejected" ? (
+        <p>A new image is required:<br /> {rejectionReason}</p>
+      ) : (
+        <p>{imageComments}</p>
+      )}
+    </>
+  );
 
   return (
     <div ref={cardRef}>
@@ -42,7 +62,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus,
         <EditIcon className={`edit-icon ${cardType}`} onClick={() => setModalOpen(true)} />
         
         <Popover
-          content={imageStatus === "rejected" && <p>Reason: {rejectionReason}</p>}
+          content={popoverContent}
           visible={popoverVisible}
           onClose={handlePopoverClick}
           type={cardType}
@@ -63,6 +83,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus,
           image={image} 
           imageTag={imageTag} 
           toggleModal={toggleModal} 
+          onUpdate={handleUpdate}
         />
       </CustomModal>
     </div>

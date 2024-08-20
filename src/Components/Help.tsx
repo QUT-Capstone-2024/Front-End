@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { closeHelp, openHelp } from '../Redux/helpSlice';
 import { RootState } from '../store';
+import '../Styles/Help.scss';
 
 type HelpProps = {
   helpContent: React.ReactNode;
