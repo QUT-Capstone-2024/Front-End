@@ -520,6 +520,9 @@ html {
 /// Inputs
 .text-input-container {
   width: 100%;
+  &.number {
+    width: 120px;
+  }
 
   .text-input-label {
     margin-bottom: 5px;
@@ -527,6 +530,9 @@ html {
     font-size: 14px;
     color: $success-color;
     text-align: left;
+    &.number {
+      margin: 0;
+    }
   }
 
   .text-input {
@@ -547,6 +553,10 @@ html {
     &:focus {
       outline: inherit;
       border-color: $primary-color;
+    }
+    
+    &.number {
+      width: 80px;
     }
     
     &.small {
@@ -576,6 +586,15 @@ html {
       color: red;
     }
   }
+}
+
+.number-icon-container {
+  padding-right: 10px; 
+}
+
+.number-icon {
+  color: $success-color;
+  font-size: 24px;
 }
 
 ////////////////////////////////////////////////////////////////
