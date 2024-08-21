@@ -1,14 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { BaseForm, CustomAlert } from "./index";
 import { useNavigate } from "react-router-dom";
+import { register } from '../Services/userServices'; // Import the register function
 
-// TODO: Error on insecure password
-// TODO: Error handling on api calls
-// TODO: Link to terms and conditions
-// TODO: Add data controls for the admin switch
-type registerFormProps = {};
+// Define the types for the form data
+type RegisterFormData = {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  phoneNumber: string;
+  propertyIds: number[]; // Assuming propertyIds are numbers; adjust if they're strings
+};
 
-const registerFields = [
+// Define the field configuration type
+type FieldConfig<T> = {
+  name: keyof T;
+  label: string;
+  type: string;
+  required: boolean;
+  validator?: (value: string | boolean) => string | null;
+};
+
+// Define the fields for the registration form
+const registerFields: FieldConfig<RegisterFormData>[] = [
   { name: "username", label: "User Name", type: "text", required: true },
   { name: "email", label: "Email", type: "email", required: true },
   { name: "password", label: "Password", type: "password", required: true },
@@ -18,16 +33,21 @@ const registerFields = [
     type: "password",
     required: true,
   },
+  { name: "phoneNumber", label: "Phone Number", type: "text", required: true },
+  // Removed userType and userRole fields
 ];
 
-const initialValues = {
+// Define the initial values for the form
+const initialValues: RegisterFormData = {
   username: "",
   email: "",
   password: "",
   confirmPassword: "",
+  phoneNumber: "",
+  propertyIds: [], // Empty array initially
 };
 
-const RegisterForm: React.FC<registerFormProps> = () => {
+const RegisterForm: React.FC = () => {
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
@@ -41,36 +61,44 @@ const RegisterForm: React.FC<registerFormProps> = () => {
       }, 3000);
     }
     return () => clearTimeout(timer);
-  }, [showAlert]); 
+  }, [showAlert]);
 
-  const handleRegisterSubmit = (formData: Record<string, any>) => {
+  const handleRegisterSubmit = async (formData: RegisterFormData) => {
     if (formData.password !== formData.confirmPassword) {
       setShowAlert(true);
       setErrors("Passwords do not match. Please try again.");
-      formData.confirmPassword = "";
-      formData.password = "";
       return;
     }
 
-    // For testing purposes
-    console.log("Registration Data:", formData);
-    navigate("/Landing");
-    // TODO: Add Api call to register user
+    try {
+      const data = await register({
+        name: formData.username,
+        email: formData.email,
+        password: formData.password,
+        phoneNumber: formData.phoneNumber,
+        userType: "CL_ADMIN", // Set by default
+        userRole: "INTERNAL", // Set by default
+        propertyIds: formData.propertyIds,
+      });
+
+      console.log("Registration successful:", data);
+      navigate("/"); // Redirect after successful registration
+    } catch (error) {
+      console.error("Registration failed:", error);
+      setShowAlert(true);
+      setErrors("Registration failed. Please try again.");
+    }
   };
 
   return (
     <div>
-      <CustomAlert
-        message={errors}
-        type="error"
-        isVisible={showAlert}
-      />
+      <CustomAlert message={errors} type="error" isVisible={showAlert} />
 
-      <BaseForm
+      <BaseForm<RegisterFormData>
         fields={registerFields}
         initialValues={initialValues}
         onSubmit={handleRegisterSubmit}
-        title=""
+        title="Register"
         withCheckbox={true}
         checkboxLabel="I agree to the terms and conditions."
         withSwitch={true}
@@ -82,3 +110,10 @@ const RegisterForm: React.FC<registerFormProps> = () => {
 };
 
 export default RegisterForm;
+
+
+
+/////////////////////////// TO DO ///////////////////////////
+// Create functionality for the Request Admin Access switch - this is only available to internal users so may actually need to be moved to the login page instead
+// Add validations for the fields
+// Add the T&C's
