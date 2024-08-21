@@ -1,0 +1,17 @@
+{
+	"React Functional Component": {
+	  "prefix": "tsx",
+	  "body": [
+		"import React from 'react';",
+		"",
+		"interface ${1:${TM_FILENAME_BASE/(.)/${1:/pascalcase}Props/}} {}",
+		"",
+		"const ${2:${TM_FILENAME_BASE/(.)/${1:/pascalcase}/}}: React.FC<$1> = () => {",
+		"  return <div>$2 component</div>;",
+		"};",
+		"",
+		"export default $2;"
+	  ],
+	  "description": "Create a React functional component with TypeScript using file name"
+	}
+  }

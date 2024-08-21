@@ -1,41 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BedRoundedIcon from '@mui/icons-material/BedRounded';
-import ShowerRoundedIcon from '@mui/icons-material/ShowerRounded';
-import GarageRoundedIcon from '@mui/icons-material/GarageRounded';
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
 import { CustomButton, IconBar } from '../Components';
-
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Import back arrow icon
 
 // Test data
 import propertiesData from '../Test Data/sample_properties.json';
 import imagesData from '../Test Data/sample_images.json';
 import houseDemoHeroImage from '../Images/house_demo_hero_image.png';
-
-type Property = {
-  id: number;
-  propertyDescription: string;
-  propertyAddress: string;
-  imageUrl: string;
-  collectionId: string;
-  internalPropertySize: number;
-  externalPropertySize: number;
-  propertyOwnerId: string;
-  bedrooms: number;
-  bathrooms: number;
-  parkingSpaces: number;
-  approvalStatus: "queued" | "approved" | "rejected";
-  propertyType: string;
-};
-
-type Image = {
-  imageUrl: string;
-  imageTag: string;
-  imageId: string;
-  imageStatus: "approved" | "rejected" | "queued";
-};
-
 
 const ImageApproval: React.FC = () => {
   const navigate = useNavigate();
@@ -120,7 +91,7 @@ const ImageApproval: React.FC = () => {
                     </div>
                     <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                       <CustomButton buttonType="successButton" label="View Property" />
-                      <CustomButton buttonType="successButton" label="Owner Name" />
+                      <CustomButton buttonType="successButton" label="Owner Details" />
                     </div>
                   </div>
                 </div>
@@ -143,7 +114,7 @@ const ImageApproval: React.FC = () => {
                   </div>
                   <div style={{ flexGrow: 1, marginLeft: '20px', color: '#8f9da3', backgroundColor: 'transparent' }}>
                     <h3>{image.imageTag.toUpperCase()}</h3>
-                    <p>Status: {image.imageStatus.toUpperCase()}</p>
+                    {/* Removed the status text */}
                   </div>
                   <div style={{ display: 'flex', gap: '15px' }}>
                     <CustomButton buttonType="successButton" label="Approve" onClick={() => handleApprove(image.imageId)} />
