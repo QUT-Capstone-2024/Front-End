@@ -1,45 +1,65 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import BaseForm from './BaseForm';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../Hooks/useAppDispatch';
 import { login } from '../Redux/authSlice';
-// TODO: Add a checkbox for requesting admin rights
-type loginFormProps = {};
+import { RootState } from '../store';
 
-const loginFields = [
+interface LoginFormData {
+    email: string;
+    password: string;
+}
+
+type FieldConfig<T> = {
+    name: keyof T;
+    label: string;
+    type: string;
+    required: boolean;
+    validator?: (value: string | boolean) => string | null;
+};
+
+const loginFields: FieldConfig<LoginFormData>[] = [
     { name: 'email', label: 'Email', type: 'email', required: true },
     { name: 'password', label: 'Password', type: 'password', required: true },  
 ];
 
-const initialValues = {
+const initialValues: LoginFormData = {
     email: '',
     password: '',
 };
 
-
-const LoginForm: React.FC<loginFormProps> = () => {
-    const dispatch = useDispatch();
+const LoginForm: React.FC = () => {
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const authState = useSelector((state: RootState) => state.auth);
     
-    const handleLoginSubmit = (formData: Record<string, any>) => {
-        // For testing purposes
-        console.log('Login Data:', formData);
-        dispatch(login());
-        navigate('/Home');
-        // TODO: Add Api call to login user
+    const handleLoginSubmit = async (formData: LoginFormData) => {
+        try {
+            const token = await dispatch(login(formData)).unwrap();
+            // Save the token to localStorage or state management if needed
+            localStorage.setItem('token', token);
+            navigate('/Home');
+        } catch (error) {
+            console.error('Login failed:', error);
+            alert('Login failed. Please check your credentials and try again.');
+        }
     };
 
     return (
         <>
-        <BaseForm
-            fields={loginFields}
-            initialValues={initialValues}
-            onSubmit={handleLoginSubmit}
-            title=""
-            withCancelButton={false}
-            buttonLabel='Login' />
+            <BaseForm<LoginFormData>
+                fields={loginFields}
+                initialValues={initialValues}
+                onSubmit={handleLoginSubmit}
+                title="Login"
+                withCancelButton={false}
+                buttonLabel="Login"
+            />
+            {authState.loading && <p>Loading...</p>}
+            {authState.error && <p style={{ color: 'red' }}>{authState.error}</p>}
         </>
     );
+};
 
-}
- export default LoginForm;
+export default LoginForm;

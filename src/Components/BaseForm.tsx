@@ -3,18 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { Container, TextField, Typography, Box, Checkbox, FormControlLabel } from '@mui/material';
 import { CustomButton, Switch } from './';
 
-type FieldConfig = {
-    name: string;
+type FieldConfig<T> = {
+    name: keyof T;
     label: string;
     type: string;
     required: boolean;
     validator?: (value: string | boolean) => string | null;
 };
 
-type BaseFormProps = {
-    fields: FieldConfig[];
-    initialValues: Record<string, any>;
-    onSubmit: (values: Record<string, any>) => void;
+type BaseFormProps<T> = {
+    fields: FieldConfig<T>[];
+    initialValues: T;
+    onSubmit: (values: T) => void;
     title: string;
     withCheckbox?: boolean;
     checkboxLabel?: string;
@@ -24,7 +24,7 @@ type BaseFormProps = {
     buttonLabel?: string;
 };
 
-const BaseForm: React.FC<BaseFormProps> = ({
+const BaseForm = <T extends Record<string, any>>({
     fields,
     initialValues,
     onSubmit,
@@ -35,18 +35,16 @@ const BaseForm: React.FC<BaseFormProps> = ({
     switchLabel = 'Enable feature',
     withCancelButton = true,
     buttonLabel = 'Submit',
-}) => {
-    const [formData, setFormData] = useState<Record<string, any>>(initialValues);
-    const [errors, setErrors] = useState<Record<string, string | null>>({});
+}: BaseFormProps<T>) => {
+    const [formData, setFormData] = useState<T>(initialValues);
+    const [errors, setErrors] = useState<Partial<Record<keyof T, string | null>>>({});
     const [isFormValid, setIsFormValid] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Check if all required fields are filled
         const allRequiredFilled = fields.every(field => 
             !field.required || (field.required && formData[field.name])
         );
-        // Check if checkbox is required and checked
         const isCheckboxValid = !withCheckbox || (withCheckbox && formData['agree']);
         setIsFormValid(allRequiredFilled && isCheckboxValid);
     }, [formData, fields, withCheckbox]);
@@ -56,7 +54,6 @@ const BaseForm: React.FC<BaseFormProps> = ({
         const newValue = type === 'checkbox' ? checked : value;
         setFormData(prev => ({ ...prev, [name]: newValue }));
         
-        // Check for field validator
         const field = fields.find(f => f.name === name);
         if (field?.validator) {
             const error = field.validator(newValue);
@@ -67,7 +64,7 @@ const BaseForm: React.FC<BaseFormProps> = ({
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         let isValid = true;
-        let newErrors: Record<string, string | null> = {};
+        let newErrors: Partial<Record<keyof T, string | null>> = {};
         fields.forEach(field => {
             const value = formData[field.name];
             if (field.validator) {
@@ -98,16 +95,16 @@ const BaseForm: React.FC<BaseFormProps> = ({
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                 {fields.map(field => (
                     <TextField
-                        key={field.name}
+                        key={field.name as string}
                         margin="normal"
                         required={field.required}
                         fullWidth
-                        id={field.name}
+                        id={field.name as string}
                         label={field.label}
-                        name={field.name}
+                        name={field.name as string}
                         type={field.type}
-                        autoComplete={field.name}
-                        value={formData[field.name]}
+                        autoComplete={field.name as string}
+                        value={formData[field.name] as string}
                         onChange={handleChange}
                         error={!!errors[field.name]}
                         helperText={errors[field.name]}
