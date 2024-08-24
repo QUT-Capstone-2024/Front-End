@@ -60,7 +60,7 @@ const ImageApproval: React.FC = () => {
       <div style={{ backgroundColor: '#eff7fe', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', width: '100%', maxWidth: '800px' }}>
         {property && queuedImages.length > 0 ? (
           <>
-            {/* New Title with Back Button */}
+            {/* Title with Back Button */}
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
               <ArrowBackIcon style={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => navigate(-1)} />
               <h1 style={{ textAlign: 'left', color: '#0b517d', fontSize: '2rem', margin: '0' }}>
@@ -105,7 +105,7 @@ const ImageApproval: React.FC = () => {
             {/* Image List */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               {queuedImages.map((image) => (
-                <div key={image.imageId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', backgroundColor: '#ffffff', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+                <div key={image.imageId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px', backgroundColor: '#eff7fe', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
                   <div style={{ position: 'relative' }}>
                     <img src={image.imageUrl} alt={image.imageTag} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
                     <div style={{ position: 'absolute', top: '0', left: '0', backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', padding: '5px', fontSize: '0.75rem', borderRadius: '8px', textAlign: 'center', width: '82%' }}>

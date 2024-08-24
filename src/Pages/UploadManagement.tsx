@@ -2,7 +2,7 @@ import React from "react";
 import { ActionRequiredCard } from "../Components";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Box } from "@mui/material";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Import back arrow icon
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
 
 // Test data
 import propertiesData from "../Test Data/sample_properties.json";
