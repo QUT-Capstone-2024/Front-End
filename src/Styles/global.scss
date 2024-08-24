@@ -515,6 +515,88 @@ html {
   }
 }
 
+
+////////////////////////////////////////////////////////////////
+/// Inputs
+.text-input-container {
+  width: 100%;
+  &.number {
+    width: 120px;
+  }
+
+  .text-input-label {
+    margin-bottom: 5px;
+    display: block;
+    font-size: 14px;
+    color: $success-color;
+    text-align: left;
+    &.number {
+      margin: 0;
+    }
+  }
+
+  .text-input {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    width: 300px;
+    padding: 10px;
+    border-radius: $border-radius;
+    border: 1px solid $primary-color;
+    background-color: $background-lighter;
+    color: $success-color;
+    box-shadow: none;
+    resize: vertical;
+    overflow-y: auto; 
+    box-sizing: border-box;
+    font-size: 16px;
+    font-weight: 500;
+    resize: none;
+    &:focus {
+      outline: inherit;
+      border-color: $primary-color;
+    }
+    
+    &.number {
+      width: 80px;
+    }
+    
+    &.small {
+      height: 40px;
+    }
+    &.large {
+      height: 200px;
+    }
+    &.input-focused {
+      background-color: $background-default;
+      box-shadow: $box-shadow-light-inset;
+      outline: none;
+      border-color: transparent;
+    }
+
+    &.input-error {
+      border-color: red;
+    }
+  }
+
+  .helper-text {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+
+    &.error-text {
+      color: red;
+    }
+  }
+}
+
+.number-icon-container {
+  padding-right: 10px; 
+}
+
+.number-icon {
+  color: $success-color;
+  font-size: 24px;
+}
+
 ////////////////////////////////////////////////////////////////
 // Header
 .header {

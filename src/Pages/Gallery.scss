@@ -6,13 +6,14 @@ $padding: 5rem;
   display: flex;
   flex-direction: column;
   margin: 2rem auto;
-  width: calc(100vw - 10rem);
+  width: 95vw;
   box-sizing: border-box;
   background: $background-lighter;
   align-self: center;
   border-radius: $border-radius;
-  box-shadow: $box-shadow-heavy;
+  box-shadow: $box-shadow-heavy; 
 }
+
 
 .hero-card-container {
   display: flex;
@@ -57,3 +58,5 @@ $padding: 5rem;
   margin-bottom: 15px;
   padding: 0 $padding;
 }
+
+

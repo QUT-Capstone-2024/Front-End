@@ -36,6 +36,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
         onChange={onChange}
         label={label}
         MenuProps={MenuProps}
+        sx={{ textAlign: 'left', borderRadius: '8px', border: '1px solid #93cdfe' }}
       >
         {ImageTags.map((tag) => (
           <MenuItem key={tag.key} value={tag.key.toString()}>
