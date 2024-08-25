@@ -156,7 +156,7 @@ const EditUser: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <IconButton 
                   onClick={() => handleEditUser(user)} 
-                  sx={{ marginRight: '10px', color: '#0a3d62' }}  // Adjust the margin and color as needed
+                  sx={{ marginRight: '10px', color: '#0a3d62' }} 
                 >
                   <EditIcon />
                 </IconButton>
