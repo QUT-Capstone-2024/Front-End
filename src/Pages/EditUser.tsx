@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Spacer, CustomButton } from "../Components";  
+import { Spacer, CustomButton, SearchBar } from "../Components"; 
 import Modal from "../Components/Modal";
-import { Card, CardContent, Box } from "@mui/material";
+import { Card, CardContent, Box, IconButton } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';  // Import the edit icon
 
 // TESTING 
 interface User {
@@ -19,7 +20,7 @@ const EditUser: React.FC = () => {
   const [users, setUsers] = useState<User[]>([
     {
       id: 1,
-      userType: "User",  
+      userType: "STANDARD",  
       userRole: "User",
       ownedProperties: [1, 2],
       creationTime: new Date(),
@@ -36,24 +37,72 @@ const EditUser: React.FC = () => {
       email: "admin@example.com",
       username: "ADMIN",
       phoneNumber: "987-654-3210",
+    },
+    {
+      id: 3,
+      userType: "STANDARD",  
+      userRole: "User",
+      ownedProperties: [],
+      creationTime: new Date(),
+      email: "anotheruser@example.com",
+      username: "ANOTHERUSER",
+      phoneNumber: "111-222-3333",
+    },
+    {
+      id: 4,
+      userType: "Admin",
+      userRole: "Administrator",
+      ownedProperties: [4],
+      creationTime: new Date(),
+      email: "anotheradmin@example.com",
+      username: "ANOTHERADMIN",
+      phoneNumber: "444-555-6666",
+    },
+    {
+      id: 5,
+      userType: "STANDARD",  
+      userRole: "User",
+      ownedProperties: [5],
+      creationTime: new Date(),
+      email: "yetanotheruser@example.com",
+      username: "YETANOTHERUSER",
+      phoneNumber: "777-888-9999",
     }
   ]);
 
+  const [filteredUsers, setFilteredUsers] = useState(users);
+  const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [newUserType, setNewUserType] = useState<string>('');
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [newUserType, setNewUserType] = useState<string>("");
 
   const handleUserTypeChange = (user: User, newType: string) => {
     setSelectedUser(user);
-    setNewUserType(newType.toUpperCase());  
+    setNewUserType(newType);
     setShowModal(true);
   };
 
   const confirmChange = () => {
     if (selectedUser) {
-      setUsers(users.map(u => u.id === selectedUser.id ? { ...u, userType: newUserType } : u));
+      setUsers(users.map(u => u.id === selectedUser.id ? { ...u, userType: newUserType.toUpperCase() } : u));
+      setShowModal(false);
     }
-    setShowModal(false);
+  };
+
+  const handleSearch = (query: string) => {
+    const result = users.filter(user =>
+      user.username.toLowerCase().includes(query.toLowerCase()) ||
+      user.email.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredUsers(result);
+  };
+
+  const saveChanges = () => {
+    console.log('User types updated', users);
+  };
+
+  const handleEditUser = (user: User) => {
+    // Logic for opening the edit user modal or navigating to the edit user page
+    console.log(`Editing user: ${user.username}`);
   };
 
   return (
@@ -79,25 +128,42 @@ const EditUser: React.FC = () => {
         }}
       >
         <CardContent>
-          <h1 style={{ textAlign: 'center', marginBottom: '10px', marginTop: '0px', color: '#0a3d62' }}>EDIT USERS</h1> 
+          {/* Title */}
+          <h1 style={{ textAlign: 'center', color: '#0a3d62', fontSize: '2rem', margin: '0' }}>
+            USER MANAGEMENT
+          </h1>
+
+          {/* Centered Search Bar */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
+            <SearchBar placeholder="Search" onSearch={handleSearch} />
+          </div>
+
           <Spacer height={1} /> 
-          {users.map(user => (
+          {filteredUsers.map(user => (
             <Card 
               key={user.id} 
               sx={{
                 marginBottom: '20px', 
                 padding: '20px',
                 borderRadius: '8px',
-                backgroundColor: '#ffffff',  
-                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+                backgroundColor: '#eff7fe',  
+                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)', 
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center'
               }}
             >
-              <div>
-                <h2 style={{ margin: '0', color: '#0a3d62', textAlign: 'left' }}>{user.username}</h2>  
-                <p style={{ margin: '5px 0', color: '#576574' }}>{user.email}</p>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton 
+                  onClick={() => handleEditUser(user)} 
+                  sx={{ marginRight: '10px', color: '#0a3d62' }}  // Adjust the margin and color as needed
+                >
+                  <EditIcon />
+                </IconButton>
+                <div>
+                  <h2 style={{ margin: '0', color: '#333', textAlign: 'left' }}>{user.username}</h2>  
+                  <p style={{ margin: '5px 0', color: '#576574' }}>{user.email}</p>
+                </div>
               </div>
               <select 
                 value={user.userType} 
@@ -111,7 +177,7 @@ const EditUser: React.FC = () => {
                 }}
               >
                 <option value="Admin">ADMIN</option>
-                <option value="User">USER</option>  
+                <option value="STANDARD">STANDARD</option>  
               </select>
             </Card>
           ))}
@@ -124,13 +190,13 @@ const EditUser: React.FC = () => {
               label="CONFIRM USER TYPE CHANGE"
             >
               <p style={{ textAlign: 'center', color: '#333' }}>
-                This action will change <strong>{selectedUser?.username}</strong>'s user type to <strong>{newUserType}</strong>. 
+                This action will change <strong>{selectedUser?.username}</strong>'s user type to <strong>{newUserType.toUpperCase()}</strong>. 
                 <br/><br/> 
                 Are you sure?
               </p>
               <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
                 <CustomButton 
-                  label="CONFIRM USER TYPE CHANGE" 
+                  label="CONFIRM" 
                   buttonType="warningButton"
                   onClick={confirmChange} 
                 />
@@ -145,10 +211,10 @@ const EditUser: React.FC = () => {
 
           <Spacer height={2} />
           <CustomButton 
-            label="Save Changes" 
-            buttonType="successButton" 
-            onClick={() => console.log('Changes saved')}
-            style={{ width: '30%', padding: '15px', marginTop: '20px', backgroundColor: '#0a3d62', color: '#fff', marginLeft: 'auto', marginRight: 'auto', display: 'block' }}  
+            label="SAVE CHANGES" 
+            buttonType="warningButton" 
+            onClick={saveChanges}
+            style={{ width: '30%', padding: '15px', marginTop: '20px', marginLeft: 'auto', marginRight: 'auto', display: 'block' }}  
           />
         </CardContent>
       </Card>

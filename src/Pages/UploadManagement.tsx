@@ -48,6 +48,7 @@ const UploadManagement = () => {
         }}
       >
         <CardContent>
+          {/* New Title with Back Button */}
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
             <ArrowBackIcon style={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => navigate(-1)} />
             <h1 style={{ textAlign: 'left', color: '#0b517d', fontSize: '2rem', margin: '0' }}>

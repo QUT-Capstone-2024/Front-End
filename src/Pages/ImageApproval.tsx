@@ -117,8 +117,8 @@ const ImageApproval: React.FC = () => {
                     {/* Removed the status text */}
                   </div>
                   <div style={{ display: 'flex', gap: '15px' }}>
-                    <CustomButton buttonType="successButton" label="Approve" onClick={() => handleApprove(image.imageId)} />
-                    <CustomButton buttonType="successButton" label="Edit" onClick={() => handleEdit(image.imageId)} />
+                    <CustomButton label="Approve" onClick={() => handleApprove(image.imageId)} />
+                    <CustomButton label="Edit" onClick={() => handleEdit(image.imageId)} />
                     <CustomButton buttonType="cancelButton" label="Reject" onClick={() => handleReject(image.imageId)} />
                   </div>
                 </div>
