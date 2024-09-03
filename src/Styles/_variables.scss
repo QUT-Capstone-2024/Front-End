@@ -37,9 +37,12 @@ $rejected-color: #ef4400;
 $border-primary: 1px solid #cccccc;
 $box-shadow-heavy: 0 4px 6px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.5); 
 $box-shadow-light: 0 4px 6px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3); 
+$box-shadow-xlight: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.1); 
 $box-shadow-subtle: 0 4px 6px rgba(0, 0, 0, 0.1); 
 $box-shadow-light-inset: inset 4px 0 6px rgba(0, 0, 0, 0.3), inset 0 4px 6px rgba(0, 0, 0, 0.3), inset 1px 1px 3px rgba(0, 0, 0, 0.1);
 $border-radius: 8px;
+$border-radius-small: 4px;
+$border-radius-large: 10px;
 
 // Gallery card sizes
 $small-image-size: 100px;

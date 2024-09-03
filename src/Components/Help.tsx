@@ -24,7 +24,7 @@ const Help: React.FC<HelpProps> = ({helpContent}) => {
   return (
     <>
       <CustomButton buttonType='helpButton' label='Help' onClick={() => dispatch(openHelp())} />
-      <Modal label={`Help for ${pageName}`} modalType='oneButton' open={isOpen} onClose={() => dispatch(closeHelp())} children={helpContent}/>
+      <Modal title={`Help for ${pageName}`} modalType='oneButton' open={isOpen} onClose={() => dispatch(closeHelp())} children={helpContent}/>
     </>
   );
 };

@@ -9,13 +9,16 @@ type ModalProps = {
   onClose: () => void;
   onConfirm?: () => void;
   children: React.ReactNode;
-  label?: string;
+  title?: string;
+  titleColour?: string;
   buttonLabel?: string;
+  buttonType?: 'navButton' | 'helpButton' | 'warningButton' | 'errorButton' | 'successButton' | 'closeButton' | 'textOnly' | 'cancelButton' | 'settingsButton';
   modalType?: 'oneButton' | 'twoButton' | 'timed' | 'editDetails' | 'editPhotos';
   style?: React.CSSProperties;
+  contentColour?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm, children, modalType, style, label, buttonLabel }) => {
+const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm, children, contentColour = '#1f323e', modalType, style, title: label, titleColour: labelColour, buttonLabel, buttonType }) => {
   
   useEffect(() => {
     let timerId: any;
@@ -31,14 +34,14 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm, children, modal
       onClose={onClose} 
       sx={style}
     >
-      {modalType !== 'editDetails' && <DialogTitle>{label}</DialogTitle>}
-      <DialogContent>
+      {modalType !== 'editDetails' && <DialogTitle sx={{ color: labelColour}}>{label}</DialogTitle>}
+      <DialogContent sx={{color: contentColour}}>
         {children}
       </DialogContent>
       {modalType === 'oneButton' && <CustomButton label={buttonLabel || 'Close'} onClick={onClose} />}
       {modalType === 'twoButton' && (
         <div className='modal-2-button-container'>
-          <CustomButton label={label || 'Yes'} onClick={onConfirm} />
+          <CustomButton label={label || 'Yes'} onClick={onConfirm} buttonType={buttonType}/>
           <CustomButton buttonType='cancelButton' label='Cancel' onClick={onClose} />
         </div>
       )}
