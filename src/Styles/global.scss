@@ -121,15 +121,16 @@ html {
   align-items: center;
   gap: 20px;
   padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: $border-radius-large;
+  box-shadow: $box-shadow-xlight;
   width: 100%;
   background: $background-lighter;
   min-height: 55px;
+  transition: all 0.1s ease-in-out;
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: $box-shadow-light;
     background-color: $hover-color;
   }  
 }
@@ -205,6 +206,7 @@ html {
     transform: scale(1.05);
   }
 }
+
 .MuiButton-root.button {
   background-color: $branding-color;
   color: white;
@@ -260,9 +262,14 @@ html {
 }
 
 .MuiButton-root.errorButton {
-  background-color: $error-color;
+  background-color: $warning-color;
   color: $background-default;
   border-radius: 10px;
+  border: 1px solid $error-color;
+
+  &:hover {
+    background-color: $error-color;
+  }
 }
 
 .MuiButton-root.successButton {
@@ -312,9 +319,11 @@ html {
 
 .modal-2-button-container {
   display: flex;
-  justify-content: space-between;
-  padding-top: 20%;
-  gap: 20px;
+  justify-content: center;
+  padding-top: 20px;
+  gap: 40px;
+  width: 100%;
+  align-items: center;
 }
 
 // Content

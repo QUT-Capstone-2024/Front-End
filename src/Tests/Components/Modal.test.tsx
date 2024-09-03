@@ -11,7 +11,7 @@ describe('Modal Component', () => {
       <Modal
         open={true}
         onClose={onClose}
-        label="Test Modal"
+        title="Test Modal"
         modalType="oneButton"
         children="This is a modal message"
       />
@@ -26,7 +26,7 @@ describe('Modal Component', () => {
       <Modal
         open={true}
         onClose={onClose}
-        label="Test Modal"
+        title="Test Modal"
         modalType="twoButton"
         buttonLabel="Confirm"
         children="This is a modal message"
@@ -44,7 +44,7 @@ describe('Modal Component', () => {
       <Modal
         open={true}
         onClose={onClose}
-        label="Auto Close Modal"
+        title="Auto Close Modal"
         modalType="timed"
         children="This will close automatically"
       />

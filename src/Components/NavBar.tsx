@@ -65,7 +65,7 @@ const Navbar: React.FC<NavbarProps> = ({ open, onClose }) => {
         </Box>
       </Drawer>
 
-      <CustomModal modalType='twoButton' open={modalOpen} onConfirm={handleLogout} onClose={toggleModal} children='Logout now?' label='Logout'/>
+      <CustomModal modalType='twoButton' open={modalOpen} onConfirm={handleLogout} onClose={toggleModal} children='Logout now?' title='Logout'/>
     </div>
   );
 };

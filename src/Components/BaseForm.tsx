@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Container, TextField, Typography, Box, Checkbox, FormControlLabel } from '@mui/material';
 import { CustomButton, Switch } from './';
 
@@ -22,6 +21,8 @@ type BaseFormProps<T> = {
     switchLabel?: string;
     withCancelButton?: boolean;
     buttonLabel?: string;
+    onChange?: (values: T) => void;
+    onCancel?: () => void; // New prop for handling cancel in modals
 };
 
 const BaseForm = <T extends Record<string, any>>({
@@ -35,11 +36,12 @@ const BaseForm = <T extends Record<string, any>>({
     switchLabel = 'Enable feature',
     withCancelButton = true,
     buttonLabel = 'Submit',
+    onChange,
+    onCancel, // Add onCancel prop here
 }: BaseFormProps<T>) => {
     const [formData, setFormData] = useState<T>(initialValues);
     const [errors, setErrors] = useState<Partial<Record<keyof T, string | null>>>({});
     const [isFormValid, setIsFormValid] = useState(false);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const allRequiredFilled = fields.every(field => 
@@ -52,8 +54,14 @@ const BaseForm = <T extends Record<string, any>>({
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, type, checked, value } = event.target;
         const newValue = type === 'checkbox' ? checked : value;
-        setFormData(prev => ({ ...prev, [name]: newValue }));
-        
+        const updatedFormData = { ...formData, [name]: newValue };
+
+        setFormData(updatedFormData);
+
+        if (onChange) {
+            onChange(updatedFormData); // Call the onChange prop if provided
+        }
+
         const field = fields.find(f => f.name === name);
         if (field?.validator) {
             const error = field.validator(newValue);
@@ -84,7 +92,9 @@ const BaseForm = <T extends Record<string, any>>({
     const handleCancel = () => {
         setFormData(initialValues);
         setErrors({});
-        navigate('/');
+        if (onCancel) {
+            onCancel(); // Use the onCancel prop if provided
+        }
     };
 
     return (
@@ -127,7 +137,7 @@ const BaseForm = <T extends Record<string, any>>({
                     />
                 }
                 
-                <div style={{ display: 'flex', justifyContent: withCancelButton? 'space-between' : 'center', marginTop: '30px' }}>
+                <div style={{ display: 'flex', justifyContent: withCancelButton ? 'space-between' : 'center', marginTop: '30px' }}>
                     <CustomButton 
                         label={buttonLabel} 
                         onClick={handleSubmit} 

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { CustomButton, StatusStamp, Popover, CustomModal, EditImageModalContent as ModalContent } from "./index";
 import EditIcon from '@mui/icons-material/Edit';
-import "../Styles/GalleryCard.scss";
+import '../Styles/Cards.scss';
 
 interface GalleryCardProps {
   cardType: "hero" | "gallery";
@@ -77,7 +77,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus,
         open={modalOpen}
         onConfirm={() => console.log('clicked')}
         onClose={toggleModal}
-        label={imageTag}
+        title={imageTag}
       >
         <ModalContent 
           image={image} 
