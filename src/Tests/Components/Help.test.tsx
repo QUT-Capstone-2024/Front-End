@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import Help from '../../Components/Help';
 import '@testing-library/jest-dom';
 import { Provider } from 'react-redux';
-import store from '../../store';
+import store from '../../Redux/store';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 
 describe('Help Component', () => {
