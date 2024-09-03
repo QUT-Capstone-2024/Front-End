@@ -7,9 +7,6 @@ import {
 } from 'react-router-dom';
 import * as Pages from './Pages';
 import { Header, Footer } from './Components';
-import { Provider } from 'react-redux';
-import store from './store';
-
 import { ThemeProvider } from '@mui/material';
 import theme from './Theme';
 import './Styles/global.scss';
@@ -28,7 +25,6 @@ const AppContent = () => {
           <Route path="/Register" element={<Pages.Register />} />
           <Route path="/Home" element={<Pages.Home />} />
           <Route path="/Gallery" element={<Pages.Gallery propertyId={1}/>} />
-          <Route path="/Users" element={<Pages.Users />} />
           <Route path="/EditUser" element={<Pages.EditUser />} />
           <Route path="/ImageView" element={<Pages.ImageView />} />
           <Route path="/ImageApproval" element={<Pages.ImageApproval />} />
@@ -38,9 +34,9 @@ const AppContent = () => {
           <Route path="/Error501" element={<Pages.Error501 />} />
         </Routes>
       {!noHeaderRoutes.includes(currentPath) && <>
-        <footer style={{ position: 'relative', left: '0', bottom: '0'}}>
+        {/* <footer style={{ position: 'relative', left: '0', bottom: '0'}}>
           <Footer />
-        </footer>
+        </footer> */}
       </>
       }
     </>
@@ -49,13 +45,11 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Router>
           <AppContent />
         </Router>
       </ThemeProvider>
-    </Provider>
   );
 };
 

@@ -58,6 +58,31 @@
   }
 }
 
+.delete-icon {
+  position: absolute !important;
+  top: 4px !important;
+  color: $warning-color;
+  cursor: pointer;
+  z-index: 1001;
+  &:hover {
+    color: $error-color;
+  }
+  &.hero {
+    font-size: 1.75rem;
+    left: $hero-image-size - 30px !important;
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+  &.gallery {
+    font-size: 1.5rem;
+    left: $image-size - 25px !important;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
 .stamp {
   &.gallery {
     width: $image-size;

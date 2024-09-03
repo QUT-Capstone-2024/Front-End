@@ -34,3 +34,4 @@ export {default as TextInput} from './TextInput';
 export {default as FileUpload} from './FileUpload';
 export {default as EditPropertyModalContent} from './EditPropertyModalContent';
 export {default as NumberInput} from './NumberInput';
+export { default as UserCard } from './UserCard';

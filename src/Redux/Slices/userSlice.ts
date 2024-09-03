@@ -1,22 +1,28 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login as loginService } from '../Services/userServices';
+import { login as loginService } from '../../Services';
 
-interface AuthState {
+interface UserState {
   isLoggedIn: boolean;
   loading: boolean;
   error: string | null;
   token: string | null;
+  userDetails: {
+    email: string;
+    name: string;
+    role: string;
+  } | null;
 }
 
-const initialState: AuthState = {
+const initialState: UserState = {
   isLoggedIn: false,
   loading: false,
   error: null,
   token: null,
+  userDetails: null,
 };
 
 export const login = createAsyncThunk(
-  'auth/login',
+  'user/login',
   async (formData: { email: string; password: string }, thunkAPI) => {
     try {
       const response = await loginService(formData);
@@ -27,13 +33,14 @@ export const login = createAsyncThunk(
   }
 );
 
-export const authSlice = createSlice({
-  name: 'auth',
+export const userSlice = createSlice({
+  name: 'user',
   initialState,
   reducers: {
     logout: (state) => {
       state.isLoggedIn = false;
       state.token = null;
+      state.userDetails = null;
       localStorage.removeItem('token');
     },
   },
@@ -47,6 +54,11 @@ export const authSlice = createSlice({
         state.loading = false;
         state.isLoggedIn = true;
         state.token = action.payload.token;
+        state.userDetails = {
+          email: action.payload.email,
+          name: action.payload.name,
+          role: action.payload.role,
+        };
         localStorage.setItem('token', action.payload.token);
       })
       .addCase(login.rejected, (state, action) => {
@@ -56,6 +68,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout } = userSlice.actions;
 
-export default authSlice.reducer;
+export default userSlice.reducer;

@@ -1,53 +1,55 @@
-const API_URL = 'http://localhost:8080/api';
+import { API_URL } from '../config/config';
+import { UpdateUser } from '../types';
 
-interface User {
-    email: string;
-    password: string;
-}
-
-// Existing login function
-export const login = async ({ email, password }: User): Promise<any> => {
-    const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
+export const getAllUsers = async (): Promise<any[]> => {
+    const response = await fetch(`${API_URL}/users`, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
     });
 
     if (!response.ok) {
-        throw new Error('Failed to login');
+        throw new Error('Failed to fetch users');
     }
 
     const data = await response.json();
     return data;
 };
 
-// New register function
-interface RegisterUser {
-    name: string;
-    email: string;
-    password: string;
-    phoneNumber: string;
-    userType: string;
-    userRole: string;
-    propertyIds: number[]; // or string[] depending on your setup
-}
-
-export const register = async (user: RegisterUser): Promise<any> => {
-    const response = await fetch(`${API_URL}/users`, {
-        method: 'POST',
+export const updateUser = async (id: number, user: UpdateUser, token: string): Promise<any> => {
+    const response = await fetch(`${API_URL}/users/${id}`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(user),
     });
 
     if (!response.ok) {
         const errorMessage = await response.text();
-        throw new Error(errorMessage || 'Failed to register');
+        throw new Error(errorMessage || 'Failed to update user');
     }
 
     const data = await response.json();
     return data;
 };
+
+export const deleteUser = async (id: number, token: string): Promise<any> => {
+    const response = await fetch(`${API_URL}/users/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || 'Failed to delete user');
+    }
+
+    return { message: 'User deleted successfully' };
+};
+
+

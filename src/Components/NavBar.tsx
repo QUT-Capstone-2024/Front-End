@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { AppBar, Toolbar, Box, Drawer } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { logout } from '../Redux/authSlice';
+import { logout } from '../Redux/Slices/userSlice';
 import { CustomButton, CustomModal, Logo, Spacer } from './index';
 
 // For testing
@@ -45,7 +45,6 @@ const Navbar: React.FC<NavbarProps> = ({ open, onClose }) => {
           width: '150px', 
           paddingTop: '2rem' 
         }}>
-          {/* Removed internal button; control drawer externally */}
         </Toolbar>
       </AppBar>
 
@@ -58,7 +57,7 @@ const Navbar: React.FC<NavbarProps> = ({ open, onClose }) => {
           onClick={onClose}
           onKeyDown={onClose}
         >
-          {isAdmin && <CustomButton label='User Management' navigationPath='/UserManagement' buttonType='navButton' isActive={isLocationActive('/UserManagement')}/>}
+          {isAdmin && <CustomButton label='User Management' navigationPath='/EditUser' buttonType='navButton' isActive={isLocationActive('/UserManagement')}/>}
           <CustomButton label={isAdmin? 'Home' : 'My Properties'} navigationPath='/Home' buttonType='navButton' isActive={isLocationActive('/Home')}/>
           {isLocationActive('/Gallery') && <CustomButton label='Gallery' navigationPath='/Gallery' buttonType='navButton' isActive={isLocationActive('/Gallery')}/>}
           <CustomButton label='Logout' buttonType='navButton' isActive={isLocationActive('/Logout')} onClick={toggleModal}/>

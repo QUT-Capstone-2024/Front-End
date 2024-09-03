@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { BaseForm, CustomAlert } from "./index";
 import { useNavigate } from "react-router-dom";
-import { register } from '../Services/userServices'; // Import the register function
+import { register } from '../Services';
 
-// Define the types for the form data
+
 type RegisterFormData = {
   username: string;
   email: string;
   password: string;
   confirmPassword: string;
   phoneNumber: string;
-  propertyIds: number[]; // Assuming propertyIds are numbers; adjust if they're strings
+  propertyIds: number[];
 };
 
-// Define the field configuration type
+
 type FieldConfig<T> = {
   name: keyof T;
   label: string;
@@ -22,7 +22,7 @@ type FieldConfig<T> = {
   validator?: (value: string | boolean) => string | null;
 };
 
-// Define the fields for the registration form
+
 const registerFields: FieldConfig<RegisterFormData>[] = [
   { name: "username", label: "User Name", type: "text", required: true },
   { name: "email", label: "Email", type: "email", required: true },
@@ -34,17 +34,16 @@ const registerFields: FieldConfig<RegisterFormData>[] = [
     required: true,
   },
   { name: "phoneNumber", label: "Phone Number", type: "text", required: true },
-  // Removed userType and userRole fields
 ];
 
-// Define the initial values for the form
+
 const initialValues: RegisterFormData = {
   username: "",
   email: "",
   password: "",
   confirmPassword: "",
   phoneNumber: "",
-  propertyIds: [], // Empty array initially
+  propertyIds: [],
 };
 
 const RegisterForm: React.FC = () => {
@@ -76,13 +75,13 @@ const RegisterForm: React.FC = () => {
         email: formData.email,
         password: formData.password,
         phoneNumber: formData.phoneNumber,
-        userType: "CL_ADMIN", // Set by default
-        userRole: "INTERNAL", // Set by default
+        userType: "PROPERTY_OWNER",
+        userRole: "EXTERNAL",
         propertyIds: formData.propertyIds,
       });
 
       console.log("Registration successful:", data);
-      navigate("/"); // Redirect after successful registration
+      navigate("/");
     } catch (error) {
       console.error("Registration failed:", error);
       setShowAlert(true);

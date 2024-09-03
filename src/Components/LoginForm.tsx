@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import BaseForm from './BaseForm';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../Hooks/useAppDispatch';
-import { login } from '../Redux/authSlice';
-import { RootState } from '../store';
+import { login } from '../Redux/Slices/userSlice';
+import { RootState } from '../Redux/store';
+
 
 interface LoginFormData {
     email: string;
@@ -30,16 +31,17 @@ const initialValues: LoginFormData = {
 };
 
 const LoginForm: React.FC = () => {
+    const user = useSelector((state: RootState) => state.user);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const authState = useSelector((state: RootState) => state.auth);
+    const userState = useSelector((state: RootState) => state.user);
     
     const handleLoginSubmit = async (formData: LoginFormData) => {
         try {
-            const token = await dispatch(login(formData)).unwrap();
-            // Save the token to localStorage or state management if needed
-            localStorage.setItem('token', token);
+            await dispatch(login(formData)).unwrap();
             navigate('/Home');
+            console.log('Login successful');
+            console.log(user);
         } catch (error) {
             console.error('Login failed:', error);
             alert('Login failed. Please check your credentials and try again.');
@@ -56,8 +58,8 @@ const LoginForm: React.FC = () => {
                 withCancelButton={false}
                 buttonLabel="Login"
             />
-            {authState.loading && <p>Loading...</p>}
-            {authState.error && <p style={{ color: 'red' }}>{authState.error}</p>}
+            {userState.loading && <p>Loading...</p>}
+            {userState.error && <p style={{ color: 'red' }}>{userState.error}</p>}
         </>
     );
 };

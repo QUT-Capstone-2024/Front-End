@@ -3,7 +3,8 @@
 // Global styles - Desktop
 html, body {
   height: 100%;
-  padding: 0 0 50px 0; /* Adds 50px of padding at the bottom */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove padding */
   box-sizing: border-box;
 }
 
@@ -11,16 +12,16 @@ body {
   font-family: 'Roboto', sans-serif;
   background-color: $background-default;
   color: $secondary-color;
-  
 }
 
 #root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-bottom: 0; /* Ensure content doesn't sit at the bottom */
+  margin: 0; /* Remove any margin */
+  padding: 0; /* Ensure there's no padding on the root */
   box-sizing: border-box;
-} 
+}
 
 // Headings
 h1, h2, h3, h4, h5, h6 {
