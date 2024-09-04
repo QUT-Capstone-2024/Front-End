@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Box, Drawer } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../Redux/store';
 import { logout } from '../Redux/Slices/userSlice';
 import { CustomButton, CustomModal, Logo, Spacer } from './index';
-
-// For testing
-const isAdmin = true;
+import { clearSelectedProperty } from '../Redux/Slices';
 
 interface NavbarProps {
   open: boolean;
@@ -17,6 +16,15 @@ const Navbar: React.FC<NavbarProps> = ({ open, onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
+  // Get the user type and check if the user is an admin
+  const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
+  const isAdmin = userType === 'CL_ADMIN';
+  
+  // Get the selected propertyId and propertySlug from Redux
+  const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
+  const propertySlug = useSelector((state: RootState) => state.currentProperty.propertySlug);
+
   const [modalOpen, setModalOpen] = useState(false);
 
   const isLocationActive = (path: string) => {
@@ -28,8 +36,8 @@ const Navbar: React.FC<NavbarProps> = ({ open, onClose }) => {
   };
 
   const handleLogout = () => {
-    console.log('Logging out...');
     dispatch(logout());
+    dispatch(clearSelectedProperty());
     navigate('/');
     setModalOpen(false);
   };
@@ -57,11 +65,59 @@ const Navbar: React.FC<NavbarProps> = ({ open, onClose }) => {
           onClick={onClose}
           onKeyDown={onClose}
         >
-          {isAdmin && <CustomButton label='User Management' navigationPath='/EditUser' buttonType='navButton' isActive={isLocationActive('/UserManagement')}/>}
-          <CustomButton label={isAdmin? 'Home' : 'My Properties'} navigationPath='/Home' buttonType='navButton' isActive={isLocationActive('/Home')}/>
-          {isLocationActive('/Gallery') && <CustomButton label='Gallery' navigationPath='/Gallery' buttonType='navButton' isActive={isLocationActive('/Gallery')}/>}
-          <CustomButton label='Logout' buttonType='navButton' isActive={isLocationActive('/Logout')} onClick={toggleModal}/>
-          <CustomButton buttonType='helpButton' label='Help' />
+          {/* Admin only */}
+          {isAdmin && 
+            <>
+              <CustomButton
+                label='User Management'
+                navigationPath='/EditUser'
+                buttonType='navButton'
+                isActive={isLocationActive('/EditUser')}
+              />
+              <CustomButton
+                label='Uploads'
+                navigationPath='/UploadManagement'
+                buttonType='navButton'
+                isActive={isLocationActive('/UploadManagement')}
+              />
+            </>
+          }
+
+          {/* Everyone else */}
+          <CustomButton 
+            label={isAdmin ? 'Home' : 'My Properties'} 
+            navigationPath='/Home' 
+            buttonType='navButton' 
+            isActive={isLocationActive('/Home')}
+          />
+
+          {/* Conditionally render Gallery button if property is selected */}
+          {selectedPropertyId && propertySlug ? (
+            <CustomButton 
+              label='Gallery' 
+              navigationPath={`/Gallery/${propertySlug}`} // Dynamic URL with propertySlug
+              buttonType='navButton' 
+              isActive={isLocationActive(`/Gallery/${propertySlug}`)}
+            />
+          ) : (
+            <CustomButton 
+              label='Gallery' 
+              buttonType='navButton' 
+              isActive={false} // Disable button if no property is selected
+              disabled
+            />
+          )}
+
+          <CustomButton 
+            label='Logout' 
+            buttonType='navButton' 
+            isActive={isLocationActive('/Logout')} 
+            onClick={toggleModal}
+          />
+          <CustomButton 
+            buttonType='helpButton' 
+            label='Help' 
+          />
         </Box>
       </Drawer>
 

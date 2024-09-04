@@ -3,10 +3,12 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storageSession from 'redux-persist/lib/storage/session';
 import userReducer from './Slices/userSlice';
 import helpReducer from './Slices/helpSlice';
+import propertyReducer from './Slices/propertySlice';
 
 const rootReducer = combineReducers({
   user: userReducer,
   help: helpReducer,
+  currentProperty: propertyReducer,
 });
 
 const persistConfig = {

@@ -9,6 +9,5 @@ export { default as UploadManagement } from "./UploadManagement";
 export { default as EditUser } from "./EditUser";
 
 // Error page exports
-export { default as Error401 } from "./ErrorPages/401";
 export { default as Error404 } from "./ErrorPages/404";
-export { default as Error501 } from "./ErrorPages/501";
+export { default as Unauthorized } from "./ErrorPages/Unauthorized";
