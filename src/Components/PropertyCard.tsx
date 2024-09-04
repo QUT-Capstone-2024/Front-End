@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { RootState } from '../Redux/store';
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
@@ -24,6 +26,11 @@ type PropertyCardProps = {
   externalPropertySize: number;
 };
 
+// Helper function to create a slug from the property address
+const createPropertySlug = (address: string) => {
+  return address.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+};
+
 const PropertyCard: React.FC<PropertyCardProps> = ({
   propertyAddress,
   bedrooms,
@@ -34,13 +41,16 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   externalPropertySize,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const isAdmin = true; // For testing purposes
-  // const isAdmin = useSelector((state: RootState) => state.auth.isAdmin);
+  const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
+  const isAdmin = userType === 'CL_ADMIN';    
   const navigate = useNavigate();
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
+
+  // Generate the property slug from the property address
+  const propertySlug = createPropertySlug(propertyAddress);
 
   // Order images by hero tag first
   const heroTag = 'Hero';
@@ -74,8 +84,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   };
 
   const handleEditPhotosClick = () => {
-    console.log('Photos clicked');
-    navigate('/gallery');
+    // Navigate to the gallery with the propertySlug
+    navigate(`/gallery/${propertySlug}`);
   };
  
   const handleRemovePropertyClick = () => {
@@ -84,7 +94,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 
   const menuItems = [
     { label: 'Edit Property Details', onClick: handleEditDetailsClick },
-    { label: 'Edit Property Photos', onClick: handleEditPhotosClick },
+    { label: 'Edit Property Photos', onClick: handleEditPhotosClick }, // Use the slug here
     ...(isAdmin ? 
       [{ label: 'Remove Ownership', onClick: handleRemovePropertyClick }] 
         : 

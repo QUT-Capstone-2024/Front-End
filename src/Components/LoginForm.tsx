@@ -40,8 +40,6 @@ const LoginForm: React.FC = () => {
         try {
             await dispatch(login(formData)).unwrap();
             navigate('/Home');
-            console.log('Login successful');
-            console.log(user);
         } catch (error) {
             console.error('Login failed:', error);
             alert('Login failed. Please check your credentials and try again.');

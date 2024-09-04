@@ -60,8 +60,8 @@ const UpdateForm: React.FC<{
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const token = useSelector((state: RootState) => state.user.token);
-  const userRole = useSelector((state: RootState) => state.user.userDetails?.role);
-  const isAdmin = userRole === 'CL_ADMIN';
+  const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
+  const isAdmin = userType === 'CL_ADMIN';
 
 
   useEffect(() => {

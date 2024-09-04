@@ -10,6 +10,7 @@ interface UserState {
     email: string;
     name: string;
     role: string;
+    userType: string;
   } | null;
 }
 
@@ -58,6 +59,7 @@ export const userSlice = createSlice({
           email: action.payload.email,
           name: action.payload.name,
           role: action.payload.role,
+          userType: action.payload.userType,
         };
         localStorage.setItem('token', action.payload.token);
       })
