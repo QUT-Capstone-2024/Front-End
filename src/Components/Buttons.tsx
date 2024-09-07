@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button, IconButton, Tooltip } from '@mui/material';
-import {Help as HelpIcon, Close as CloseIcon, Settings as SettingsIcon,} from '@mui/icons-material';
+import {Help as HelpIcon, Close as CloseIcon, Settings as SettingsIcon, Upload as UploadIcon } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 
 
 type ButtonProps = {
-  buttonType?: 'navButton' | 'helpButton' | 'warningButton' | 'errorButton' | 'successButton' | 'closeButton' | 'textOnly' | 'cancelButton' | 'settingsButton';
+  buttonType?: 'navButton' | 'helpButton' | 'warningButton' | 'errorButton' | 'successButton' | 'closeButton' | 'textOnly' | 'cancelButton' | 'settingsButton' | 'uploadButton';
   label: string;
   withTooltip?: boolean;
   tooltipText?: string;
@@ -53,14 +53,21 @@ const CustomButton: React.FC<ButtonProps> = ({ buttonType, label, withIcon, icon
             <SettingsIcon sx={{ fontSize: '30px'}}/>
           </IconButton>
       );
+
+    case 'uploadButton':
+      return (
+          <IconButton sx={ style } onClick={onClick} className={buttonType}>
+            <UploadIcon sx={{ fontSize: '36px' }}/>
+          </IconButton>
+      );
      
     case 'closeButton':
       return (
         <Tooltip title={label} className='closeButton'>
-        <IconButton style={ style } onClick={onClick}>
-          <CloseIcon />
-        </IconButton>
-      </Tooltip>
+          <IconButton style={ style } onClick={onClick}>
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
       );
 
     case 'textOnly':

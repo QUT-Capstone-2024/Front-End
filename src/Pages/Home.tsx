@@ -1,58 +1,79 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../Redux/store';
-import { selectProperty } from '../Redux/Slices/propertySlice'; // Updated action to dispatch propertyId and address
+import { selectProperty } from '../Redux/Slices/propertySlice'; 
+import { getUserCollections, getAllCollections } from '../Services';
 import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard } from '../Components';
+import { Collection } from '../types'; 
 import './PropertiesHome.scss';
 
-// REMOVE: Test data
-import propertiesData from '../Test Data/sample_properties.json';
-
-interface Property {
-  id: number;
-  propertyAddress: string;
-  imageUrl?: string;
-  collectionId: string;
-  propertyOwnerId: string;
-  bedrooms: number;
-  bathrooms: number;
-  parkingSpaces: number;
-  approvalStatus: "queued" | "approved" | "rejected";
-  propertyType: string;
-  propertyDescription: string;
-  internalPropertySize: number;
-  externalPropertySize: number;
-}
-
 interface HomeProps {}
-
-// Type cast the imported JSON data
-const properties: Property[] = propertiesData as Property[];
 
 const Home: React.FC<HomeProps> = () => {
   const dispatch = useDispatch();
   const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
+  const userId = useSelector((state: RootState) => state.user.userDetails?.id);
+  const token = useSelector((state: RootState) => state.user.token);
+  const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const isAdmin = userType === 'CL_ADMIN';
 
-  // This state stores the currently selected property locally
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  // State for fetched properties (collections)
+  const [properties, setProperties] = useState<Collection[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // If no property is selected, select the first property by default
+  // Fetch collections on component mount
   useEffect(() => {
-    if (properties.length > 0 && !selectedProperty) {
-      const defaultProperty = properties[0];
-      setSelectedProperty(defaultProperty);
-      // Dispatch both propertyId and propertyAddress to the Redux slice
-      dispatch(selectProperty({ propertyId: defaultProperty.id, propertyAddress: defaultProperty.propertyAddress }));
-    }
-  }, [properties, selectedProperty, dispatch]);
+    const fetchProperties = async () => {
+      if (!token) {
+        setError('User not authenticated');
+        return;
+      }
 
-  // When a property card is clicked, update both the local state and Redux store
-  const handleCardClick = (property: Property) => {
-    setSelectedProperty(property);
-    // Dispatch both propertyId and propertyAddress to generate the slug in the slice
-    dispatch(selectProperty({ propertyId: property.id, propertyAddress: property.propertyAddress }));
+      try {
+        setLoading(true);
+        let fetchedCollections: Collection[] = [];
+
+        if (isAdmin) {
+          // Admin users fetch all collections
+          fetchedCollections = await getAllCollections(token);
+        } else if (userId) {
+          // Non-admin users fetch only their collections
+          fetchedCollections = await getUserCollections(userId, token);
+        }
+
+        setProperties(fetchedCollections);
+
+        if (fetchedCollections.length > 0 && !selectedPropertyId) {
+          // If there's no selected property yet, select the first one by default
+          dispatch(selectProperty({
+            propertyId: fetchedCollections[0].id,
+            propertyAddress: fetchedCollections[0].propertyAddress,
+          }));
+        }
+      } catch (err) {
+        setError('Failed to fetch properties');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, [dispatch, userId, token, isAdmin, selectedPropertyId]);
+
+  // Get selected property from properties list based on selectedPropertyId
+  const selectedProperty = properties.find((property) => property.id === selectedPropertyId);
+
+  // Event handler for selecting a property
+  const handleCardClick = (property: Collection) => {
+    dispatch(selectProperty({
+      propertyId: property.id,
+      propertyAddress: property.propertyAddress,
+    }));
   };
+
+  if (loading) return <p>Loading properties...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div>
@@ -62,16 +83,16 @@ const Home: React.FC<HomeProps> = () => {
           {isAdmin && <SearchBar placeholder="Search for a property" onSearch={(query) => console.log(query)} />}
           {!isAdmin && <AddPropertyCard />}
           <Spacer height={1} />
-          <h2 className="left">{isAdmin ? 'Properties' : 'My Properties'}</h2>
+          <h2 className="left">{isAdmin ? 'All Properties' : 'My Properties'}</h2>
           <Spacer height={0.5} />
-          {properties.map((property: Property) => (
+          {properties.map((property: Collection) => (
             <div
               key={property.id}
               className="small-display-card-container"
-              onClick={() => handleCardClick(property)} // Update both local state and Redux on click
+              onClick={() => handleCardClick(property)}
             >
               <SmallDisplayCard
-                image={property.imageUrl}
+                image={property.imageUrls && property.imageUrls.length > 0 ? property.imageUrls[0] : ''}
                 propertyType={property.propertyType}
                 propertyAddress={property.propertyAddress}
               />
@@ -79,28 +100,29 @@ const Home: React.FC<HomeProps> = () => {
           ))}
         </div>
         <div style={{ marginTop: '10px', width: '60%' }}>
-          {selectedProperty ? (
-            <PropertyCard
-              propertyAddress={selectedProperty.propertyAddress}
-              imageUrl={selectedProperty.imageUrl}
-              collectionId={selectedProperty.collectionId}
-              propertyOwnerId={selectedProperty.propertyOwnerId}
-              bedrooms={selectedProperty.bedrooms}
-              bathrooms={selectedProperty.bathrooms}
-              parkingSpaces={selectedProperty.parkingSpaces}
-              approvalStatus={selectedProperty.approvalStatus}
-              propertyType={selectedProperty.propertyType}
-              propertyDescription={selectedProperty.propertyDescription}
-              internalPropertySize={selectedProperty.internalPropertySize}
-              externalPropertySize={selectedProperty.externalPropertySize}
-            />
-          ) : (
-            <div className="empty-property-card">
-              <Spacer height={2} />
-              <h2>No property selected</h2>
-              <div>Select a property to view details</div>
-            </div>
-          )}
+        {selectedProperty ? (
+          <PropertyCard
+            propertyAddress={selectedProperty.propertyAddress}
+            imageUrl={selectedProperty.imageUrls && selectedProperty.imageUrls.length > 0 ? selectedProperty.imageUrls[0] : ''}
+            collectionId={selectedProperty.id}
+            propertyOwnerId={selectedProperty.propertyOwnerId}
+            bedrooms={selectedProperty.bedrooms}
+            bathrooms={selectedProperty.bathrooms}
+            parkingSpaces={selectedProperty.parkingSpaces ?? 0}
+            approvalStatus={selectedProperty.approvalStatus}
+            propertyType={selectedProperty.propertyType}
+            propertyDescription={selectedProperty.propertyDescription}
+            internalPropertySize={selectedProperty.propertySize}
+            externalPropertySize={0}
+          />
+        ) : (
+          <div className="empty-property-card">
+            <Spacer height={2} />
+            <h2>No property selected</h2>
+            <div>Select a property to view details</div>
+          </div>
+        )}
+
         </div>
       </div>
       <Spacer height={4} />

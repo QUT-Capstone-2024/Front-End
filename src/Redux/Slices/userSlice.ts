@@ -7,6 +7,7 @@ interface UserState {
   error: string | null;
   token: string | null;
   userDetails: {
+    id: number;
     email: string;
     name: string;
     role: string;
@@ -56,6 +57,7 @@ export const userSlice = createSlice({
         state.isLoggedIn = true;
         state.token = action.payload.token;
         state.userDetails = {
+          id: action.payload.id,
           email: action.payload.email,
           name: action.payload.name,
           role: action.payload.role,

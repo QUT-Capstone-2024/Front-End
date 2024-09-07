@@ -202,6 +202,7 @@ html {
 ////////////////////////////////////////////////////////////////
 // Buttons
 .css-bq05nv-MuiSvgIcon-root {
+  transition: all 0.1s ease-in-out;
   &:hover {
     transform: scale(1.05);
   }
@@ -241,7 +242,7 @@ html {
   bottom: 30px;
   z-index: 1;
   padding: 0px;
-  transition: background-color 0.3s ease;
+  transition: all 0.1s ease-in-out;
 
   &:hover {
     background-color: $primary-color;
@@ -252,12 +253,23 @@ html {
   color: $branding-color;
   background-color: transparent;
   padding: 0px;
-  transition: background-color 0.3s ease;
-
+  transition: all 0.1s ease-in-out;
   &:hover {
     background-color: transparent;
     color: $primary-color;
     transform: scale(1.05);
+  }
+}
+
+.MuiIconButton-root.uploadButton {
+  color: $success-color;
+  background-color: transparent;
+  padding: 0px;
+  transition: all 0.1s ease-in-out;
+  &:hover {
+    background-color: transparent;
+    color: $primary-color;
+    transform: scale(1.1);
   }
 }
 
@@ -290,14 +302,13 @@ html {
   border-radius: 10px;
 }
 
-.MuiButton-root.textButton {
+.MuiButton-text {
   background-color: transparent;
-  color: $info-color;
-  font-weight: bolder;
-  
+  color: $success-color;
+  font-size: 1rem !important;
   &:hover {
     color: $branding-color;
-    background-color: transparent;
+    background-color: transparent !important;
   }
 }
 
@@ -404,9 +415,9 @@ html {
 ////////////////////////////////////////////////////////////////
 // Images and Icons
 .thumbnail-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+  width: $thumbnail-size;
+  height: $thumbnail-size;
+  border-radius: $circle;
   object-fit: cover;
 }
 

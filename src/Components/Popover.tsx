@@ -5,7 +5,7 @@ interface PopoverProps {
   content: React.ReactNode;
   visible: boolean;
   onClose: () => void;
-  type?: 'gallery' | 'hero';
+  type?: 'gallery' | 'hero' | 'property-card' | 'thumbnail';
 }
 
 const Popover: React.FC<PopoverProps> = ({ content, visible, onClose, type = 'gallery' }) => {
@@ -13,7 +13,7 @@ const Popover: React.FC<PopoverProps> = ({ content, visible, onClose, type = 'ga
 
   return (
       <div className={`popover-overlay ${type}`} onClick={onClose}>
-        <div className="popover-content">{content}</div>
+        <div className={`popover-content ${type}`}>{content}</div>
       </div>
   );
 };

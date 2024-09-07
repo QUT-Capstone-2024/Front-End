@@ -31,7 +31,6 @@ const initialValues: LoginFormData = {
 };
 
 const LoginForm: React.FC = () => {
-    const user = useSelector((state: RootState) => state.user);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const userState = useSelector((state: RootState) => state.user);
