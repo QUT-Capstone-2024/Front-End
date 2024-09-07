@@ -14,11 +14,13 @@ const Gallery: React.FC = () => {
   const [propertyDetails, setPropertyDetails] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Accessing Redux state for selected property and user token
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const token = useSelector((state: RootState) => state.user.token);
   const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
   const isAdmin = userType === 'CL_ADMIN';
 
+  // Fetch property images and details on component mount
   useEffect(() => {
     const fetchPropertyData = async () => {
       if (selectedPropertyId && token) {
@@ -37,59 +39,61 @@ const Gallery: React.FC = () => {
     fetchPropertyData();
   }, [selectedPropertyId, token]);
 
+  // Handling menu actions
   const menuItems = [
     { label: 'Download Selected', onClick: () => console.log('Download Selected') },
     { label: isAdmin ? 'Remove Selected' : 'Request removal of Selected', onClick: () => console.log('Remove Selected') },
   ];
 
+  // Early return if there's an error or no property data
   if (!propertyDetails || error) {
     return <div>{error || "Property not found"}</div>;
   }
 
-  // Separate the Hero card from the rest of the images
+  // Separate Hero card from other images
   const heroCard = images.find((image) => image.imageTag.includes('Hero'));
   const otherCards = images.filter((image) => !image.imageTag.includes('Hero'));
 
-  // Function to generate GalleryCards based on missing images
-  // Remove the hero card rendering logic from `renderUploadableCards` since it's already handled elsewhere
-const renderUploadableCards = () => {
-  const uploadableCards = [];
+  // Function to render cards for missing images based on property specs
+  const renderUploadableCards = () => {
+    const uploadableCards = [];
 
-  // Generate cards for each bedroom
-  for (let i = 1; i <= propertyDetails.bedrooms; i++) {
-    const imageTag = `Bedroom ${i}`;
-    const bedroomImage = images.find(image => image.imageTag === imageTag);
+    // Generate cards for each bedroom
+    for (let i = 1; i <= propertyDetails.bedrooms; i++) {
+      const imageTag = `Bedroom ${i}`;
+      const bedroomImage = images.find(image => image.imageTag === imageTag);
 
-    uploadableCards.push(
-      <GalleryCard
-        key={`bedroom-${i}`}
-        cardType="gallery"
-        imageTag={`Bedroom ${i}`}
-        imageStatus={bedroomImage ? bedroomImage.imageStatus : 'queued'}
-        image={bedroomImage ? bedroomImage.imageUrl : null}
-      />
-    );
-  }
+      uploadableCards.push(
+        <GalleryCard
+          key={`bedroom-${i}`}
+          cardType="gallery"
+          imageTag={`Bedroom ${i}`}
+          imageStatus={bedroomImage ? bedroomImage.imageStatus : 'queued'}
+          image={bedroomImage ? bedroomImage.imageUrl : null}
+          collectionId={selectedPropertyId} // Pass collectionId for uploads
+        />
+      );
+    }
 
-  // Generate cards for bathrooms, kitchens, etc.
-  for (let i = 1; i <= propertyDetails.bathrooms; i++) {
-    const imageTag = `Bathroom ${i}`;
-    const bathroomImage = images.find(image => image.imageTag === imageTag);
+    // Generate cards for bathrooms
+    for (let i = 1; i <= propertyDetails.bathrooms; i++) {
+      const imageTag = `Bathroom ${i}`;
+      const bathroomImage = images.find(image => image.imageTag === imageTag);
 
-    uploadableCards.push(
-      <GalleryCard
-        key={`bathroom-${i}`}
-        cardType="gallery"
-        imageTag={`Bathroom ${i}`}
-        imageStatus={bathroomImage ? bathroomImage.imageStatus : 'queued'}
-        image={bathroomImage ? bathroomImage.imageUrl : null}
-      />
-    );
-  }
+      uploadableCards.push(
+        <GalleryCard
+          key={`bathroom-${i}`}
+          cardType="gallery"
+          imageTag={`Bathroom ${i}`}
+          imageStatus={bathroomImage ? bathroomImage.imageStatus : 'queued'}
+          image={bathroomImage ? bathroomImage.imageUrl : null}
+          collectionId={selectedPropertyId} // Pass collectionId for uploads
+        />
+      );
+    }
 
-  return uploadableCards;
-};
-
+    return uploadableCards;
+  };
 
   return (
     <div className='gallery-container'>
@@ -121,6 +125,7 @@ const renderUploadableCards = () => {
                 rejectionReason={heroCard.rejectionReason}
                 imageComments={heroCard.imageComments}
                 imageDate={heroCard.uploadTime.split('T')[0]}
+                collectionId={selectedPropertyId} // Pass collectionId
               />
             </div>
           ) : (
@@ -130,6 +135,7 @@ const renderUploadableCards = () => {
                 imageTag="Front Image (Hero)"
                 imageStatus="queued"
                 image={null} 
+                collectionId={selectedPropertyId} // Pass collectionId
               />
             </div>
           )}
@@ -146,6 +152,7 @@ const renderUploadableCards = () => {
                 rejectionReason={imageData.rejectionReason}
                 imageComments={imageData.imageComments}
                 imageDate={imageData.uploadTime.split('T')[0]}
+                collectionId={selectedPropertyId} // Pass collectionId
               />
             ))}
           </div>
