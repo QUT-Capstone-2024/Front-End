@@ -1,23 +1,33 @@
 import React, { useState, useRef } from "react";
 import { CustomButton, StatusStamp, Popover, CustomModal, EditImageModalContent as ModalContent } from "./index";
 import EditIcon from '@mui/icons-material/Edit';
+import UploadIcon from '@mui/icons-material/Upload';
 import '../Styles/Cards.scss';
 
 interface GalleryCardProps {
   cardType: "hero" | "gallery";
-  image: string;
+  image?: string | null;
   imageTag: string;
   imageStatus: "queued" | "approved" | "rejected";
   rejectionReason?: string;
   imageComments?: string;
   imageDate?: string;
-};
+}
 
-const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus, rejectionReason, cardType = 'gallery', imageComments, imageDate }) => {
+const GalleryCard: React.FC<GalleryCardProps> = ({
+  image,
+  imageTag,
+  imageStatus,
+  rejectionReason,
+  cardType = 'gallery',
+  imageComments,
+  imageDate
+}) => {
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(image || null); 
   const cardRef = useRef<HTMLDivElement>(null);
-  
+
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
@@ -27,10 +37,10 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus,
   };
 
   const handleUpdate = (updatedImage: File | null, updatedTag: string, updatedDescription: string) => {
-    console.log('Updated image:', updatedImage);
-    console.log('Updated category:', updatedTag);
-    console.log('Updated description:', updatedDescription);
-    // TODO: Implement update logic
+    if (updatedImage) {
+      const imageUrl = URL.createObjectURL(updatedImage);
+      setUploadedImage(imageUrl);
+    }
     toggleModal();
   };
 
@@ -46,32 +56,52 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus,
   );
 
   return (
-    <div ref={cardRef}>
+    <div ref={cardRef} className="gallery-card">
       <div className="gallery-image-container"> 
-        {imageStatus !== 'approved' && <StatusStamp status={imageStatus} className={`stamp ${cardType}`}/>}
+        {/* Don't show the status if the image is approved or there is no image */}
+        {imageStatus !== 'approved' && image && <StatusStamp status={imageStatus} className={`stamp ${cardType}`} />}
+
+        {/* Conditional rendering: Show the uploaded image or an empty placeholder */}
+        {uploadedImage ? (
+          <img className={`${cardType} gallery-card-image`} src={uploadedImage} alt={imageTag} />
+        ) : (
+          <div className={`${cardType} gallery-card-image`} />
+        )}
+
+        {/* Details button only if an image exists */}
+        {uploadedImage && (
+          <CustomButton 
+            className={`details-button ${cardType}`} 
+            label='Details' 
+            buttonType="textOnly"
+            onClick={handlePopoverClick}
+          />
+        )}
         
-        <img className={`${cardType} gallery-card-image`} src={image} alt={imageTag} />
+        {/* the upload/edit icon is always visible for editing/uploading */}
+        {uploadedImage ?
+            <EditIcon className={`edit-icon ${cardType}`} onClick={toggleModal} />
+          : 
+            <UploadIcon className={`edit-icon ${cardType}`} onClick={toggleModal} />      
+        }
         
-        <CustomButton 
-          className={`details-button ${cardType}`} 
-          label='Details' 
-          buttonType="textOnly"
-          onClick={handlePopoverClick}
-        />
-        
-        <EditIcon className={`edit-icon ${cardType}`} onClick={() => setModalOpen(true)} />
-        
-        <Popover
-          content={popoverContent}
-          visible={popoverVisible}
-          onClose={handlePopoverClick}
-          type={cardType}
-        />
+        {/* Popover to show image details */}
+        {uploadedImage && (
+          <Popover
+            content={popoverContent}
+            visible={popoverVisible}
+            onClose={handlePopoverClick}
+            type={cardType}
+          />
+        )}
       </div>
+
+      {/* Image tag */}
       <div className="gallery-card-tag">
         <p>{imageTag}</p>
       </div>
 
+      {/* Modal for uploading a new image */}
       <CustomModal
         modalType='editDetails'
         open={modalOpen}
@@ -80,11 +110,11 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ image, imageTag, imageStatus,
         title={imageTag}
       >
         <ModalContent 
-          image={image} 
+          image={uploadedImage || ''} 
           imageTag={imageTag} 
           description={imageComments}
           toggleModal={toggleModal} 
-          onUpdate={handleUpdate}
+          onUpdate={handleUpdate} 
         />
       </CustomModal>
     </div>

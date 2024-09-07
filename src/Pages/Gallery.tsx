@@ -1,38 +1,95 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../Redux/store'; // Correct import for Redux store
-import { GalleryCard, Spacer, Dropdown } from '../Components';
+import { RootState } from '../Redux/store';
+import { Spacer, Dropdown, GalleryCard } from '../Components';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './Gallery.scss';
 import { useNavigate } from 'react-router-dom';
-
-// REMOVE: for testing purposes only
-import sampleImageData from "../Test Data/sample_images.json";
-import samplePropertyData from "../Test Data/sample_properties.json";
+import { getImagesByCollectionId, getCollectionById } from '../Services';
+import { Image } from '../types';
 
 const Gallery: React.FC = () => {
   const navigate = useNavigate();
+  const [images, setImages] = useState<Image[]>([]);
+  const [propertyDetails, setPropertyDetails] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Get the selected propertyId from the Redux store
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
-
-  // Find the property from sample data based on the selectedPropertyId
-  const property = samplePropertyData.find((prop) => prop.id === selectedPropertyId);
+  const token = useSelector((state: RootState) => state.user.token);
   const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
   const isAdmin = userType === 'CL_ADMIN';
+
+  useEffect(() => {
+    const fetchPropertyData = async () => {
+      if (selectedPropertyId && token) {
+        try {
+          const fetchedImages = await getImagesByCollectionId(selectedPropertyId, token);
+          const fetchedPropertyDetails = await getCollectionById(selectedPropertyId, token);
+
+          setImages(fetchedImages);
+          setPropertyDetails(fetchedPropertyDetails);
+        } catch (error) {
+          console.error("Error fetching property data:", error);
+          setError("Failed to fetch property data.");
+        }
+      }
+    };
+    fetchPropertyData();
+  }, [selectedPropertyId, token]);
 
   const menuItems = [
     { label: 'Download Selected', onClick: () => console.log('Download Selected') },
     { label: isAdmin ? 'Remove Selected' : 'Request removal of Selected', onClick: () => console.log('Remove Selected') },
   ];
 
-  if (!property) {
-    return <div>Property not found</div>;
+  if (!propertyDetails || error) {
+    return <div>{error || "Property not found"}</div>;
   }
 
   // Separate the Hero card from the rest of the images
-  const heroCard = sampleImageData.images.find((image) => image.imageTag.includes('Hero'));
-  const otherCards = sampleImageData.images.filter((image) => !image.imageTag.includes('Hero'));
+  const heroCard = images.find((image) => image.imageTag.includes('Hero'));
+  const otherCards = images.filter((image) => !image.imageTag.includes('Hero'));
+
+  // Function to generate GalleryCards based on missing images
+  // Remove the hero card rendering logic from `renderUploadableCards` since it's already handled elsewhere
+const renderUploadableCards = () => {
+  const uploadableCards = [];
+
+  // Generate cards for each bedroom
+  for (let i = 1; i <= propertyDetails.bedrooms; i++) {
+    const imageTag = `Bedroom ${i}`;
+    const bedroomImage = images.find(image => image.imageTag === imageTag);
+
+    uploadableCards.push(
+      <GalleryCard
+        key={`bedroom-${i}`}
+        cardType="gallery"
+        imageTag={`Bedroom ${i}`}
+        imageStatus={bedroomImage ? bedroomImage.imageStatus : 'queued'}
+        image={bedroomImage ? bedroomImage.imageUrl : null}
+      />
+    );
+  }
+
+  // Generate cards for bathrooms, kitchens, etc.
+  for (let i = 1; i <= propertyDetails.bathrooms; i++) {
+    const imageTag = `Bathroom ${i}`;
+    const bathroomImage = images.find(image => image.imageTag === imageTag);
+
+    uploadableCards.push(
+      <GalleryCard
+        key={`bathroom-${i}`}
+        cardType="gallery"
+        imageTag={`Bathroom ${i}`}
+        imageStatus={bathroomImage ? bathroomImage.imageStatus : 'queued'}
+        image={bathroomImage ? bathroomImage.imageUrl : null}
+      />
+    );
+  }
+
+  return uploadableCards;
+};
+
 
   return (
     <div className='gallery-container'>
@@ -48,12 +105,12 @@ const Gallery: React.FC = () => {
         />
       </div>
 
-      {property && (
+      {propertyDetails && (
         <>
-          <h2 className='address'>{property.propertyAddress}</h2>
+          <h2 className='address'>{propertyDetails.propertyAddress}</h2>
 
           {/* Render the Hero card separately */}
-          {heroCard && (
+          {heroCard ? (
             <div className='hero-card-container'>
               <GalleryCard
                 key={heroCard.imageId}
@@ -64,6 +121,15 @@ const Gallery: React.FC = () => {
                 rejectionReason={heroCard.rejectionReason}
                 imageComments={heroCard.imageComments}
                 imageDate={heroCard.uploadTime.split('T')[0]}
+              />
+            </div>
+          ) : (
+            <div className='hero-card-placeholder'>
+              <GalleryCard
+                cardType="hero"
+                imageTag="Front Image (Hero)"
+                imageStatus="queued"
+                image={null} 
               />
             </div>
           )}
@@ -82,6 +148,11 @@ const Gallery: React.FC = () => {
                 imageDate={imageData.uploadTime.split('T')[0]}
               />
             ))}
+          </div>
+
+          {/* Render uploadable cards for missing images */}
+          <div className="upload-buttons-container">
+            {renderUploadableCards()}
           </div>
         </>
       )}

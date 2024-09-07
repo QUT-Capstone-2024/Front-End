@@ -19,6 +19,8 @@
   justify-content: center;
   z-index: 1000;
   border-radius: $border-radius;
+  height: 100%;
+  width: 100%;
   & p {
     color: $success-color;
     font-weight: bold;
@@ -33,12 +35,24 @@
     height: $hero-image-size;
     width: $hero-image-size;
   }
+  &.property-card {
+    border-radius: 0;
+    height: $property-card-height;
+    width: $property-card-width;
+    box-sizing: border-box;
+  }
+  &.thumbnail {
+    height: $thumbnail-size;
+    width: $thumbnail-size;
+    border-radius: $circle;
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+  }
 }
 
 .popover-content {
   background: transparent;
   border: none;
-  padding: 5px;
   &.gallery {
     padding: 5px;
     height: $image-size;
@@ -48,5 +62,19 @@
     padding: 2px;
     height: $hero-image-size;
     width: $hero-image-size;
+  }
+  &.property-card {
+    height: $property-card-height;
+    width: $property-card-width;
+    text-align: center;
+    & h2 {
+      padding: 1rem 0rem 1rem 0rem;
+      color: $warning-color;
+      text-shadow: $text-shadow;
+    }
+    & p {
+      padding: 0rem 1.5rem 0rem 1.5rem;
+      text-align: left;
+    }
   }
 }
