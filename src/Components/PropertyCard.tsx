@@ -172,7 +172,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
               title="Images Needing Attention"
               submittedDateTime={new Date(mostRecentPendingImage.uploadTime).toLocaleDateString()}
               description=""
-              onButtonClick={() => navigate(`/gallery/${propertySlug}`)}
+              onButtonClick={() => navigate(`/ImageApproval`)}
               cardType="Review"
             />
           </>
