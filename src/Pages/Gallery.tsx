@@ -7,6 +7,8 @@ import './Gallery.scss';
 import { useNavigate } from 'react-router-dom';
 import { getImagesByCollectionId, getCollectionById } from '../Services';
 import { Image } from '../types';
+import { ImageTags } from '../Constants/ImageTags';
+import { JSX } from 'react/jsx-runtime';
 
 const Gallery: React.FC = () => {
   const navigate = useNavigate();
@@ -58,51 +60,47 @@ const Gallery: React.FC = () => {
       }
     });
 
-    return Object.values(imageMap); // Return the latest image for each tag
+    return imageMap; // Return the latest image map by tag
   };
 
   // Get the latest images
   const latestImages = getLatestImagesByTag(images);
 
   // Separate the Hero card from the rest of the images by selecting the FRONT tag
-  const heroCard = latestImages.find((image) => image.imageTag.includes('FRONT'));
-  const otherCards = latestImages.filter((image) => !image.imageTag.includes('FRONT'));
+  const heroCard = latestImages["FRONT"];
+  const otherCards = Object.values(latestImages).filter((image) => image.imageTag !== 'FRONT');
 
   // Function to generate GalleryCards based on missing images
   const renderUploadableCards = () => {
-    const uploadableCards = [];
+    const uploadableCards: JSX.Element[] = [];
 
-    // Generate cards for each bedroom
-    for (let i = 1; i <= propertyDetails.bedrooms; i++) {
-      const imageTag = `Bedroom ${i}`;
-      const bedroomImage = latestImages.find(image => image.imageTag === imageTag);
+    // Handle dynamic creation based on property specs
+    const specs = [
+      { key: 'bedrooms', tag: 'BEDROOM', displayName: 'Bedroom' },
+      { key: 'bathrooms', tag: 'BATHROOM', displayName: 'Bathroom' },
+      { key: 'parkingSpaces', tag: 'GARAGE', displayName: 'Garage' },
+    ];
 
-      uploadableCards.push(
-        <GalleryCard
-          key={`bedroom-${i}`}
-          cardType="gallery"
-          imageTag={`Bedroom ${i}`}
-          imageStatus={bedroomImage ? bedroomImage.imageStatus : 'PENDING'}
-          image={bedroomImage ? bedroomImage.imageUrl : null}
-        />
-      );
-    }
+    specs.forEach(({ key, tag, displayName }) => {
+      const count = propertyDetails[key]; // Get the number of bedrooms, bathrooms, etc.
+      const existingImages = Object.values(latestImages).filter((image) => image.imageTag === tag); // Get already uploaded images by tag
+      const missingCount = count - existingImages.length; // Calculate missing images
 
-    // Generate cards for bathrooms, kitchens, etc.
-    for (let i = 1; i <= propertyDetails.bathrooms; i++) {
-      const imageTag = `Bathroom ${i}`;
-      const bathroomImage = latestImages.find(image => image.imageTag === imageTag);
+      // Add placeholders for missing images
+      for (let i = 1; i <= missingCount; i++) {
+        const imageTag = count > 1 ? `${displayName} ${existingImages.length + i}` : displayName; // If more than one, show number
 
-      uploadableCards.push(
-        <GalleryCard
-          key={`bathroom-${i}`}
-          cardType="gallery"
-          imageTag={`Bathroom ${i}`}
-          imageStatus={bathroomImage ? bathroomImage.imageStatus : 'PENDING'}
-          image={bathroomImage ? bathroomImage.imageUrl : null}
-        />
-      );
-    }
+        uploadableCards.push(
+          <GalleryCard
+            key={`${displayName}-${i}`}
+            cardType="gallery"
+            imageTag={imageTag}
+            imageStatus="PENDING"
+            image={null} // Placeholder, since there's no image yet
+          />
+        );
+      }
+    });
 
     return uploadableCards;
   };
@@ -140,7 +138,7 @@ const Gallery: React.FC = () => {
               />
             </div>
           ) : (
-            <div className='hero-card-placeholder'>
+            <div className='hero-card-container'>
               <GalleryCard
                 cardType="hero"
                 imageTag=""
@@ -156,7 +154,7 @@ const Gallery: React.FC = () => {
               <GalleryCard
                 key={imageData.imageId}
                 image={imageData.imageUrl}
-                imageTag={imageData.imageTag}
+                imageTag={ImageTags.find(tag => tag.name === imageData.imageTag)?.displayName || imageData.imageTag}
                 imageStatus={imageData.imageStatus as "UNTAGGED" | "PENDING" | "APPROVED" | "REJECTED" | "ARCHIVED"}
                 cardType='gallery'
                 rejectionReason={imageData.rejectionReason}
@@ -164,7 +162,7 @@ const Gallery: React.FC = () => {
                 imageDate={imageData.uploadTime.split('T')[0]}
               />
             ))}
-            {/* Placeholder cards based on the property specs */}
+            {/* Dynamically render uploadable cards based on property specs */}
             {renderUploadableCards()}
           </div>
         </>

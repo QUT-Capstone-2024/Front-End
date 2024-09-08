@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { CustomButton, TextInput } from './';
-import Spacer from './Spacer';
 
 interface FileUploadProps {
   onFileSelect: (file: File) => void;
-  initialFileName?: string; // Optional prop to set the initial file name
+  initialFileName?: string;
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, initialFileName }) => {
@@ -26,7 +25,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, initialFileName }
       if (isValidType) {
         setSelectedFileName(file.name);
         setError(null);
-        onFileSelect(file);
+        onFileSelect(file); // Pass the selected file to parent
       } else {
         setError('Please select a valid .png or .jpg file');
         setSelectedFileName(null);
@@ -34,14 +33,17 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, initialFileName }
     }
   };
 
-  const handleButtonClick = () => {
-    document.getElementById('file-input')?.click(); // Trigger the file input click
-  };
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, padding: 0 }}>
-      <CustomButton label="change image" onClick={handleButtonClick} />
-      <TextInput size='small' label='Image File' value={selectedFileName || ''} placeholder="No file selected" editable={false} onChange={() => console.log('changed')} />
+      <CustomButton label="Change image" onClick={() => document.getElementById('file-input')?.click()} />
+      <TextInput
+        size="small"
+        label="Image File"
+        value={selectedFileName || ''}
+        placeholder="No file selected"
+        editable={false}
+        onChange={() => {}}
+      />
       <input
         id="file-input"
         type="file"
@@ -49,6 +51,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, initialFileName }
         style={{ display: 'none' }}
         onChange={handleFileChange}
       />
+      {error && <span style={{ color: 'red' }}>{error}</span>}
     </Box>
   );
 };

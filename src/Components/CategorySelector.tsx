@@ -40,7 +40,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
       >
         {ImageTags.map((tag) => (
           <MenuItem key={tag.key} value={tag.key.toString()}>
-            {tag.name}
+            {tag.displayName}  {/* Use displayName for human-readable names */}
           </MenuItem>
         ))}
       </Select>

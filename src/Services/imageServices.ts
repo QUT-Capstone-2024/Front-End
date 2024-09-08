@@ -1,7 +1,7 @@
 import { API_URL } from '../config/config';
 import { Image } from '../types';
 
-// Fetch all images for a specific collection ID
+
 export const getImagesByCollectionId = async (collectionId: number, token: string): Promise<Image[]> => {
   const response = await fetch(`${API_URL}/images/collections/${collectionId}/images`, {
     method: 'GET',
@@ -17,4 +17,33 @@ export const getImagesByCollectionId = async (collectionId: number, token: strin
 
   const data = await response.json();
   return data;
+};
+
+
+export const uploadImage = async (
+  file: File,
+  userId: number,
+  collectionId: number,
+  tag: string,
+  description: string,
+  token: string
+): Promise<void> => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('userId', userId.toString());
+  formData.append('collectionId', collectionId.toString());
+  formData.append('tag', tag);
+  formData.append('description', description);
+
+  const response = await fetch(`${API_URL}/images/upload`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`, // Don't set Content-Type when using FormData
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to upload image');
+  }
 };
