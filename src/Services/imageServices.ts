@@ -47,3 +47,17 @@ export const uploadImage = async (
     throw new Error('Failed to upload image');
   }
 };
+
+export const removeImageFromCollection = async (collectionId: number, imageId: number, token: string): Promise<void> => {
+  const response = await fetch(`${API_URL}/images/collections/${collectionId}/images/${imageId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to remove image');
+  }
+};

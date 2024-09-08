@@ -14,12 +14,13 @@ $padding: 5rem;
   box-shadow: $box-shadow-heavy; 
 }
 
+.placeholder-card {
+  position: relative;
+}
 
 .hero-card-container {
   display: flex;
   flex-direction: row;
-  gap: 2rem;
-  // margin: 1rem 2rem;
   padding: 0 $padding;
 }
 
@@ -33,6 +34,11 @@ $padding: 5rem;
   padding: 1rem $padding;
   box-sizing: border-box;
   align-items: center;
+}
+
+.gallery-card-checkbox {
+  display: flex;
+  align-items: flex-start;
 }
 
 .button-container {

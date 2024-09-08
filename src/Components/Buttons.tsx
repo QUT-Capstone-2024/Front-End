@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 
 
 type ButtonProps = {
-  buttonType?: 'navButton' | 'helpButton' | 'warningButton' | 'errorButton' | 'successButton' | 'closeButton' | 'textOnly' | 'cancelButton' | 'settingsButton' | 'uploadButton';
+  buttonType?: 'navButton' | 'helpButton' | 'warningButton' | 'errorButton' | 'successButton' | 'closeButton' | 'textOnly' | 'cancelButton' | 'settingsButton' | 'uploadButton' | 'removeButton';
   label: string;
   withTooltip?: boolean;
   tooltipText?: string;
@@ -66,6 +66,15 @@ const CustomButton: React.FC<ButtonProps> = ({ buttonType, label, withIcon, icon
         <Tooltip title={label} className='closeButton'>
           <IconButton style={ style } onClick={onClick}>
             <CloseIcon />
+          </IconButton>
+        </Tooltip>
+      );
+    
+    case 'removeButton':
+      return (
+        <Tooltip title={label} className='closeButton'>
+          <IconButton style={ style } onClick={onClick}>
+            <CloseIcon sx={{ color: '#ef4400' }}/>
           </IconButton>
         </Tooltip>
       );
