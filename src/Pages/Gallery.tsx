@@ -14,11 +14,13 @@ const Gallery: React.FC = () => {
   const [propertyDetails, setPropertyDetails] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Accessing Redux state for selected property and user token
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const token = useSelector((state: RootState) => state.user.token);
   const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
   const isAdmin = userType === 'CL_ADMIN';
 
+  // Fetch property images and details on component mount
   useEffect(() => {
     const fetchPropertyData = async () => {
       if (selectedPropertyId && token) {
@@ -37,11 +39,13 @@ const Gallery: React.FC = () => {
     fetchPropertyData();
   }, [selectedPropertyId, token]);
 
+  // Handling menu actions
   const menuItems = [
     { label: 'Download Selected', onClick: () => console.log('Download Selected') },
     { label: isAdmin ? 'Remove Selected' : 'Request removal of Selected', onClick: () => console.log('Remove Selected') },
   ];
 
+  // Early return if there's an error or no property data
   if (!propertyDetails || error) {
     return <div>{error || "Property not found"}</div>;
   }
@@ -103,7 +107,6 @@ const Gallery: React.FC = () => {
         />
       );
     }
-
     return uploadableCards;
   };
 
@@ -137,6 +140,7 @@ const Gallery: React.FC = () => {
                 rejectionReason={heroCard.rejectionReason}
                 imageComments={heroCard.imageComments}
                 imageDate={heroCard.uploadTime.split('T')[0]}
+                collectionId={selectedPropertyId} // Pass collectionId
               />
             </div>
           ) : (
@@ -146,6 +150,7 @@ const Gallery: React.FC = () => {
                 imageTag=""
                 imageStatus="PENDING"
                 image={null} 
+                collectionId={selectedPropertyId} // Pass collectionId
               />
             </div>
           )}
@@ -162,6 +167,7 @@ const Gallery: React.FC = () => {
                 rejectionReason={imageData.rejectionReason}
                 imageComments={imageData.imageComments}
                 imageDate={imageData.uploadTime.split('T')[0]}
+                collectionId={selectedPropertyId} // Pass collectionId
               />
             ))}
             {/* Placeholder cards based on the property specs */}

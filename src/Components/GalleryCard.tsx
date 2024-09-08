@@ -12,6 +12,7 @@ interface GalleryCardProps {
   rejectionReason?: string;
   imageComments?: string;
   imageDate?: string;
+  collectionId: number | null;
 }
 
 const GalleryCard: React.FC<GalleryCardProps> = ({
@@ -21,7 +22,8 @@ const GalleryCard: React.FC<GalleryCardProps> = ({
   rejectionReason,
   cardType = 'gallery',
   imageComments,
-  imageDate
+  imageDate,
+  collectionId // Ensure it's passed from parent components
 }) => {
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -78,7 +80,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({
           />
         )}
         
-        {/* the upload/edit icon is always visible for editing/uploading */}
+        {/* The upload/edit icon is always visible for editing/uploading */}
         {uploadedImage ?
             <EditIcon className={`edit-icon ${cardType}`} onClick={toggleModal} />
           : 
@@ -113,6 +115,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({
           image={uploadedImage || ''} 
           imageTag={imageTag} 
           description={imageComments}
+          collectionId={collectionId!} 
           toggleModal={toggleModal} 
           onUpdate={handleUpdate} 
         />
