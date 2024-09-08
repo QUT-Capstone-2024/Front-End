@@ -2,18 +2,18 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 
 type StatusStampProps = {
-  status: 'approved' | 'queued' | 'rejected';
+  status: "UNTAGGED" | "PENDING" | "APPROVED" | "REJECTED" | "ARCHIVED";
   className?: string;
 };
 
 const StatusStamp: React.FC<StatusStampProps> = ({ status, className }) => {
   const getStatusColor = () => {
     switch (status) {
-      case 'approved':
+      case 'APPROVED':
         return '#1f323e';
-      case 'queued':
+      case 'PENDING':
         return '#1f323e';
-      case 'rejected':
+      case 'REJECTED':
         return '#ef4400';
       default:
         return 'gray';
@@ -22,11 +22,11 @@ const StatusStamp: React.FC<StatusStampProps> = ({ status, className }) => {
 
   const getStatusLabel = () => {
     switch (status) {
-      case 'approved':
+      case 'APPROVED':
         return 'APPROVED';
-      case 'queued':
+      case 'PENDING':
         return 'PENDING';
-      case 'rejected':
+      case 'REJECTED':
         return 'REJECTED';
       default:
         return '';

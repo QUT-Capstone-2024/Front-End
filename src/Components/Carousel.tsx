@@ -39,13 +39,14 @@ const PrevArrow = (props: any) => {
 const Carousel: React.FC<CarouselProps> = ({ images, settings, height = '300px', width = '100%', ...rest }) => {
   const defaultSettings = {
     dots: true,
-    infinite: true,
+    infinite: images.length > 1, // Only infinite if more than 1 image
     speed: 700,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: false, // Disable autoplay
-    nextArrow: <NextArrow className="carousel-arrow"/>, // Custom next arrow
-    prevArrow: <PrevArrow className="carousel-arrow"/>, // Custom previous arrow
+    autoplay: false,
+    nextArrow: <NextArrow />, 
+    prevArrow: <PrevArrow />,
+    arrows: images.length > 1, // Arrows only shown if more than 1 image
     ...settings,
   };
 

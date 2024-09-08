@@ -8,7 +8,7 @@ interface GalleryCardProps {
   cardType: "hero" | "gallery";
   image?: string | null;
   imageTag: string;
-  imageStatus: "queued" | "approved" | "rejected";
+  imageStatus: "UNTAGGED" | "PENDING" | "APPROVED" | "REJECTED" | "ARCHIVED";
   rejectionReason?: string;
   imageComments?: string;
   imageDate?: string;
@@ -47,7 +47,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({
   const popoverContent = (
     <>
       <p>Uploaded:<br />{imageDate}</p>
-      {imageStatus === "rejected" ? (
+      {imageStatus === "REJECTED" ? (
         <p>A new image is required:<br /> {rejectionReason}</p>
       ) : (
         <p>{imageComments}</p>
@@ -59,7 +59,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({
     <div ref={cardRef} className="gallery-card">
       <div className="gallery-image-container"> 
         {/* Don't show the status if the image is approved or there is no image */}
-        {imageStatus !== 'approved' && image && <StatusStamp status={imageStatus} className={`stamp ${cardType}`} />}
+        {imageStatus !== 'APPROVED' && image && <StatusStamp status={imageStatus} className={`stamp ${cardType}`} />}
 
         {/* Conditional rendering: Show the uploaded image or an empty placeholder */}
         {uploadedImage ? (

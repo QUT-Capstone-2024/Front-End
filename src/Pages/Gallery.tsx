@@ -46,50 +46,66 @@ const Gallery: React.FC = () => {
     return <div>{error || "Property not found"}</div>;
   }
 
-  // Separate the Hero card from the rest of the images
-  const heroCard = images.find((image) => image.imageTag.includes('Hero'));
-  const otherCards = images.filter((image) => !image.imageTag.includes('Hero'));
+  // Helper function to get the latest image by tag
+  const getLatestImagesByTag = (images: Image[]) => {
+    const imageMap: { [tag: string]: Image } = {};
+
+    images.forEach((image) => {
+      const existingImage = imageMap[image.imageTag];
+      // If no image for the tag exists, or if the current image is newer, replace it
+      if (!existingImage || new Date(image.uploadTime) > new Date(existingImage.uploadTime)) {
+        imageMap[image.imageTag] = image;
+      }
+    });
+
+    return Object.values(imageMap); // Return the latest image for each tag
+  };
+
+  // Get the latest images
+  const latestImages = getLatestImagesByTag(images);
+
+  // Separate the Hero card from the rest of the images by selecting the FRONT tag
+  const heroCard = latestImages.find((image) => image.imageTag.includes('FRONT'));
+  const otherCards = latestImages.filter((image) => !image.imageTag.includes('FRONT'));
 
   // Function to generate GalleryCards based on missing images
-  // Remove the hero card rendering logic from `renderUploadableCards` since it's already handled elsewhere
-const renderUploadableCards = () => {
-  const uploadableCards = [];
+  const renderUploadableCards = () => {
+    const uploadableCards = [];
 
-  // Generate cards for each bedroom
-  for (let i = 1; i <= propertyDetails.bedrooms; i++) {
-    const imageTag = `Bedroom ${i}`;
-    const bedroomImage = images.find(image => image.imageTag === imageTag);
+    // Generate cards for each bedroom
+    for (let i = 1; i <= propertyDetails.bedrooms; i++) {
+      const imageTag = `Bedroom ${i}`;
+      const bedroomImage = latestImages.find(image => image.imageTag === imageTag);
 
-    uploadableCards.push(
-      <GalleryCard
-        key={`bedroom-${i}`}
-        cardType="gallery"
-        imageTag={`Bedroom ${i}`}
-        imageStatus={bedroomImage ? bedroomImage.imageStatus : 'queued'}
-        image={bedroomImage ? bedroomImage.imageUrl : null}
-      />
-    );
-  }
+      uploadableCards.push(
+        <GalleryCard
+          key={`bedroom-${i}`}
+          cardType="gallery"
+          imageTag={`Bedroom ${i}`}
+          imageStatus={bedroomImage ? bedroomImage.imageStatus : 'PENDING'}
+          image={bedroomImage ? bedroomImage.imageUrl : null}
+        />
+      );
+    }
 
-  // Generate cards for bathrooms, kitchens, etc.
-  for (let i = 1; i <= propertyDetails.bathrooms; i++) {
-    const imageTag = `Bathroom ${i}`;
-    const bathroomImage = images.find(image => image.imageTag === imageTag);
+    // Generate cards for bathrooms, kitchens, etc.
+    for (let i = 1; i <= propertyDetails.bathrooms; i++) {
+      const imageTag = `Bathroom ${i}`;
+      const bathroomImage = latestImages.find(image => image.imageTag === imageTag);
 
-    uploadableCards.push(
-      <GalleryCard
-        key={`bathroom-${i}`}
-        cardType="gallery"
-        imageTag={`Bathroom ${i}`}
-        imageStatus={bathroomImage ? bathroomImage.imageStatus : 'queued'}
-        image={bathroomImage ? bathroomImage.imageUrl : null}
-      />
-    );
-  }
+      uploadableCards.push(
+        <GalleryCard
+          key={`bathroom-${i}`}
+          cardType="gallery"
+          imageTag={`Bathroom ${i}`}
+          imageStatus={bathroomImage ? bathroomImage.imageStatus : 'PENDING'}
+          image={bathroomImage ? bathroomImage.imageUrl : null}
+        />
+      );
+    }
 
-  return uploadableCards;
-};
-
+    return uploadableCards;
+  };
 
   return (
     <div className='gallery-container'>
@@ -109,14 +125,14 @@ const renderUploadableCards = () => {
         <>
           <h2 className='address'>{propertyDetails.propertyAddress}</h2>
 
-          {/* Render the Hero card separately */}
+          {/* Render the Hero card with the FRONT tag */}
           {heroCard ? (
             <div className='hero-card-container'>
               <GalleryCard
                 key={heroCard.imageId}
                 image={heroCard.imageUrl}
-                imageTag={heroCard.imageTag.replace('Hero', '')}
-                imageStatus={heroCard.imageStatus as 'queued' | 'approved' | 'rejected'}
+                imageTag={heroCard.imageTag.replace('FRONT', 'Hero Image (property front)')}
+                imageStatus={heroCard.imageStatus as "UNTAGGED" | "PENDING" | "APPROVED" | "REJECTED" | "ARCHIVED"}
                 cardType='hero'
                 rejectionReason={heroCard.rejectionReason}
                 imageComments={heroCard.imageComments}
@@ -127,8 +143,8 @@ const renderUploadableCards = () => {
             <div className='hero-card-placeholder'>
               <GalleryCard
                 cardType="hero"
-                imageTag="Front Image (Hero)"
-                imageStatus="queued"
+                imageTag=""
+                imageStatus="PENDING"
                 image={null} 
               />
             </div>
@@ -141,17 +157,14 @@ const renderUploadableCards = () => {
                 key={imageData.imageId}
                 image={imageData.imageUrl}
                 imageTag={imageData.imageTag}
-                imageStatus={imageData.imageStatus as 'queued' | 'approved' | 'rejected'}
+                imageStatus={imageData.imageStatus as "UNTAGGED" | "PENDING" | "APPROVED" | "REJECTED" | "ARCHIVED"}
                 cardType='gallery'
                 rejectionReason={imageData.rejectionReason}
                 imageComments={imageData.imageComments}
                 imageDate={imageData.uploadTime.split('T')[0]}
               />
             ))}
-          </div>
-
-          {/* Render uploadable cards for missing images */}
-          <div className="upload-buttons-container">
+            {/* Placeholder cards based on the property specs */}
             {renderUploadableCards()}
           </div>
         </>

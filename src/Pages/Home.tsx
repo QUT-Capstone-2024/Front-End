@@ -4,7 +4,6 @@ import { RootState } from '../Redux/store';
 import { selectProperty } from '../Redux/Slices/propertySlice'; 
 import { getUserCollections, getAllCollections } from '../Services';
 import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard } from '../Components';
-import { Collection } from '../types'; 
 import './PropertiesHome.scss';
 
 interface HomeProps {}
@@ -18,11 +17,11 @@ const Home: React.FC<HomeProps> = () => {
   const isAdmin = userType === 'CL_ADMIN';
 
   // State for fetched properties (collections)
-  const [properties, setProperties] = useState<Collection[]>([]);
+  const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch collections on component mount
+  // Fetch collections (properties) on component mount
   useEffect(() => {
     const fetchProperties = async () => {
       if (!token) {
@@ -32,7 +31,7 @@ const Home: React.FC<HomeProps> = () => {
 
       try {
         setLoading(true);
-        let fetchedCollections: Collection[] = [];
+        let fetchedCollections: any[] = [];
 
         if (isAdmin) {
           // Admin users fetch all collections
@@ -64,12 +63,35 @@ const Home: React.FC<HomeProps> = () => {
   // Get selected property from properties list based on selectedPropertyId
   const selectedProperty = properties.find((property) => property.id === selectedPropertyId);
 
+  // Helper function to extract the Hero (FRONT) image from the property
+const getHeroImage = (images: Array<any>) => {
+  // Filter images with the tag "FRONT"
+  const frontImages = images.filter((image) => image.imageTag === 'FRONT');
+
+  // If there are no FRONT images, return null
+  if (frontImages.length === 0) return null;
+
+  // Sort FRONT images by upload time (most recent first)
+  const latestFrontImage = frontImages.sort(
+    (a, b) => new Date(b.uploadTime).getTime() - new Date(a.uploadTime).getTime()
+  )[0];
+
+  // Return the URL of the most recent FRONT image
+  return latestFrontImage.imageUrl;
+};
+
+
   // Event handler for selecting a property
-  const handleCardClick = (property: Collection) => {
+  const handleCardClick = (property: any) => {
     dispatch(selectProperty({
       propertyId: property.id,
       propertyAddress: property.propertyAddress,
     }));
+  };
+
+  // Helper function to extract the Hero (FRONT) image for a property
+  const getHeroImageForProperty = (property: any) => {
+    return getHeroImage(property.images); // Pass the images array to the helper function
   };
 
   if (loading) return <p>Loading properties...</p>;
@@ -85,25 +107,23 @@ const Home: React.FC<HomeProps> = () => {
           <Spacer height={1} />
           <h2 className="left">{isAdmin ? 'All Properties' : 'My Properties'}</h2>
           <Spacer height={0.5} />
-          {properties.map((property: Collection) => (
-            <div
-              key={property.id}
-              className="small-display-card-container"
-              onClick={() => handleCardClick(property)}
-            >
-              <SmallDisplayCard
-                image={property.imageUrls && property.imageUrls.length > 0 ? property.imageUrls[0] : ''}
-                propertyType={property.propertyType}
-                propertyAddress={property.propertyAddress}
-              />
-            </div>
-          ))}
+          <div className='scrollable-property-list'>
+          {properties.map((property: any) => (
+                <SmallDisplayCard
+                  image={getHeroImageForProperty(property)}
+                  propertyType={property.propertyType}
+                  propertyAddress={property.propertyAddress}
+                  key={property.id}
+                  onClick={() => handleCardClick(property)}
+                />
+              ))}
+              </div>
         </div>
         <div style={{ marginTop: '10px', width: '60%' }}>
         {selectedProperty ? (
           <PropertyCard
             propertyAddress={selectedProperty.propertyAddress}
-            imageUrl={selectedProperty.imageUrls && selectedProperty.imageUrls.length > 0 ? selectedProperty.imageUrls[0] : ''}
+           
             collectionId={selectedProperty.id}
             propertyOwnerId={selectedProperty.propertyOwnerId}
             bedrooms={selectedProperty.bedrooms}
@@ -122,7 +142,6 @@ const Home: React.FC<HomeProps> = () => {
             <div>Select a property to view details</div>
           </div>
         )}
-
         </div>
       </div>
       <Spacer height={4} />

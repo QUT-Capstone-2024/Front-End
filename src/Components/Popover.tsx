@@ -4,7 +4,7 @@ import "../Styles/Popover.scss";
 interface PopoverProps {
   content: React.ReactNode;
   visible: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   type?: 'gallery' | 'hero' | 'property-card' | 'thumbnail';
 }
 

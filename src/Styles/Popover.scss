@@ -44,9 +44,10 @@
   &.thumbnail {
     height: $thumbnail-size;
     width: $thumbnail-size;
-    border-radius: $circle;
+    border-radius: $border-radius-left;
     backdrop-filter: blur(1px);
     -webkit-backdrop-filter: blur(1px);
+    overflow-y: hidden;
   }
 }
 
