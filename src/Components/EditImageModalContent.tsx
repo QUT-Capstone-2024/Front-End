@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { CustomButton, CategorySelector, FileUpload, TextInput } from './';
 import { SelectChangeEvent } from '@mui/material';
 import { ImageTags } from '../Constants/ImageTags';
+import { uploadImage } from '../Services'; // Ensure you import the upload service
+import { useSelector } from 'react-redux';
+import { RootState } from '../Redux/store';
 
 interface EditImageModalContentProps {
   image: string;
@@ -12,33 +15,53 @@ interface EditImageModalContentProps {
 }
 
 const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, imageTag, description = '', toggleModal, onUpdate }) => {
-  const initialCategoryKey = ImageTags.find(tag => tag.name === imageTag)?.key.toString() || '';
-  const [selectedCategory, setSelectedCategory] = useState(initialCategoryKey);
+  const initialCategoryKey = ImageTags.find(tag => tag.name.toUpperCase() === imageTag.toUpperCase())?.key.toString() || '';
+  const [selectedCategoryKey, setSelectedCategoryKey] = useState(initialCategoryKey);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [descriptionText, setDescriptionText] = useState(description);
+  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Access userId, collectionId, and token from Redux state
+  const userId = useSelector((state: RootState) => state.user.userDetails?.id);
+  const collectionId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
+  const token = useSelector((state: RootState) => state.user.token);
 
   useEffect(() => {
-    const filename = image.split('/').pop();
-    setSelectedFileName(filename || null);
     setDescriptionText(description);
-  }, [image, description]);
+  }, [description]);
 
   const handleCategoryChange = (event: SelectChangeEvent<string>) => {
-    setSelectedCategory(event.target.value as string);
+    setSelectedCategoryKey(event.target.value);
   };
 
   const handleFileChange = (file: File) => {
     setSelectedFile(file);
-    setSelectedFileName(file.name);
   };
 
   const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setDescriptionText(event.target.value);
   };
 
-  const handleUpdate = () => {
-    onUpdate(selectedFile, selectedCategory, descriptionText);
+  const handleUpdate = async () => {
+    const selectedCategoryName = ImageTags.find(tag => tag.key.toString() === selectedCategoryKey)?.name.toUpperCase() || '';
+
+    // Only proceed with the upload if we have the required details
+    if (selectedFile && userId && collectionId && token) {
+      setIsUploading(true);
+      try {
+        await uploadImage(selectedFile, userId, collectionId, selectedCategoryName, descriptionText, token);
+        setUploadStatus('Upload successful');
+      } catch (error) {
+        setUploadStatus('Upload failed');
+        console.error('Upload error:', error);
+      } finally {
+        setIsUploading(false);
+      }
+    }
+
+    // Call onUpdate to pass updated information to the parent component
+    onUpdate(selectedFile, selectedCategoryName, descriptionText);
     toggleModal();
   };
 
@@ -50,21 +73,21 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
         <div style={{ marginBottom: '20px', marginTop: '20px' }}>
           <FileUpload 
             onFileSelect={handleFileChange} 
-            initialFileName={selectedFileName ? selectedFileName : ''} 
+            initialFileName={selectedFile?.name || ''} 
           />
         </div>
 
         <div style={{ marginBottom: '20px' }}>
           <CategorySelector
             label="Category"
-            value={selectedCategory}
+            value={selectedCategoryKey}
             onChange={handleCategoryChange}
           />
         </div>
 
         <div style={{ marginBottom: '20px' }}>
           <TextInput 
-            size='large'
+            size="large"
             label="Description"
             value={descriptionText}
             onChange={handleDescriptionChange}
@@ -73,9 +96,11 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
       </form>
 
       <div style={{ display: 'flex', gap: '40px', justifyContent: 'center' }}>
-        <CustomButton label="Update" onClick={handleUpdate} />
+        <CustomButton label="Update" onClick={handleUpdate} disabled={isUploading} />
         <CustomButton buttonType="cancelButton" label="Cancel" onClick={toggleModal} />
       </div>
+
+      {uploadStatus && <p>{uploadStatus}</p>}
     </div>
   );
 };
