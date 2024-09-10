@@ -40,6 +40,8 @@
     height: $property-card-height;
     width: $property-card-width;
     box-sizing: border-box;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
   }
   &.thumbnail {
     height: $thumbnail-size;
@@ -68,6 +70,8 @@
     height: $property-card-height;
     width: $property-card-width;
     text-align: center;
+    box-sizing: border-box;
+    padding: 30px;
     & h2 {
       padding: 1rem 0rem 1rem 0rem;
       color: $warning-color;
@@ -75,7 +79,6 @@
     }
     & p {
       padding: 0rem 1.5rem 0rem 1.5rem;
-      text-align: left;
     }
   }
 }

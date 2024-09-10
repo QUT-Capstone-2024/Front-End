@@ -12,6 +12,7 @@ import { Image } from '../types';
 import { ImageTags } from '../Constants/ImageTags';
 import { saveAs } from 'file-saver';
 import { JSX } from 'react/jsx-runtime';
+import { useCheckAuth } from '../Hooks/useCheckAuth';
 
 const Gallery: React.FC = () => {
   const navigate = useNavigate();
@@ -23,8 +24,8 @@ const Gallery: React.FC = () => {
 
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const token = useSelector((state: RootState) => state.user.token);
-  const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
-  const isAdmin = userType === 'CL_ADMIN';
+  
+  const { isAdmin } = useCheckAuth();
 
   // State for modal management
   const [modalOpen, setModalOpen] = useState(false);
@@ -107,9 +108,6 @@ const Gallery: React.FC = () => {
     }
   };
   
-  
-  
-
   // Helper function to get the latest image by tag
   const getLatestImagesByTag = (images: Image[]) => {
     const imageMap: { [tag: string]: Image } = {};
