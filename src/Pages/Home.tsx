@@ -4,24 +4,25 @@ import { RootState } from '../Redux/store';
 import { selectProperty } from '../Redux/Slices/propertySlice'; 
 import { getUserCollections, getAllCollections } from '../Services';
 import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard } from '../Components';
+import { useCheckAuth } from '../Hooks/useCheckAuth';
+import { getHeroImage } from '../HelperFunctions/utils';
 import './PropertiesHome.scss';
 
 interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
   const dispatch = useDispatch();
-  const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
   const userId = useSelector((state: RootState) => state.user.userDetails?.id);
   const token = useSelector((state: RootState) => state.user.token);
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
-  const isAdmin = userType === 'CL_ADMIN';
+  const { isAdmin } = useCheckAuth();
 
-  // State for fetched properties (collections)
+  // Component state
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch collections (properties) on component mount
+
   useEffect(() => {
     const fetchProperties = async () => {
       if (!token) {
@@ -48,6 +49,13 @@ const Home: React.FC<HomeProps> = () => {
           dispatch(selectProperty({
             propertyId: fetchedCollections[0].id,
             propertyAddress: fetchedCollections[0].propertyAddress,
+            propertyDescription: fetchedCollections[0].propertyDescription,
+            propertySize: fetchedCollections[0].propertySize,
+            bedrooms: fetchedCollections[0].bedrooms,
+            bathrooms: fetchedCollections[0].bathrooms,
+            parkingSpaces: fetchedCollections[0].parkingSpaces,
+            propertyType: fetchedCollections[0].propertyType,
+            approvalStatus: fetchedCollections[0].approvalStatus,
           }));
         }
       } catch (err) {
@@ -56,43 +64,31 @@ const Home: React.FC<HomeProps> = () => {
         setLoading(false);
       }
     };
-
     fetchProperties();
   }, [dispatch, userId, token, isAdmin, selectedPropertyId]);
 
   // Get selected property from properties list based on selectedPropertyId
   const selectedProperty = properties.find((property) => property.id === selectedPropertyId);
 
-  // Helper function to extract the Hero (FRONT) image from the property
-const getHeroImage = (images: Array<any>) => {
-  // Filter images with the tag "FRONT"
-  const frontImages = images.filter((image) => image.imageTag === 'FRONT');
-
-  // If there are no FRONT images, return null
-  if (frontImages.length === 0) return null;
-
-  // Sort FRONT images by upload time (most recent first)
-  const latestFrontImage = frontImages.sort(
-    (a, b) => new Date(b.uploadTime).getTime() - new Date(a.uploadTime).getTime()
-  )[0];
-
-  // Return the URL of the most recent FRONT image
-  return latestFrontImage.imageUrl;
-};
-
-
+  const getHeroImageForProperty = (property: any) => {
+    return getHeroImage(property.images); // Pass the images array to the helper function
+  };
+  
   // Event handler for selecting a property
   const handleCardClick = (property: any) => {
     dispatch(selectProperty({
       propertyId: property.id,
       propertyAddress: property.propertyAddress,
+      propertyDescription: property.propertyDescription,
+      propertySize: property.propertySize,
+      bedrooms: property.bedrooms,
+      bathrooms: property.bathrooms,
+      parkingSpaces: property.parkingSpaces,
+      propertyType: property.propertyType,
+      approvalStatus: property.approvalStatus,
     }));
   };
 
-  // Helper function to extract the Hero (FRONT) image for a property
-  const getHeroImageForProperty = (property: any) => {
-    return getHeroImage(property.images); // Pass the images array to the helper function
-  };
 
   if (loading) return <p>Loading properties...</p>;
   if (error) return <p>{error}</p>;
@@ -125,7 +121,6 @@ const getHeroImage = (images: Array<any>) => {
             propertyAddress={selectedProperty.propertyAddress}
            
             collectionId={selectedProperty.id}
-            propertyOwnerId={selectedProperty.propertyOwnerId}
             bedrooms={selectedProperty.bedrooms}
             bathrooms={selectedProperty.bathrooms}
             parkingSpaces={selectedProperty.parkingSpaces ?? 0}

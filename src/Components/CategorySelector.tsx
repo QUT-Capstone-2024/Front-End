@@ -1,11 +1,11 @@
 import React from 'react';
 import { FormControl, InputLabel, Select, MenuItem, FormHelperText, SelectChangeEvent } from '@mui/material';
-import { ImageTags } from '../Constants/ImageTags';
 
 interface CategorySelectorProps {
   label: string;
   value: string;
   onChange: (event: SelectChangeEvent<string>) => void;
+  options: { value: string; label: string }[];
   error?: boolean;
   helperText?: string;
 }
@@ -25,6 +25,7 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
   label, 
   value, 
   onChange, 
+  options,
   error = false, 
   helperText = '',
 }) => {
@@ -38,9 +39,9 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
         MenuProps={MenuProps}
         sx={{ textAlign: 'left', borderRadius: '8px', border: '1px solid #93cdfe' }}
       >
-        {ImageTags.map((tag) => (
-          <MenuItem key={tag.key} value={tag.key.toString()}>
-            {tag.displayName}  {/* Use displayName for human-readable names */}
+        {options.map((option) => ( // Use passed options
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
           </MenuItem>
         ))}
       </Select>

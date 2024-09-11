@@ -5,7 +5,7 @@ import {
   Navigate,
   useLocation
 } from 'react-router-dom';
-import ProtectedRoute, {AuthLevels} from './HelperFunctions/ProtectedRoute';
+import ProtectedRoute from './HelperFunctions/ProtectedRoute';
 import * as Pages from './Pages';
 import { Header, Footer } from './Components';
 import { ThemeProvider } from '@mui/material';
@@ -20,50 +20,46 @@ const AppContent = () => {
   return (
     <>
       {!noHeaderRoutes.includes(currentPath) && <Header />}
-        <Routes>
-          {/* Guest Routes */}
-          <Route path="/" element={<Navigate replace to="/Login" />} />
-          <Route path="/Login" element={<Pages.LandingPage />} />
-          <Route path="/Register" element={<Pages.Register />} />
+      <Routes>
+        {/* Public/Guest Routes */}
+        <Route path="/" element={<Navigate replace to="/Login" />} />
+        <Route path="/Login" element={<Pages.LandingPage />} />
+        <Route path="/Register" element={<Pages.Register />} />
 
-          {/* standard Routes */}
-          <Route element={<ProtectedRoute requiredAuthLevel={AuthLevels.PROPERTY_OWNER} />}>
-            <Route path="/Home" element={<Pages.Home />} />
-            <Route path="/Gallery/:propertySlug" element={<Pages.Gallery/>} />  
-          </Route>
-          
-          {/* Protected Routes */}
-          <Route element={<ProtectedRoute requiredAuthLevel={AuthLevels.CL_USER} />}>
-            <Route path="/ImageApproval" element={<Pages.ImageApproval />} />
-            <Route path="/UploadManagement" element={<Pages.UploadManagement />} />
-          </Route>
-          <Route element={<ProtectedRoute requiredAuthLevel={AuthLevels.CL_ADMIN} />}>
-            <Route path="/EditUser" element={<Pages.EditUser />} />  
-          </Route>
+        {/* Protected Routes with varying access levels */}
+        <Route element={<ProtectedRoute requiredAuthLevel={1} />}>
+          <Route path="/Home" element={<Pages.Home />} />
+          <Route path="/Gallery/:propertySlug" element={<Pages.Gallery />} />
+        </Route>
 
-          {/* Unauthorized Route */}
-          <Route path="/unauthorized" element={<Pages.Unauthorized />} />
+        <Route element={<ProtectedRoute requiredAuthLevel={3} />}>
+          <Route path="/ImageApproval" element={<Pages.ImageApproval />} />
+          <Route path="/UploadManagement" element={<Pages.UploadManagement />} />
+        </Route>
 
-          {/* Error Routes with catch all*/}
-          <Route path="/Error404" element={<Pages.Error404 />} />
-        </Routes>
-      {!noHeaderRoutes.includes(currentPath) && <>
-        {/* <footer style={{ position: 'relative', left: '0', bottom: '0'}}>
-          <Footer />
-        </footer> */}
-      </>
-      }
+        <Route element={<ProtectedRoute requiredAuthLevel={4} />}>
+          <Route path="/EditUser" element={<Pages.EditUser />} />
+        </Route>
+
+        {/* Unauthorized Route */}
+        <Route path="/unauthorized" element={<Pages.Unauthorized />} />
+
+        {/* Error Routes */}
+        <Route path="/Error404" element={<Pages.Error404 />} />
+        <Route path="*" element={<Navigate to="/Error404" replace />} />
+      </Routes>
+      {/* {!noHeaderRoutes.includes(currentPath) && <Footer />} */}
     </>
   );
 };
 
 const App = () => {
   return (
-      <ThemeProvider theme={theme}>
-        <Router>
-          <AppContent />
-        </Router>
-      </ThemeProvider>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <AppContent />
+      </Router>
+    </ThemeProvider>
   );
 };
 

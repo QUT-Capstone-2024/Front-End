@@ -12,6 +12,8 @@ import { Image } from '../types';
 import { ImageTags } from '../Constants/ImageTags';
 import { saveAs } from 'file-saver';
 import { JSX } from 'react/jsx-runtime';
+import { useCheckAuth } from '../Hooks/useCheckAuth';
+import * as Img from '../Images';
 
 const Gallery: React.FC = () => {
   const navigate = useNavigate();
@@ -23,8 +25,8 @@ const Gallery: React.FC = () => {
 
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const token = useSelector((state: RootState) => state.user.token);
-  const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
-  const isAdmin = userType === 'CL_ADMIN';
+  
+  const { isAdmin } = useCheckAuth();
 
   // State for modal management
   const [modalOpen, setModalOpen] = useState(false);
@@ -41,21 +43,22 @@ const Gallery: React.FC = () => {
     toggleModal();
   };
 
-  useEffect(() => {
-    const fetchPropertyData = async () => {
-      if (selectedPropertyId && token) {
-        try {
-          const fetchedImages = await getImagesByCollectionId(selectedPropertyId, token);
-          const fetchedPropertyDetails = await getCollectionById(selectedPropertyId, token);
-
-          setImages(fetchedImages);
-          setPropertyDetails(fetchedPropertyDetails);
-        } catch (error) {
-          console.error("Error fetching property data:", error);
-          setError("Failed to fetch property data.");
-        }
+  const fetchPropertyData = async () => {
+    if (selectedPropertyId && token) {
+      try {
+        console.log('Fetching updated property data...');
+        const fetchedImages = await getImagesByCollectionId(selectedPropertyId, token);
+        const fetchedPropertyDetails = await getCollectionById(selectedPropertyId, token);
+        setImages(fetchedImages);
+        setPropertyDetails(fetchedPropertyDetails);
+      } catch (error) {
+        console.error("Error fetching property data:", error);
+        setError("Failed to fetch property data.");
       }
-    };
+    }
+  };
+
+  useEffect(() => {
     fetchPropertyData();
   }, [selectedPropertyId, token]);
 
@@ -96,45 +99,13 @@ const Gallery: React.FC = () => {
       }
   
       try {
-        // Use the removeImageFromCollection service, passing imageIdAsNumber
         await removeImageFromCollection(selectedPropertyId, imageIdAsNumber, token!);
-        // Remove the image from the UI after successful removal
         setImages((prevImages) => prevImages.filter(img => img.imageId !== image.imageId));
         setSelectedImages((prevSelected) => prevSelected.filter(tag => tag !== image.imageTag));
       } catch (error) {
         console.error('Error removing image:', error);
       }
     }
-  };
-  
-  
-  
-
-  // Helper function to get the latest image by tag
-  const getLatestImagesByTag = (images: Image[]) => {
-    const imageMap: { [tag: string]: Image } = {};
-
-    images.forEach((image) => {
-      const existingImage = imageMap[image.imageTag];
-      // If no image for the tag exists, or if the current image is newer, replace it
-      if (!existingImage || new Date(image.uploadTime) > new Date(existingImage.uploadTime)) {
-        imageMap[image.imageTag] = image;
-      }
-    });
-
-    return imageMap; // Return the latest image map by tag
-  };
-
-  // Get the latest images
-  const latestImages = getLatestImagesByTag(images);
-
-  // Separate the Hero card from the rest of the images by selecting the FRONT tag
-  const heroCard = latestImages["FRONT"];
-  const otherCards = Object.values(latestImages).filter((image) => image.imageTag !== 'FRONT');
-
-  // Function to handle removing a placeholder card
-  const handleRemoveCard = (tag: string) => {
-    setRemovedCards((prev) => [...prev, tag]); // Add the tag to the removed cards list
   };
 
   // Function to handle selecting or deselecting an image
@@ -146,51 +117,88 @@ const Gallery: React.FC = () => {
     }
   };
 
+  // Helper function to get the latest image by tag and instance number
+  const getLatestImagesByTagAndInstance = (images: Image[]) => {
+    const imageMap: { [tagInstance: string]: Image } = {};
+
+    images.forEach((image) => {
+      const tagWithInstance = `${image.imageTag}-${image.instanceNumber}`;
+      const existingImage = imageMap[tagWithInstance];
+      if (!existingImage || new Date(image.uploadTime) > new Date(existingImage.uploadTime)) {
+        imageMap[tagWithInstance] = image;
+      }
+    });
+
+    return imageMap; // Return the latest image map by tag and instance
+  };
+
+  // Get the latest images
+  const latestImages = getLatestImagesByTagAndInstance(images);
+
+  // Separate the Hero card from the rest of the images by selecting the STREET tag
+  const heroCard = latestImages["STREET-0"];
+  const otherCards = Object.values(latestImages).filter((image) => image.imageTag !== 'STREET');
+
   // Function to generate GalleryCards based on missing images
   const renderUploadableCards = () => {
     const uploadableCards: JSX.Element[] = [];
-
+  
     // Handle dynamic creation based on property specs
     const specs = [
       { key: 'bedrooms', tag: 'BEDROOM', displayName: 'Bedroom' },
       { key: 'bathrooms', tag: 'BATHROOM', displayName: 'Bathroom' },
-      { key: 'parkingSpaces', tag: 'GARAGE', displayName: 'Garage' },
+      { key: 'dinningRoom', tag: 'DINNING_ROOM', displayName: 'Dining Room', defaultCount: 1 },
+      { key: 'kitchen', tag: 'KITCHEN', displayName: 'Kitchen', defaultCount: 1 },
+      { key: 'livingRoom', tag: 'LIVING_ROOM', displayName: 'Living Room', defaultCount: 1 },
     ];
-
-    specs.forEach(({ key, tag, displayName }) => {
-      const count = propertyDetails[key]; // Get the number of bedrooms, bathrooms, etc.
-      const existingImages = Object.values(latestImages).filter((image) => image.imageTag === tag); // Get already uploaded images by tag
-      const missingCount = count - existingImages.length; // Calculate missing images
-
-      // Add placeholders for missing images
+  
+    const tagToImageMap: { [key: string]: string } = {
+      BEDROOM: Img.bedroom,
+      BATHROOM: Img.bathroom,
+      DINNING_ROOM: Img.dinning,
+      KITCHEN: Img.kitchen,
+      LIVING_ROOM: Img.lounge,
+    };
+  
+    specs.forEach(({ key, tag, displayName, defaultCount }) => {
+      const count = key in propertyDetails ? propertyDetails[key] : defaultCount || 0;
+      const existingImages = Object.values(latestImages).filter((image) => image.imageTag === tag);
+      const missingCount = count - existingImages.length;
+  
       for (let i = 1; i <= missingCount; i++) {
-        const imageTag = count > 1 ? `${displayName} ${existingImages.length + i}` : displayName; // If more than one, show number
-
-        // Only render the card if it hasn't been removed
+        let imageTag = displayName;  // Keep display name as is
+  
         if (!removedCards.includes(imageTag)) {
           uploadableCards.push(
             <div key={`${displayName}-${i}`} className="placeholder-card">
               <GalleryCard
+                isPlaceholder={true}
                 cardType="gallery"
-                imageTag={imageTag}
-                imageStatus="PENDING"
-                image={null} // Placeholder, since there's no image yet
+                imageTag={imageTag}  // Pass only the clean display name
+                imageStatus="UNTAGGED"
+                image={tagToImageMap[tag]}
+                imageInstance={existingImages.length + i} // Pass the instance number to the card
               />
             </div>
           );
         }
       }
     });
-
+  
     return uploadableCards;
   };
+  
+  
+  
+  
+  
 
   const handleUpdate = (updatedImage: File | null, updatedTag: string, updatedDescription: string) => {
-    // This is where you would handle the image update, e.g., upload the image to the server.
-    console.log("Image updated:", updatedImage, updatedTag, updatedDescription);
+    fetchPropertyData();
     toggleModal();
   };
 
+  //////////////////////////////////////// RENDER
   return (
     <div className='gallery-container'>
       <Spacer />
@@ -219,13 +227,13 @@ const Gallery: React.FC = () => {
           />
           <Spacer height={0.5}/>
 
-          {/* Render the Hero card with the FRONT tag */}
+          {/* Render the Hero card with the STREET tag */}
           {heroCard ? (
             <div className='hero-card-container'>
               <GalleryCard
                 key={heroCard.imageId}
                 image={heroCard.imageUrl}
-                imageTag={heroCard.imageTag.replace('FRONT', 'Hero Image (property front)')}
+                imageTag="Hero Image (property front)"
                 imageStatus={heroCard.imageStatus as "UNTAGGED" | "PENDING" | "APPROVED" | "REJECTED" | "ARCHIVED"}
                 cardType='hero'
                 rejectionReason={heroCard.rejectionReason}
@@ -233,18 +241,19 @@ const Gallery: React.FC = () => {
                 imageDate={heroCard.uploadTime.split('T')[0]}
               />
               <Checkbox
-                  checked={selectedImages.includes('FRONT')}
-                  onChange={() => handleSelectImage('FRONT')}
-                  sx={{ alignSelf: 'flex-start' }}
-                />
+                checked={selectedImages.includes('STREET')}
+                onChange={() => handleSelectImage('STREET')}
+                sx={{ alignSelf: 'flex-start' }}
+              />
             </div>
           ) : (
             <div className='hero-card-container'>
               <GalleryCard
+                isPlaceholder={true}
                 cardType="hero"
-                imageTag=""
-                imageStatus="PENDING"
-                image={null} 
+                imageTag="Hero Image (property front)"
+                imageStatus="UNTAGGED"
+                image={Img.house} 
               />
             </div>
           )}
@@ -262,6 +271,7 @@ const Gallery: React.FC = () => {
                   rejectionReason={imageData.rejectionReason}
                   imageComments={imageData.imageComments}
                   imageDate={imageData.uploadTime.split('T')[0]}
+                  imageInstance={imageData.instanceNumber}
                 />
                 <Checkbox
                   checked={selectedImages.includes(imageData.imageTag)}

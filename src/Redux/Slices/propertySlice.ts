@@ -3,11 +3,25 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface PropertyState {
   selectedPropertyId: number | null;
   propertySlug: string | null;
+  propertyDescription?: string | null;
+  propertySize?: number | null;
+  bedrooms?: number | null;
+  bathrooms?: number | null;
+  parking?: number | null;
+  type?: string | null;
+  approvalStatus?: string | null;
 }
 
 const initialState: PropertyState = {
   selectedPropertyId: null,
   propertySlug: null,
+  propertyDescription: null,
+  propertySize: null,
+  bedrooms: null,
+  bathrooms: null,
+  parking: null,
+  type:  null,
+  approvalStatus:  null,
 };
 
 // Helper function to create a slug from the address
@@ -19,13 +33,29 @@ const propertySlice = createSlice({
   name: 'currentProperty',
   initialState,
   reducers: {
-    selectProperty(state, action: PayloadAction<{ propertyId: number; propertyAddress: string }>) {
+    selectProperty(state, action: PayloadAction<{ 
+      propertyId: number;
+      propertyAddress: string;
+      propertyDescription: string;
+      propertySize: number;
+      bedrooms: number;
+      bathrooms: number;
+      parkingSpaces: number;
+      propertyType: string;
+      approvalStatus: string;  
+    }>) {
       state.selectedPropertyId = action.payload.propertyId;
-      state.propertySlug = createPropertySlug(action.payload.propertyAddress);
+      state.propertySlug = createPropertySlug(action.payload.propertyAddress); 
+      state.propertyDescription = action.payload.propertyDescription;
+      state.propertySize = action.payload.propertySize;
+      state.bedrooms = action.payload.bedrooms;
+      state.bathrooms = action.payload.bathrooms;
+      state.parking = action.payload.parkingSpaces;
+      state.type = action.payload.propertyType;
+      state.approvalStatus = action.payload.approvalStatus
     },
     clearSelectedProperty(state) {
-      state.selectedPropertyId = null;
-      state.propertySlug = null;
+      state = initialState;
     },
   },
 });

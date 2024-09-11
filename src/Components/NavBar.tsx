@@ -6,6 +6,7 @@ import { RootState } from '../Redux/store';
 import { logout } from '../Redux/Slices/userSlice';
 import { CustomButton, CustomModal, Logo, Spacer } from './index';
 import { clearSelectedProperty } from '../Redux/Slices';
+import { useCheckAuth } from '../Hooks/useCheckAuth';
 
 interface NavbarProps {
   open: boolean;
@@ -17,9 +18,8 @@ const Navbar: React.FC<NavbarProps> = ({ open, onClose }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
-  // Get the user type and check if the user is an admin
-  const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
-  const isAdmin = userType === 'CL_ADMIN';
+
+  const { isAdmin } = useCheckAuth();
   
   // Get the selected propertyId and propertySlug from Redux
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);

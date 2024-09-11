@@ -6,4 +6,5 @@ export interface Image {
   rejectionReason?: string;
   uploadTime: string;
   imageComments?: string;
+  instanceNumber?: number;
 }

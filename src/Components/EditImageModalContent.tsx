@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { CustomButton, CategorySelector, FileUpload, TextInput } from './';
+import { CustomButton, CategorySelector, FileUpload, TextInput, Spacer } from './';
 import { SelectChangeEvent } from '@mui/material';
-import { ImageTags } from '../Constants/ImageTags';
-import { uploadImage } from '../Services'; // Ensure you import the upload service
+import { generateImageTags } from '../Constants/ImageTags';
+import { uploadImage } from '../Services';
 import { useSelector } from 'react-redux';
 import { RootState } from '../Redux/store';
+import UploadIcon from '@mui/icons-material/Upload';
 
 interface EditImageModalContentProps {
   image: string;
@@ -15,17 +16,33 @@ interface EditImageModalContentProps {
 }
 
 const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, imageTag, description = '', toggleModal, onUpdate }) => {
-  const initialCategoryKey = ImageTags.find(tag => tag.name.toUpperCase() === imageTag.toUpperCase())?.key.toString() || '';
-  const [selectedCategoryKey, setSelectedCategoryKey] = useState(initialCategoryKey);
+  const [selectedCategoryKey, setSelectedCategoryKey] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [descriptionText, setDescriptionText] = useState(description);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string>(image); // New state for image preview
 
   // Access userId, collectionId, and token from Redux state
   const userId = useSelector((state: RootState) => state.user.userDetails?.id);
   const collectionId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const token = useSelector((state: RootState) => state.user.token);
+
+  // Access the updated property details from the Redux state
+  const propertyDetails = useSelector((state: RootState) => ({
+    bedrooms: state.currentProperty.bedrooms,
+    bathrooms: state.currentProperty.bathrooms,
+    propertyType: state.currentProperty.type,
+    propertySize: state.currentProperty.propertySize,
+  }));
+
+  // Generate dynamic options based on property details
+  const dynamicImageTags = generateImageTags(propertyDetails).map(tag => ({
+    value: tag.key, // Ensure this is a string
+    label: tag.displayName, // Human-readable label
+    instanceNumber: tag.instanceNumber, // Instance number if relevant
+    name: tag.name
+  }));
 
   useEffect(() => {
     setDescriptionText(description);
@@ -37,6 +54,11 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
 
   const handleFileChange = (file: File) => {
     setSelectedFile(file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreviewImageUrl(reader.result as string); // Set preview image URL to file content
+    };
+    reader.readAsDataURL(file); // Read the file as data URL for image preview
   };
 
   const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -44,14 +66,23 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
   };
 
   const handleUpdate = async () => {
-    const selectedCategoryName = ImageTags.find(tag => tag.key.toString() === selectedCategoryKey)?.name.toUpperCase() || '';
+    // Find the selected tag object to get both the category name and instance number
+    const selectedTag = dynamicImageTags.find(tag => tag.value === selectedCategoryKey);
+    const selectedCategoryName = selectedTag!.name.toUpperCase();
+    const instanceNumber = selectedTag!.instanceNumber || 0; 
 
-    // Only proceed with the upload if we have the required details
     if (selectedFile && userId && collectionId && token) {
       setIsUploading(true);
       try {
-        await uploadImage(selectedFile, userId, collectionId, selectedCategoryName, descriptionText, token);
+        // Upload the image with the instanceNumber
+        await uploadImage(selectedFile, userId, collectionId, selectedCategoryName, descriptionText, instanceNumber, token);
         setUploadStatus('Upload successful');
+
+        // Call onUpdate to pass updated information to the parent component
+        onUpdate(selectedFile, selectedCategoryName, descriptionText);
+
+        // Close the modal
+        toggleModal();
       } catch (error) {
         setUploadStatus('Upload failed');
         console.error('Upload error:', error);
@@ -59,15 +90,13 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
         setIsUploading(false);
       }
     }
-
-    // Call onUpdate to pass updated information to the parent component
-    onUpdate(selectedFile, selectedCategoryName, descriptionText);
-    toggleModal();
   };
 
+  //////////////////////////////////////// RENDER
   return (
-    <div style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 0, margin: 0 }}>
-      <img className="hero gallery-card-image" src={image} alt={imageTag} />
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 0, margin: 0 }}>
+      {/* Use the updated previewImageUrl to display either the selected file or the initial image */}
+      {previewImageUrl && <img className="modal gallery-card-image" src={previewImageUrl} alt={imageTag} />}
       
       <form>
         <div style={{ marginBottom: '20px', marginTop: '20px' }}>
@@ -82,12 +111,13 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
             label="Category"
             value={selectedCategoryKey}
             onChange={handleCategoryChange}
+            options={dynamicImageTags}
           />
         </div>
 
         <div style={{ marginBottom: '20px' }}>
           <TextInput 
-            size="large"
+            size="medium"
             label="Description"
             value={descriptionText}
             onChange={handleDescriptionChange}
@@ -96,9 +126,19 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
       </form>
 
       <div style={{ display: 'flex', gap: '40px', justifyContent: 'center' }}>
-        <CustomButton label="Update" onClick={handleUpdate} disabled={isUploading} />
+        <CustomButton 
+          withIcon='right'
+          icon={<UploadIcon />}
+          label="Upload Image" 
+          onClick={handleUpdate}
+          disabled={selectedFile === null}
+        />
         <CustomButton buttonType="cancelButton" label="Cancel" onClick={toggleModal} />
       </div>
+
+      <Spacer height={1} />
+      <span style={{ color: '#ef4400', visibility: !selectedFile ? 'visible' : 'hidden'}}>Please select an image</span>
+      <span style={{ color: '#ef4400', visibility: !selectedCategoryKey ? 'visible' : 'hidden'}}>Please select an category</span>
 
       {uploadStatus && <p>{uploadStatus}</p>}
     </div>

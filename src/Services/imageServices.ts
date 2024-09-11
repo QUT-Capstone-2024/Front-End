@@ -26,6 +26,7 @@ export const uploadImage = async (
   collectionId: number,
   tag: string,
   description: string,
+  instanceNumber: number,
   token: string
 ): Promise<void> => {
   const formData = new FormData();
@@ -34,11 +35,16 @@ export const uploadImage = async (
   formData.append('collectionId', collectionId.toString());
   formData.append('tag', tag);
   formData.append('description', description);
+  formData.append('instanceNumber', instanceNumber.toString());
 
+  formData.forEach((value, key) => {
+    console.log(`${key}: ${value}`);
+  });
+  
   const response = await fetch(`${API_URL}/images/upload`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${token}`, // Don't set Content-Type when using FormData
+      'Authorization': `Bearer ${token}`,
     },
     body: formData,
   });
@@ -47,6 +53,7 @@ export const uploadImage = async (
     throw new Error('Failed to upload image');
   }
 };
+
 
 export const removeImageFromCollection = async (collectionId: number, imageId: number, token: string): Promise<void> => {
   const response = await fetch(`${API_URL}/images/collections/${collectionId}/images/${imageId}`, {

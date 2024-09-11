@@ -5,23 +5,23 @@ import { RootState } from '../Redux/store';
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { Dropdown, Spacer, Carousel, IconBar, CustomModal, EditPropertyModalContent as ModalContent, ActionRequiredCard } from "./index";
+import UploadIcon from '@mui/icons-material/Upload';
+import { Dropdown, Spacer, Carousel, IconBar, CustomModal, EditPropertyModalContent as ModalContent, ActionRequiredCard, Popover, CustomButton } from "./index";
 import { getImagesByCollectionId } from '../Services';
 import { Image } from "../types";
 import DefaultHouseImage from "../Images/house_demo_hero_image.png";
 import DefaultApartmentImage from "../Images/apartment_demo_hero_image.png";
-import { createSlugFromAddress } from "../HelperFunctions/utils";
+import { useCheckAuth } from "../Hooks/useCheckAuth";
+import { getMostRecentImagesByTagAndInstance, getMostRecentPhoto, getMostRecentPendingImage, createSlugFromAddress } from "../HelperFunctions/utils";
 
 type PropertyCardProps = {
   propertyAddress: string;
   collectionId: number;
-  propertyOwnerId: number;
   bedrooms: number;
   bathrooms: number;
   parkingSpaces: number;
   approvalStatus: "UNTAGGED" | "PENDING" | "APPROVED" | "REJECTED" | "ARCHIVED";
   propertyType: string;
-  propertyId?: number;
   propertyDescription: string;
   internalPropertySize: number;
   externalPropertySize: number;
@@ -38,21 +38,44 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   externalPropertySize,
   propertyType,
 }) => {
+ 
+  // Component state
   const [images, setImages] = useState<Image[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const token = useSelector((state: RootState) => state.user.token);
-  const navigate = useNavigate();
-
-  // Get the user type and check if the user is an admin
-  const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
-  const isAdmin = userType === 'CL_ADMIN';
-
   const toggleModal = () => setModalOpen(!modalOpen);
-
-  // Placeholder images based on property type
+  
+  const navigate = useNavigate();
+  const token = useSelector((state: RootState) => state.user.token);
+  const { isAdmin } = useCheckAuth();
   const defaultImage = propertyType === 'house' ? DefaultHouseImage : DefaultApartmentImage;
+  const mostRecentImages = getMostRecentImagesByTagAndInstance(images);
+  const mostRecentPhoto = getMostRecentPhoto(images);
+  const mostRecentPendingImage = getMostRecentPendingImage(images);
+  const noImagesAvailable = mostRecentImages.length === 0;
+  const displayedImages = !noImagesAvailable ? mostRecentImages.map(image => image.imageUrl) : [defaultImage];
+  const propertySlug = createSlugFromAddress(propertyAddress);
 
-  // Fetch images for the collection
+  const menuItems = [
+    { label: 'Edit Property Details', onClick: toggleModal },
+    { label: 'Edit Property Photos', onClick: () => navigate(`/gallery/${propertySlug}`) },
+    { label: 'Remove Property', onClick: () => console.log('Remove clicked') },
+  ];
+
+  const popoverContent = (
+    <>
+      <h2>No images available</h2>
+      <p>The "Hero" or front image is the most important image for presenting your property.</p>
+      <p>Please start by uploading your "Hero" image.</p>
+      <CustomButton 
+            withIcon='right'
+            icon={<UploadIcon />}
+            label="Get Started" 
+            onClick={() => navigate(`/gallery/${propertySlug}`)}
+            style={{ height: '40px', width: '200px', margin: '1rem 5rem' }} 
+          />
+    </>
+  );
+
   useEffect(() => {
     const fetchImages = async () => {
       if (collectionId && token) {
@@ -68,57 +91,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     fetchImages();
   }, [collectionId, token]);
 
-  // Helper function to get the most recent image for each tag
-  const getMostRecentImagesByTag = (images: Image[]) => {
-    const imageMap: { [tag: string]: Image } = {};
-
-    images.forEach((image) => {
-      const tag = image.imageTag;
-      if (!imageMap[tag] || new Date(image.uploadTime).getTime() > new Date(imageMap[tag].uploadTime).getTime()) {
-        imageMap[tag] = image;
-      }
-    });
-
-    return Object.values(imageMap);
-  };
-
-  // Helper function to get the most recent photo update
-  const getMostRecentPhoto = (images: Image[]) => {
-    if (images.length === 0) return null;
-    return images.sort(
-      (a, b) => new Date(b.uploadTime).getTime() - new Date(a.uploadTime).getTime()
-    )[0];
-  };
-
-  // Helper function to get the most recent image needing attention (PENDING)
-  const getMostRecentPendingImage = (images: Image[]) => {
-    const pendingImages = images.filter(image => image.imageStatus === "PENDING");
-    if (pendingImages.length === 0) return null;
-    return pendingImages.sort(
-      (a, b) => new Date(b.uploadTime).getTime() - new Date(a.uploadTime).getTime()
-    )[0];
-  };
-
-  // Get the most recent image for each unique tag
-  const mostRecentImages = getMostRecentImagesByTag(images);
-
-  // Get the most recent photo
-  const mostRecentPhoto = getMostRecentPhoto(images);
-
-  // Get the most recent pending image
-  const mostRecentPendingImage = getMostRecentPendingImage(images);
-
-  // Generate the image URLs array for the carousel or fallback to default image
-  const displayedImages = mostRecentImages.length > 0 ? mostRecentImages.map(image => image.imageUrl) : [defaultImage];
-
-  // Generate the property slug for navigation
-  const propertySlug = createSlugFromAddress(propertyAddress);
-
-  const menuItems = [
-    { label: 'Edit Property Details', onClick: toggleModal },
-    { label: 'Edit Property Photos', onClick: () => navigate(`/gallery/${propertySlug}`) },
-    { label: 'Remove Property', onClick: () => console.log('Remove clicked') },
-  ];
 
   return (
     <Card sx={{ padding: 0, margin: 0, width: '100%', maxWidth: '600px', height: 'auto', borderRadius: '8px', backgroundColor: '#eff7fe', boxShadow: 5 }}>
@@ -135,12 +107,20 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         />
       </div>
 
-      {/* Display the Carousel */}
-      {displayedImages.length > 0 && (
-        <Carousel images={displayedImages} height='300px' width='600px' />
-      )}
+      {!noImagesAvailable ? (
+          <Carousel images={displayedImages} height="300px" width="600px" />
+        ) : (
+          <div style={{ position: 'relative' }}>
+            <Popover content={popoverContent} visible={true} type='property-card'/>
+            <img src={defaultImage} alt="Default" style={{ width: '600px', height: '300px'}} />
+          </div>
+        )}
 
-      {/* Always Render the Card Content */}
+
+
+
+
+
       <CardContent>
         <IconBar bedrooms={bedrooms} bathrooms={bathrooms} parkingSpaces={parkingSpaces} internalPropertySize={internalPropertySize} externalPropertySize={externalPropertySize} />
         <Spacer height={0.5} />
@@ -148,7 +128,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           {propertyDescription}
         </Typography>
 
-        {/* Most Recent Photo Update */}
         {mostRecentPhoto && (
           <>
             <Spacer height={1} />
@@ -163,7 +142,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
           </>
         )}
 
-        {/* Most Recent Pending Image */}
         {mostRecentPendingImage && isAdmin && (
           <>
             <Spacer height={1} />
@@ -179,7 +157,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         )}
       </CardContent>
 
-      {/* Modal for editing property details */}
       <CustomModal
         modalType='editDetails'
         open={modalOpen}

@@ -4,6 +4,7 @@ import { updateUser } from '../Services';
 import { useSelector } from 'react-redux';
 import { RootState } from '../Redux/store';
 import { UserWithId } from '../types';
+import { useCheckAuth } from "../Hooks/useCheckAuth";
 
 // Define the type for the form data
 type UpdateFormData = {
@@ -60,8 +61,8 @@ const UpdateForm: React.FC<{
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const token = useSelector((state: RootState) => state.user.token);
-  const userType = useSelector((state: RootState) => state.user.userDetails?.userType);
-  const isAdmin = userType === 'CL_ADMIN';
+  
+  const { isAdmin } = useCheckAuth();
 
 
   useEffect(() => {

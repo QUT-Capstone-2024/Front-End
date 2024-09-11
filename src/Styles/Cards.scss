@@ -68,6 +68,10 @@
     max-height: 100%;
     box-shadow: $box-shadow-heavy;
   }
+  &.modal {
+    height: 200px;
+    width: 300px;
+  }
 }
 
 .gallery-card-tag {
@@ -131,6 +135,21 @@
     &:hover {
       transform: scale(1.1);
     }
+  }
+}
+
+.upload-icon {
+  font-size: 45px !important;
+  position: absolute !important;
+  bottom: 5px !important;
+  right: 5px!important;
+  color: $warning-color;
+  cursor: pointer;
+  z-index: 1001;
+  translate: all 0.1s ease-in-out;
+  &:hover {
+    color: $primary-color;
+    transform: scale(1.2);
   }
 }
 
