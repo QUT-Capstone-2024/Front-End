@@ -223,7 +223,7 @@ html {
   &.disabled {
     background-color: $background-lighter;
     color: grey;
-    cursor: not-allowed;
+    cursor: not-allowed !important;
   }
 
   &:hover {
@@ -590,6 +590,9 @@ html {
     
     &.small {
       height: 40px;
+    }
+    &.medium {
+      height: 100px;
     }
     &.large {
       height: 200px;

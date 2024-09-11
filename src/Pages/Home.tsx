@@ -49,6 +49,13 @@ const Home: React.FC<HomeProps> = () => {
           dispatch(selectProperty({
             propertyId: fetchedCollections[0].id,
             propertyAddress: fetchedCollections[0].propertyAddress,
+            propertyDescription: fetchedCollections[0].propertyDescription,
+            propertySize: fetchedCollections[0].propertySize,
+            bedrooms: fetchedCollections[0].bedrooms,
+            bathrooms: fetchedCollections[0].bathrooms,
+            parkingSpaces: fetchedCollections[0].parkingSpaces,
+            propertyType: fetchedCollections[0].propertyType,
+            approvalStatus: fetchedCollections[0].approvalStatus,
           }));
         }
       } catch (err) {
@@ -72,6 +79,13 @@ const Home: React.FC<HomeProps> = () => {
     dispatch(selectProperty({
       propertyId: property.id,
       propertyAddress: property.propertyAddress,
+      propertyDescription: property.propertyDescription,
+      propertySize: property.propertySize,
+      bedrooms: property.bedrooms,
+      bathrooms: property.bathrooms,
+      parkingSpaces: property.parkingSpaces,
+      propertyType: property.propertyType,
+      approvalStatus: property.approvalStatus,
     }));
   };
 

@@ -39,17 +39,17 @@ export const getMostRecentPendingImage = (images: Image[]): Image | null => {
 
 // Helper function to get the hero image for a property
 export const getHeroImage = (images: Array<any>) => {
-  // Filter images with the tag "FRONT"
-  const frontImages = images.filter((image) => image.imageTag === 'FRONT');
+  // Filter images with the tag "STREET"
+  const frontImages = images.filter((image) => image.imageTag === 'STREET');
 
-  // If there are no FRONT images, return null
+  // If there are no STREET images, return null
   if (frontImages.length === 0) return null;
 
-  // Sort FRONT images by upload time (most recent first)
+  // Sort STREET images by upload time (most recent first)
   const latestFrontImage = frontImages.sort(
     (a, b) => new Date(b.uploadTime).getTime() - new Date(a.uploadTime).getTime()
   )[0];
 
-  // Return the URL of the most recent FRONT image
+  // Return the URL of the most recent STREET image
   return latestFrontImage.imageUrl;
 };
