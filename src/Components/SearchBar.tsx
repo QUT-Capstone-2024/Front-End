@@ -20,11 +20,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = 'Search...', onSear
 
     return (
         <>
-             <Box sx={{ display: 'flex', 
+             <Box sx={{ 
                 alignItems: 'center', 
                 width: '300px', 
-                borderRadius: '10px', 
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)',
                 }}>
                 <TextField
                     placeholder={placeholder}

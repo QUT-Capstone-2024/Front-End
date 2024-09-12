@@ -103,7 +103,7 @@ const Home: React.FC<HomeProps> = () => {
           <Spacer height={1} />
           <h2 className="left">{isAdmin ? 'All Properties' : 'My Properties'}</h2>
           <Spacer height={0.5} />
-          <div className='scrollable-property-list'>
+          <div className='scrollable-list-container'>
           {properties.map((property: any) => (
                 <SmallDisplayCard
                   image={getHeroImageForProperty(property)}

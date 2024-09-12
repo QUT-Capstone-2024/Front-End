@@ -86,10 +86,12 @@
 ////////////////////////////////////////
 /// User card styles
 .user-card-container {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
   border: $border-primary;
   border-radius: $border-radius-large;
-  width: 400px;
-  padding: 0 20px;
+  width: 600px;
   box-sizing: border-box;
   box-shadow: $box-shadow-xlight;
   background: $background-lighter;
@@ -98,13 +100,20 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 10px;
 
   &:hover {
-    transform: scale(1.01);
+    transform: scale(1.02);
     box-shadow: $box-shadow-light;
     background-color: $hover-color;
   }
+
+  & p {
+    margin: 2px 0px;
+    padding: 1px 0px;
+  }
 }
+
 
 ////////////////////////////////////////
 /// Icons

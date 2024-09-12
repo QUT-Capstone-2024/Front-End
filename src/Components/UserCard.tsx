@@ -4,6 +4,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { CustomModal, UpdateForm } from '.';
 import '../Styles/Cards.scss';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import { useCheckAuth } from '../Hooks/useCheckAuth';
 
 interface UserCardProps {
   user: UserWithId;
@@ -14,6 +16,8 @@ interface UserCardProps {
 const UserCard: React.FC<UserCardProps> = ({ user, onDelete, onUpdate }) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const { userType } = useCheckAuth();
+  const isGod = userType === 'HARBINGER';
 
   const toggleEditModal = () => {
     setEditModalOpen(!editModalOpen);
@@ -25,21 +29,32 @@ const UserCard: React.FC<UserCardProps> = ({ user, onDelete, onUpdate }) => {
 
   const DeleteUserModalContent = () => {
     return (
-      <div>
-        Are you sure you want to delete {user.name}?
-      </div>
+      isGod ?
+        <div>
+          Are you sure you want to delete {user.name}?
+        </div>
+      :
+        <div>
+          Are you sure you want to archive {user.name}?
+        </div>
     );
   };
 
   return (
     <div style={{display: 'flex' }}>
       <div className='user-card-container'>
-        <p><span style={{ fontWeight: 'bold'}}>USER:</span> {user.name}</p>
-        <p><span style={{ fontWeight: 'bold'}}>EMAIL:</span> {user.email}</p>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '5px 10px', position: 'relative'}}>
-        <EditIcon className={`edit-icon`} onClick={() => setEditModalOpen(true)} />
-        <DeleteIcon className={`delete-icon`} onClick={() => setDeleteModalOpen(true)} />
+        <div style={{ display: 'flex', flexDirection: 'column'}}>
+          <p><span style={{ fontWeight: 'bold' }}>USER:</span> {user.name}</p>
+          <p><span style={{ fontWeight: 'bold' }}>EMAIL:</span> {user.email}</p>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '15px', position: 'relative'}}>
+          <EditIcon className={`edit-icon`} onClick={() => setEditModalOpen(true)} />
+          {isGod ?
+            <DeleteIcon className={`delete-icon`} onClick={() => setDeleteModalOpen(true)} />
+            :
+            <ArchiveIcon className={`delete-icon`} onClick={() => setDeleteModalOpen(true)} />
+          }
+        </div>
       </div>
 
       <CustomModal
@@ -57,7 +72,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, onDelete, onUpdate }) => {
         open={deleteModalOpen}
         onConfirm={() => onDelete(user.id)}
         onClose={toggleDeleteModal}
-        title='Delete User' 
+        title={isGod ? 'Delete User' : 'Archive User'} 
         contentColour='#ef4400' 
       >
         <DeleteUserModalContent />
