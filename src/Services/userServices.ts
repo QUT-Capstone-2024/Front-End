@@ -18,11 +18,11 @@ export const getUserById = async (id: number, token: string): Promise<UserWithId
     return data;
 };
 
-export const getAllUsers = async (): Promise<any[]> => {
-    const response = await fetch(`${API_URL}/users`, {
+export const getAllUsers = async (token: string): Promise<any[]> => {
+    const response = await fetch(`${API_URL}/users/all`, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         },
     });
 
@@ -68,5 +68,23 @@ export const deleteUser = async (id: number, token: string): Promise<any> => {
 
     return { message: 'User deleted successfully' };
 };
+
+export const archiveUser = async (id: number, token: string): Promise<any> => {
+    const response = await fetch(`${API_URL}/users/archive/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || 'Failed to archive user');
+    }
+
+    return { message: 'User archived successfully' };
+};
+
 
 

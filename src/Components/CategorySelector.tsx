@@ -37,9 +37,9 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
         onChange={onChange}
         label={label}
         MenuProps={MenuProps}
-        sx={{ textAlign: 'left', borderRadius: '8px', border: '1px solid #93cdfe' }}
+        sx={{ textAlign: 'left', borderRadius: '8px', border: '1px solid #93cdfe', width: '300px !important' }}
       >
-        {options.map((option) => ( // Use passed options
+        {options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>

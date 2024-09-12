@@ -114,14 +114,32 @@ html {
   padding: 10px;
 }
 
-.scrollable-property-list {
+.scrollable-list-container {
   max-height: 68vh;
   overflow-y: auto;
   padding: 10px 10px;
   box-shadow: $box-shadow-light-inset;
   border-radius: $border-radius-left;
+  &.users{
+    height: 65vh;
+    overflow-x: hidden;
+    padding: 10px 10px;
+    width: 450px;
+  }
 }
 
+.user-page-container {
+  display: flex;
+  margin-top: 4rem;
+  margin-left: 4rem;
+  gap: 2rem;
+  & h4:first-of-type {
+    margin: 0;
+  }
+  & h4 {
+    margin: 20px 0px 0px 0px;
+  }
+}
 
 .small-display-card-container {
   display: flex;
