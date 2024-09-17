@@ -62,8 +62,6 @@ const ImageApproval: React.FC = () => {
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '15px', alignItems: 'center', mt: 1 }}>
                     <IconBar {...property} />
                     <Box sx={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                      <CustomButton buttonType="successButton" label="View Property" />
-                      <CustomButton buttonType="successButton" label="Owner Details" />
                     </Box>
                   </Box>
                 </Box>
