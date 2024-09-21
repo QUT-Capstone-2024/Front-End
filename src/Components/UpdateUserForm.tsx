@@ -27,7 +27,7 @@ type FieldConfig<T> = {
   validator?: (value: string | boolean) => string | null;
 };
 
-// Define the form fields for regular users
+// Define the form fields for regular users 
 const UpdateFields: FieldConfig<UpdateFormData>[] = [
   { name: "username", label: "User Name", type: "text", required: false },
   { name: "email", label: "Email", type: "email", required: false },
