@@ -24,6 +24,27 @@ const Home: React.FC<HomeProps> = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/users/details', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            // Include auth headers if required
+          },
+        });
+        const data = await response.json();
+        console.log('Fetched user details:', data);
+        // Handle setting user details in state or Redux store
+      } catch (error) {
+        console.error('Failed to fetch user details:', error);
+      }
+    };
+  
+    fetchUserDetails();
+  }, []);
+  
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -140,10 +161,11 @@ const Home: React.FC<HomeProps> = () => {
           </div>
         )}
         </div>
-        <div className="update-profile-section" style={{ width: '30%', padding: '20px', borderLeft: '1px solid #ccc' }}>
-        {userDetails ? <UpdateForm user={userDetails as unknown as UserWithId} onUpdate={(id, updatedUser) => console.log('Updated:', id, updatedUser)} onCancel={() => console.log('Canceled')} />
-         : <p>User details not available.</p>}
-      </div>
+        {!isAdmin && userDetails ? (
+          <div className="update-profile-section" style={{ width: '30%', padding: '20px', borderLeft: '1px solid #ccc' }}>
+            <UpdateForm user={userDetails as unknown as UserWithId} onUpdate={(id, updatedUser) => console.log('Updated:', id, updatedUser)} onCancel={() => console.log('Canceled')} />
+          </div>
+        ) : null}
       </div>
       <Spacer height={4} />
     </div>

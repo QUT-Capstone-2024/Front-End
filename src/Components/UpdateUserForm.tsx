@@ -24,6 +24,7 @@ type FieldConfig<T> = {
   label: string;
   type: string;
   required: boolean;
+  readOnly?: boolean;
   validator?: (value: string | boolean) => string | null;
 };
 
@@ -31,18 +32,8 @@ type FieldConfig<T> = {
 const UpdateFields: FieldConfig<UpdateFormData>[] = [
   { name: "username", label: "User Name", type: "text", required: false },
   { name: "email", label: "Email", type: "email", required: false },
-  {
-    name: "password",
-    label: "New Password",
-    type: "password",
-    required: false,
-  },
-  {
-    name: "confirmPassword",
-    label: "Confirm New Password",
-    type: "password",
-    required: false,
-  },
+  { name: "password", label: "New Password", type: "password", required: false },
+  { name: "confirmPassword", label: "Confirm New Password", type: "password", required: false },
   { name: "phoneNumber", label: "Phone Number", type: "text", required: false },
 ];
 
@@ -50,6 +41,13 @@ const UpdateFields: FieldConfig<UpdateFormData>[] = [
 const adminFields: FieldConfig<UpdateFormData>[] = [
   { name: "userType", label: "User Type", type: "text", required: false },
   { name: "userRole", label: "User Role", type: "text", required: false },
+];
+
+// Define the form fields specifically for homepage profile edit (non-admin users)
+const EditProfileFields: FieldConfig<UpdateFormData>[] = [
+  { name: "username", label: "User Name", type: "text", required: false },
+  { name: "email", label: "Email", type: "email", required: false, readOnly: true }, // Email remains visible but not editable
+  { name: "phoneNumber", label: "Phone Number", type: "text", required: false }, // Only phone number is editable
 ];
 
 // Define the UpdateForm component
@@ -134,13 +132,13 @@ const UpdateForm: React.FC<{
     <div>
       <CustomAlert message={errors} type="error" isVisible={showAlert} />
       <BaseForm<UpdateFormData>
-        title='Update User'
-        fields={isAdmin ? [...UpdateFields, ...adminFields] : UpdateFields}
+        title={isAdmin ? 'Update User' : 'Edit Profile Details'}
+        fields={isAdmin ? [...UpdateFields, ...adminFields] : EditProfileFields}
         initialValues={formData}
         onSubmit={handleUpdateSubmit}
-        onChange={(updatedFormData) => setFormData(updatedFormData)} // Handles form data updates
+        onChange={(updatedFormData) => setFormData(updatedFormData)}
         buttonLabel="Update"
-        onCancel={onCancel} // Pass the onCancel function
+        onCancel={onCancel}
       />
     </div>
   );
