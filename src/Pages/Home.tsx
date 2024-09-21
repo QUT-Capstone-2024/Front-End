@@ -3,10 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../Redux/store';
 import { selectProperty } from '../Redux/Slices/propertySlice'; 
 import { getUserCollections, getAllCollections } from '../Services';
-import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard } from '../Components';
+import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard, UpdateForm } from '../Components';
 import { useCheckAuth } from '../Hooks/useCheckAuth';
 import { getHeroImage } from '../HelperFunctions/utils';
 import './PropertiesHome.scss';
+import { UserWithId } from '../types/userTypes';
 
 interface HomeProps {}
 
@@ -14,6 +15,7 @@ const Home: React.FC<HomeProps> = () => {
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.user.userDetails?.id);
   const token = useSelector((state: RootState) => state.user.token);
+  const userDetails = useSelector((state: RootState) => state.user.userDetails);
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const { isAdmin } = useCheckAuth();
 
@@ -138,6 +140,10 @@ const Home: React.FC<HomeProps> = () => {
           </div>
         )}
         </div>
+        <div className="update-profile-section" style={{ width: '30%', padding: '20px', borderLeft: '1px solid #ccc' }}>
+        {userDetails ? <UpdateForm user={userDetails as unknown as UserWithId} onUpdate={(id, updatedUser) => console.log('Updated:', id, updatedUser)} onCancel={() => console.log('Canceled')} />
+         : <p>User details not available.</p>}
+      </div>
       </div>
       <Spacer height={4} />
     </div>

@@ -1,38 +1,68 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ActionRequiredCard } from "../Components";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Box, Typography } from "@mui/material";
 
-// Test data
-import propertiesData from "../Test Data/sample_properties.json";
-import imagesData from "../Test Data/sample_images.json";
+// Define the interfaces for the data
+interface Image {
+  uploadTime: string;
+  [key: string]: any;
+}
+
+interface Property {
+  collectionId: string;
+  approvalStatus: string;
+  propertyAddress: string;
+  [key: string]: any;
+}
 
 const UploadManagement = () => {
+  const [collectionsNeedingReview, setCollectionsNeedingReview] = useState<Property[]>([]);
   const navigate = useNavigate();
 
-  interface Image {
-    uploadTime: string;
-    [key: string]: any;
-  }
+  // Function to fetch data from the API
+  const fetchPropertiesAndImages = async () => {
+    try {
+      // Replace these with your actual API endpoints
+      const propertiesResponse = await fetch("/api/properties"); // API call to fetch properties
+      const imagesResponse = await fetch("/api/images"); // API call to fetch images
 
-  const findLatestQueuedImage = (images: Image[]): Image | null =>
-    images.length > 0
-      ? images.reduce((latest, current) =>
-          new Date(current.uploadTime.trim().replace(" T", "T")) >
-          new Date(latest.uploadTime.trim().replace(" T", "T"))
-            ? current
-            : latest
-        )
-      : null;
+      if (propertiesResponse.ok && imagesResponse.ok) {
+        const propertiesData: Property[] = await propertiesResponse.json();
+        const imagesData: { images: Image[] } = await imagesResponse.json();
 
-  const collectionsNeedingReview = propertiesData
-    .filter((property) => property.approvalStatus.toLowerCase() === "queued")
-    .map((property) => ({
-      ...property,
-      latestImage: findLatestQueuedImage(
-        imagesData.images.filter((image) => image.imageStatus.toLowerCase() === "queued")
-      ),
-    }));
+        const findLatestQueuedImage = (images: Image[]): Image | null =>
+          images.length > 0
+            ? images.reduce((latest, current) =>
+                new Date(current.uploadTime.trim().replace(" T", "T")) >
+                new Date(latest.uploadTime.trim().replace(" T", "T"))
+                  ? current
+                  : latest
+              )
+            : null;
+
+        const filteredProperties = propertiesData
+          .filter((property) => property.approvalStatus.toLowerCase() === "queued")
+          .map((property) => ({
+            ...property,
+            latestImage: findLatestQueuedImage(
+              imagesData.images.filter((image) => image.imageStatus.toLowerCase() === "queued")
+            ),
+          }));
+
+        setCollectionsNeedingReview(filteredProperties);
+      } else {
+        console.error("Error fetching data from API");
+      }
+    } catch (error) {
+      console.error("Error fetching data from API:", error);
+    }
+  };
+
+  // useEffect to call the fetch function when the component loads
+  useEffect(() => {
+    fetchPropertiesAndImages();
+  }, []);
 
   return (
     <Box sx={{ padding: "20px", backgroundColor: "#e2eaf1", display: "flex", justifyContent: "center", alignItems: "flex-start", minHeight: "100vh" }}>
