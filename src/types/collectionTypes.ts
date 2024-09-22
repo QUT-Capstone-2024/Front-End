@@ -23,12 +23,14 @@ export interface Collection {
 
 // The payload for updating an existing collection
 export interface UpdateCollectionPayload {
+  user?: {
+    id: number;
+  };
   propertyAddress?: string;
   propertyDescription?: string;
   imageUrls?: string[];
-  collectionId?: string;
+  collectionId?: string | number;
   propertySize?: number;
-  propertyOwnerId?: number;
   bedrooms?: number;
   bathrooms?: number;
   parkingSpaces?: number;

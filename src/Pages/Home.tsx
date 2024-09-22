@@ -12,6 +12,7 @@ interface HomeProps {}
 
 const Home: React.FC<HomeProps> = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
   const userId = useSelector((state: RootState) => state.user.userDetails?.id);
   const token = useSelector((state: RootState) => state.user.token);
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
@@ -21,6 +22,7 @@ const Home: React.FC<HomeProps> = () => {
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isNewUser, setIsNewUser] = useState<boolean>(false);   
 
 
   useEffect(() => {
@@ -42,7 +44,11 @@ const Home: React.FC<HomeProps> = () => {
           fetchedCollections = await getUserCollections(userId, token);
         }
 
-        setProperties(fetchedCollections);
+        if (fetchedCollections.length === 0) {
+          setIsNewUser(true);
+        } else {
+          setProperties(fetchedCollections);
+        }
 
         if (fetchedCollections.length > 0 && !selectedPropertyId) {
           // If there's no selected property yet, select the first one by default
@@ -58,8 +64,14 @@ const Home: React.FC<HomeProps> = () => {
             approvalStatus: fetchedCollections[0].approvalStatus,
           }));
         }
-      } catch (err) {
-        setError('Failed to fetch properties');
+
+      } catch (err: any) {
+        console.log(err.message.includes('404'));
+        if (err.message && err.message.includes('404')) {
+        setIsNewUser(true);  // Assume new user if 404
+        } else {
+          setError('Failed to fetch properties');
+        }
       } finally {
         setLoading(false);
       }
@@ -89,9 +101,18 @@ const Home: React.FC<HomeProps> = () => {
     }));
   };
 
-
   if (loading) return <p>Loading properties...</p>;
   if (error) return <p>{error}</p>;
+
+  if (isNewUser) {
+    return (
+      <div className="new-user-container">
+        <h2>Welcome to VisionCORE!</h2>
+        <p>{user.userDetails?.name}, it looks like you don't have any properties yet.<br />Let's fix that by clicking below.</p>
+        <AddPropertyCard />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -113,13 +134,12 @@ const Home: React.FC<HomeProps> = () => {
                   onClick={() => handleCardClick(property)}
                 />
               ))}
-              </div>
+          </div>
         </div>
         <div style={{ marginTop: '10px', width: '60%' }}>
         {selectedProperty ? (
           <PropertyCard
             propertyAddress={selectedProperty.propertyAddress}
-           
             collectionId={selectedProperty.id}
             bedrooms={selectedProperty.bedrooms}
             bathrooms={selectedProperty.bathrooms}

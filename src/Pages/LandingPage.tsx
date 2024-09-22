@@ -14,8 +14,9 @@ const LandingPage: React.FC = () => {
         <div className="overlay-container">
             <div className="background-overlay"></div>
             <div className="overlay-content-container">
-                <Spacer height={2} />
-                <Logo />
+                <Spacer height={1} />
+                <Logo logoSize="medium"/>
+                <Spacer height={1} />
                 <div className="overlay-button-container">
                     <LoginForm />
                     <Spacer height={2} />

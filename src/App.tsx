@@ -25,6 +25,7 @@ const AppContent = () => {
         <Route path="/" element={<Navigate replace to="/Login" />} />
         <Route path="/Login" element={<Pages.LandingPage />} />
         <Route path="/Register" element={<Pages.Register />} />
+        <Route path="/Terms-and-Conditions" element={<Pages.Terms />} />
 
         {/* Protected Routes with varying access levels */}
         <Route element={<ProtectedRoute requiredAuthLevel={1} />}>

@@ -16,7 +16,7 @@ type BaseFormProps<T> = {
     onSubmit: (values: T) => void;
     title: string;
     withCheckbox?: boolean;
-    checkboxLabel?: string;
+    checkboxLabel?: string | React.ReactNode;
     withSwitch?: boolean;
     switchLabel?: string;
     withCancelButton?: boolean;
@@ -99,7 +99,7 @@ const BaseForm = <T extends Record<string, any>>({
 
     return (
         <Container component="main" maxWidth="sm">
-            <Typography component="h1" variant="h5" sx={{ mt: 2, mb: 2 }}>
+            <Typography component="h1" variant="h5" sx={{ mt: 2, mb: 2, margin: 0 }}>
                 {title}
             </Typography>
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>

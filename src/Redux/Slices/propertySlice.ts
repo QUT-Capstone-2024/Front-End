@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface PropertyState {
   selectedPropertyId: number | null;
+  propertyAddress: string | null;
   propertySlug: string | null;
   propertyDescription?: string | null;
   propertySize?: number | null;
@@ -14,6 +15,7 @@ interface PropertyState {
 
 const initialState: PropertyState = {
   selectedPropertyId: null,
+  propertyAddress: null,
   propertySlug: null,
   propertyDescription: null,
   propertySize: null,
@@ -45,6 +47,7 @@ const propertySlice = createSlice({
       approvalStatus: string;  
     }>) {
       state.selectedPropertyId = action.payload.propertyId;
+      state.propertyAddress = action.payload.propertyAddress;
       state.propertySlug = createPropertySlug(action.payload.propertyAddress); 
       state.propertyDescription = action.payload.propertyDescription;
       state.propertySize = action.payload.propertySize;
@@ -52,8 +55,8 @@ const propertySlice = createSlice({
       state.bathrooms = action.payload.bathrooms;
       state.parking = action.payload.parkingSpaces;
       state.type = action.payload.propertyType;
-      state.approvalStatus = action.payload.approvalStatus
-    },
+      state.approvalStatus = action.payload.approvalStatus;
+    },    
     clearSelectedProperty(state) {
       state = initialState;
     },
