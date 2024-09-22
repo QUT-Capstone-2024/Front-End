@@ -1,0 +1,33 @@
+@import "../Styles/variables";
+
+.add-property-card-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.search-bar-container {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.search-bar-container input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+}
+
+.add-property-card-container, 
+.search-bar-container {
+  position: absolute;
+  width: 100%;
+  top: 0;
+}
+
+.search-bar-container {
+  opacity: 1;
+}

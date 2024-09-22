@@ -30,3 +30,16 @@
   width: 80%;
   height: 95%;
 }
+
+.new-user-container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  padding: 10px;
+  margin-left: 4rem;
+  margin-top: 1rem;
+
+  & h2 {
+    text-align: left;
+  }
+}
