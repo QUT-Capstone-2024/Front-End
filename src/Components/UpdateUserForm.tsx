@@ -46,8 +46,8 @@ const adminFields: FieldConfig<UpdateFormData>[] = [
 // Define the form fields specifically for homepage profile edit (non-admin users)
 const EditProfileFields: FieldConfig<UpdateFormData>[] = [
   { name: "username", label: "User Name", type: "text", required: false },
-  { name: "email", label: "Email", type: "email", required: false, readOnly: true }, // Email remains visible but not editable
-  { name: "phoneNumber", label: "Phone Number", type: "text", required: false }, // Only phone number is editable
+  { name: "email", label: "Email", type: "email", required: false, readOnly: true }, 
+  { name: "phoneNumber", label: "Phone Number", type: "text", required: false }, 
 ];
 
 // Define the UpdateForm component

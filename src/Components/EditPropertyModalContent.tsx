@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CustomButton, TextInput, NumberInput, Spacer } from './';
 import { useSelector } from 'react-redux';
 import { RootState } from '../Redux/store';
+import { API_URL } from '../config/config';
 
 interface EditPropertyModalContentProps {
   toggleModal: () => void;
@@ -71,14 +72,16 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
       };
   
       try {
-        const response = await fetch('https://api.example.com/properties/update', {
-          method: 'POST', // or 'PUT' depending on the API design
+        const response = await fetch(`${API_URL}/properties/update`, {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Use token for authentication
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify(updatedProperty),
         });
+
+        console.log("Response status:", response.status);
   
         if (response.ok) {
           // Handle successful response
@@ -95,7 +98,7 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
     };
 
   return (
-    <div style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ minWidth: '400px', maxWidth: '450px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <h2>{propertyAddress}</h2>
       <Spacer height={1} />
       <form>
