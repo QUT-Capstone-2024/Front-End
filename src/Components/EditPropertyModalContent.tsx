@@ -3,6 +3,8 @@ import { CustomButton, TextInput, NumberInput, Spacer } from './';
 import { useSelector } from 'react-redux';
 import { RootState } from '../Redux/store';
 import { API_URL } from '../config/config';
+import { updateCollection } from '../Services';
+import { updateDecorator } from 'typescript';
 
 interface EditPropertyModalContentProps {
   toggleModal: () => void;
@@ -16,6 +18,7 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
 }) => {
   // Access the updated property details from the Redux state
   const propertyDetails = useSelector((state: RootState) => state.currentProperty);
+  const collectionID = propertyDetails.selectedPropertyId;
 
   // Local state for editable fields, initialized from Redux state
   const [bedrooms, setBedrooms] = useState<number>(propertyDetails.bedrooms || 0);
@@ -60,42 +63,25 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
     setDescription(event.target.value); // Update description state
   };
 
-    // Handle update | post to API
-    const handleUpdate = async () => {
-      const updatedProperty = {
-        bedrooms,
-        bathrooms,
-        parkingSpaces,
-        internalPropertySize,
-        externalPropertySize,
-        description,
-      };
-  
-      try {
-        const response = await fetch(`${API_URL}/properties/update`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(updatedProperty),
-        });
-
-        console.log("Response status:", response.status);
-  
-        if (response.ok) {
-          // Handle successful response
-          const data = await response.json();
-          console.log('Property updated successfully:', data);
-          toggleModal(); // Close the modal after a successful update
-        } else {
-          // Handle errors
-          console.error('Failed to update property:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error updating property:', error);
-      }
+  const handleUpdate = async () => {
+    const updateData = {
+      bedrooms,
+      bathrooms,
+      parkingSpaces,
+      internalPropertySize,
+      externalPropertySize,
+      description,
     };
+  
+    try {
+      const updatedData = await updateCollection(collectionID!, updateData, token!);
+      console.log("success", updatedData);
+    } catch (err) {
+      console.log("error", err);
+    } finally {
+      // Any cleanup if needed
+    }
+  };
 
   return (
     <div style={{ minWidth: '400px', maxWidth: '450px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
