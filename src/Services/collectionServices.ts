@@ -102,6 +102,22 @@ export const updateCollection = async (id: number, updatedCollection: UpdateColl
 };
 
 
+// Approve a collection
+export const approveImageInCollection = async (collectionId: number, imageId: number, token: string): Promise<void> => {
+  const response = await fetch(`${API_URL}/images/collections/${collectionId}/images/${imageId}/approve`, {
+    method: 'PUT',  
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to approve image');
+  }
+};
+
+
 // Delete a collection by ID (ADMIN ONLY)
 export const deleteCollection = async (id: number): Promise<void> => {
   const response = await fetch(`${API_URL}/collections/${id}`, {

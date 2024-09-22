@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CustomButton, TextInput, NumberInput, Spacer } from './';
+import { useSelector } from 'react-redux';
+import { RootState } from '../Redux/store';
+import { API_URL } from '../config/config';
 
 interface EditPropertyModalContentProps {
   toggleModal: () => void;
@@ -9,15 +12,29 @@ interface EditPropertyModalContentProps {
 
 const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
   toggleModal,
-  propertyDescription: initialDescription,
   propertyAddress,
 }) => {
-  const [bedrooms, setBedrooms] = useState<number>(0);
-  const [bathrooms, setBathrooms] = useState<number>(0);
-  const [parkingSpaces, setParkingSpaces] = useState<number>(0);
-  const [internalPropertySize, setInternalPropertySize] = useState<number>(0);
-  const [externalPropertySize, setExternalPropertySize] = useState<number>(0);
-  const [description, setDescription] = useState<string>(initialDescription); // Manage the state for description
+  // Access the updated property details from the Redux state
+  const propertyDetails = useSelector((state: RootState) => state.currentProperty);
+
+  // Local state for editable fields, initialized from Redux state
+  const [bedrooms, setBedrooms] = useState<number>(propertyDetails.bedrooms || 0);
+  const [bathrooms, setBathrooms] = useState<number>(propertyDetails.bathrooms || 0);
+  const [parkingSpaces, setParkingSpaces] = useState<number>(propertyDetails.parking || 0);
+  const [internalPropertySize, setInternalPropertySize] = useState<number>(propertyDetails.propertySize || 0);
+  const [externalPropertySize, setExternalPropertySize] = useState<number>(0); 
+  const [description, setDescription] = useState<string>(propertyDetails.propertyDescription || '');
+
+  // Effect to update local state when the Redux state changes
+  useEffect(() => {
+    setBedrooms(propertyDetails.bedrooms || 0);
+    setBathrooms(propertyDetails.bathrooms || 0);
+    setParkingSpaces(propertyDetails.parking || 0);
+    setInternalPropertySize(propertyDetails.propertySize || 0);
+    setDescription(propertyDetails.propertyDescription || '');
+  }, [propertyDetails]);
+
+  const token = useSelector((state: RootState) => state.user.token);
 
   const handleBathroomChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBathrooms(parseInt(event.target.value));
@@ -43,12 +60,45 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
     setDescription(event.target.value); // Update description state
   };
 
-  const handleUpdate = () => {
-    // TO DO: post to API
-  };
+    // Handle update | post to API
+    const handleUpdate = async () => {
+      const updatedProperty = {
+        bedrooms,
+        bathrooms,
+        parkingSpaces,
+        internalPropertySize,
+        externalPropertySize,
+        description,
+      };
+  
+      try {
+        const response = await fetch(`${API_URL}/properties/update`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(updatedProperty),
+        });
+
+        console.log("Response status:", response.status);
+  
+        if (response.ok) {
+          // Handle successful response
+          const data = await response.json();
+          console.log('Property updated successfully:', data);
+          toggleModal(); // Close the modal after a successful update
+        } else {
+          // Handle errors
+          console.error('Failed to update property:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error updating property:', error);
+      }
+    };
 
   return (
-    <div style={{ minWidth: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ minWidth: '400px', maxWidth: '450px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <h2>{propertyAddress}</h2>
       <Spacer height={1} />
       <form>

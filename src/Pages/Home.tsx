@@ -3,10 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../Redux/store';
 import { selectProperty } from '../Redux/Slices/propertySlice'; 
 import { getUserCollections, getAllCollections } from '../Services';
-import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard } from '../Components';
+import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard, UpdateForm } from '../Components';
 import { useCheckAuth } from '../Hooks/useCheckAuth';
 import { getHeroImage } from '../HelperFunctions/utils';
 import './PropertiesHome.scss';
+import { UserWithId } from '../types/userTypes';
 
 interface HomeProps {}
 
@@ -15,6 +16,7 @@ const Home: React.FC<HomeProps> = () => {
   const user = useSelector((state: RootState) => state.user);
   const userId = useSelector((state: RootState) => state.user.userDetails?.id);
   const token = useSelector((state: RootState) => state.user.token);
+  const userDetails = useSelector((state: RootState) => state.user.userDetails);
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const { isAdmin } = useCheckAuth();
 
@@ -24,6 +26,27 @@ const Home: React.FC<HomeProps> = () => {
   const [error, setError] = useState<string | null>(null);
   const [isNewUser, setIsNewUser] = useState<boolean>(false);   
 
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/users/details', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            // Include auth headers if required
+          },
+        });
+        const data = await response.json();
+        console.log('Fetched user details:', data);
+        // Handle setting user details in state or Redux store
+      } catch (error) {
+        console.error('Failed to fetch user details:', error);
+      }
+    };
+  
+    fetchUserDetails();
+  }, []);
+  
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -158,6 +181,11 @@ const Home: React.FC<HomeProps> = () => {
           </div>
         )}
         </div>
+        {!isAdmin && userDetails ? (
+          <div className="update-profile-section" style={{ width: '30%', padding: '20px', borderLeft: '1px solid #ccc' }}>
+            <UpdateForm user={userDetails as unknown as UserWithId} onUpdate={(id, updatedUser) => console.log('Updated:', id, updatedUser)} onCancel={() => console.log('Canceled')} />
+          </div>
+        ) : null}
       </div>
       <Spacer height={4} />
     </div>
