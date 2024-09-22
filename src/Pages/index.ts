@@ -11,3 +11,4 @@ export { default as EditUser } from "./EditUser";
 // Error page exports
 export { default as Error404 } from "./ErrorPages/404";
 export { default as Unauthorized } from "./ErrorPages/Unauthorized";
+export { default as Terms } from "./ErrorPages/Ts&Cs"

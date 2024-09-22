@@ -51,7 +51,7 @@ const LoginForm: React.FC = () => {
                 fields={loginFields}
                 initialValues={initialValues}
                 onSubmit={handleLoginSubmit}
-                title="Login"
+                title="Login with your credentials"
                 withCancelButton={false}
                 buttonLabel="Login"
             />

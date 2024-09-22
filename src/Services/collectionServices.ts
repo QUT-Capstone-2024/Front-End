@@ -31,8 +31,12 @@ export const getUserCollections = async (userId: number, token: string): Promise
     },
   });
 
+  console.log('Response:', response.status);
   if (!response.ok) {
-    throw new Error('Failed to fetch collections');
+    if (response.status === 404) {
+      throw new Error('User has no collections (404)'); 
+    }
+    throw new Error(`Failed to fetch collections: ${response.status}`);
   }
 
   const data = await response.json();
@@ -79,11 +83,12 @@ export const createCollection = async (collection: Collection): Promise<Collecti
 
 
 // Update a collection by ID
-export const updateCollection = async (id: number, updatedCollection: UpdateCollectionPayload): Promise<Collection> => {
+export const updateCollection = async (id: number, updatedCollection: UpdateCollectionPayload, token: string): Promise<Collection> => {
   const response = await fetch(`${API_URL}/collections/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,  // Include the token in the request headers
     },
     body: JSON.stringify(updatedCollection),
   });
@@ -95,6 +100,7 @@ export const updateCollection = async (id: number, updatedCollection: UpdateColl
   const data = await response.json();
   return data;
 };
+
 
 // Approve a collection
 export const approveImageInCollection = async (collectionId: number, imageId: number, token: string): Promise<void> => {
@@ -111,6 +117,7 @@ export const approveImageInCollection = async (collectionId: number, imageId: nu
   }
 };
 
+
 // Delete a collection by ID (ADMIN ONLY)
 export const deleteCollection = async (id: number): Promise<void> => {
   const response = await fetch(`${API_URL}/collections/${id}`, {
@@ -124,3 +131,22 @@ export const deleteCollection = async (id: number): Promise<void> => {
     throw new Error('Failed to delete collection');
   }
 };
+
+// Fetch collections by address (search query)
+export const searchCollectionsByAddress = async (address: string, token: string): Promise<Collection[]> => {
+  const response = await fetch(`${API_URL}/collections/search?address=${encodeURIComponent(address)}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch search results');
+  }
+
+  const data = await response.json();
+  return data;
+};
+

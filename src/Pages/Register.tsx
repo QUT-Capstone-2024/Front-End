@@ -8,11 +8,11 @@ const Register: React.FC<RegisterProps> = () => {
     <div className="overlay-container">
       <div className="background-overlay"></div>
       <div className="overlay-content-container">
-          <Spacer height={2} />
-          <Logo />
+          <Spacer height={1} />
+          <Logo logoSize='medium'/>
           <div className="overlay-button-container">
               <RegisterForm />
-              <Spacer height={2} />
+              <Spacer height={1} />
           </div>
       </div>
     </div>

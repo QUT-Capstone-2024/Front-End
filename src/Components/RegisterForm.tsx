@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BaseForm, CustomAlert } from "./index";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { register } from '../Services';
 
 
@@ -36,7 +36,6 @@ const registerFields: FieldConfig<RegisterFormData>[] = [
   { name: "phoneNumber", label: "Phone Number", type: "text", required: true },
 ];
 
-
 const initialValues: RegisterFormData = {
   username: "",
   email: "",
@@ -45,6 +44,19 @@ const initialValues: RegisterFormData = {
   phoneNumber: "",
   propertyIds: [],
 };
+
+const checkboxLabel = (
+  // eslint-disable-next-line jsx-a11y/anchor-is-valid
+  <a
+    href="#"
+    onClick={(e) => {
+      e.preventDefault();
+      window.open("/terms-and-conditions", "_blank");
+    }}
+  >
+    I agree to the terms and conditions
+  </a>
+);
 
 const RegisterForm: React.FC = () => {
   const [errors, setErrors] = useState<React.ReactNode | null>(null);
@@ -97,22 +109,14 @@ const RegisterForm: React.FC = () => {
         fields={registerFields}
         initialValues={initialValues}
         onSubmit={handleRegisterSubmit}
-        title="Register"
+        title="Register for an account"
         withCheckbox={true}
-        checkboxLabel="I agree to the terms and conditions."
-        withSwitch={true}
-        switchLabel="Request Admin Access"
+        checkboxLabel={checkboxLabel}
         buttonLabel="Register"
+        onCancel={() => navigate('/')}
       />
     </div>
   );
 };
 
 export default RegisterForm;
-
-
-
-/////////////////////////// TO DO ///////////////////////////
-// Create functionality for the Request Admin Access switch - this is only available to internal users so may actually need to be moved to the login page instead
-// Add validations for the fields
-// Add the T&C's
