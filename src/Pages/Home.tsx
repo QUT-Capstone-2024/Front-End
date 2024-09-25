@@ -193,3 +193,6 @@ const Home: React.FC<HomeProps> = () => {
 };
 
 export default Home;
+
+
+// Edit user profile bug - phone number not showing 

@@ -5,12 +5,7 @@ import { Card, CardContent, Box, Typography } from "@mui/material";
 import { CustomButton, IconBar } from "../Components";
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
-import {
-  getImagesByCollectionId,
-  removeImageFromCollection,
-  approveImageInCollection,
-} from "../Services";
-import { API_URL } from "../config/config";
+import { getImagesByCollectionId, removeImageFromCollection, approveImageInCollection } from "../Services";
 
 // Define the interfaces for image and property details
 interface Image {
@@ -34,55 +29,39 @@ interface Property {
 
 const ImageApproval: React.FC = () => {
   const { collectionId } = useParams<{ collectionId: string }>(); // Get collectionId from URL
+  const numericCollectionId = collectionId ? parseInt(collectionId) : null; // Convert collectionId to a number
   const [property, setProperty] = useState<Property | null>(null); // State to hold property details
-  const [queuedImages, setQueuedImages] = useState<Image[]>([]); // State to hold queued images
+  const [images, setImages] = useState<Image[]>([]); // State to hold images, corrected from queuedImages to images for clarity
   const navigate = useNavigate();
   const token = useSelector((state: RootState) => state.user.token); // Get token from Redux
 
-  // Fetch property details and queued images when component mounts
   useEffect(() => {
-    const fetchData = async () => {
-      if (token && collectionId) {
+    const fetchImages = async () => {
+      if (token && numericCollectionId) {
+        // Ensure both token and numericCollectionId are available
         try {
-          // Fetch property details
-          const propertyResponse = await fetch(
-            `${API_URL}/properties/${collectionId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          if (propertyResponse.ok) {
-            const propertyData: Property = await propertyResponse.json();
-            setProperty(propertyData); // Set the property data
-          }
-
-          // Fetch queued images
-          const images = await getImagesByCollectionId(
-            Number(collectionId),
+          const fetchedImages = await getImagesByCollectionId(
+            numericCollectionId,
             token
           );
-          setQueuedImages(
-            images.filter(
-              (image) => image.imageStatus.toLowerCase() === "PENDING"
-            )
-          );
-        } catch (error) {
-          console.error("Error fetching data:", error);
+          console.log(fetchedImages); // Log fetched images to verify
+          setImages(fetchedImages); // Correctly set fetched images
+        } catch (error: any) {
+          // Correctly handle catch block using 'any' type
+          console.error(error.message); // Log error message
         }
       }
     };
 
-    fetchData();
-  }, [token, collectionId]);
+    fetchImages();
+  }, [numericCollectionId, token]); // Depend on numericCollectionId and token
 
   // Handle individual image actions (approve or reject)
   const handleImageAction = async (
     imageId: string,
     action: "approve" | "reject"
   ) => {
-    if (!token || !collectionId) return;
+    if (!token || !numericCollectionId) return; // Check for token and numericCollectionId
 
     try {
       if (action === "reject") {
@@ -90,59 +69,59 @@ const ImageApproval: React.FC = () => {
         if (!comment) return;
 
         await removeImageFromCollection(
-          Number(collectionId),
+          numericCollectionId,
           Number(imageId),
           token
         );
       } else if (action === "approve") {
         await approveImageInCollection(
-          Number(collectionId),
+          numericCollectionId,
           Number(imageId),
           token
         );
       }
 
-      // Remove the image from the queued images list after action
-      setQueuedImages((prevImages) =>
+      // Update images state after action
+      setImages((prevImages) =>
         prevImages.filter((image) => image.imageId !== imageId)
       );
-    } catch (error) {
-      console.error("Error processing image action:", error);
+    } catch (error: any) {
+      console.error("Error processing image action:", error.message);
     }
   };
 
   // Handle bulk approve or reject actions
   const handleBulkAction = async (action: "approve" | "reject") => {
-    if (!token || !collectionId) return;
+    if (!token || !numericCollectionId) return;
 
     try {
-      const actions = queuedImages.map((image) =>
+      const actions = images.map((image) =>
         action === "approve"
           ? approveImageInCollection(
-              Number(collectionId),
+              numericCollectionId,
               Number(image.imageId),
               token
             )
           : removeImageFromCollection(
-              Number(collectionId),
+              numericCollectionId,
               Number(image.imageId),
               token
             )
       );
 
       await Promise.all(actions);
-      setQueuedImages([]); // Clear the images list after bulk action
-    } catch (error) {
-      console.error(`Error performing bulk ${action} action:`, error);
+      setImages([]); // Clear the images list after bulk action
+    } catch (error: any) {
+      console.error(`Error performing bulk ${action} action:`, error.message);
     }
   };
 
   // Redirect to previous page if no images need review
   useEffect(() => {
-    if (queuedImages.length === 0) {
+    if (images.length === 0) {
       navigate(-1);
     }
-  }, [queuedImages, navigate]);
+  }, [images, navigate]);
 
   return (
     <Box
@@ -165,7 +144,7 @@ const ImageApproval: React.FC = () => {
           maxWidth: "800px",
         }}
       >
-        {property && queuedImages.length > 0 && (
+        {property && images.length > 0 && (
           <>
             <CardContent sx={{ paddingBottom: "16px" }}>
               <Box
@@ -233,11 +212,11 @@ const ImageApproval: React.FC = () => {
                     }}
                   >
                     <IconBar
-                      bedrooms={property?.bedrooms}
-                      bathrooms={property?.bathrooms}
-                      parkingSpaces={property?.parkingSpaces}
-                      internalPropertySize={property?.internalPropertySize}
-                      externalPropertySize={property?.externalPropertySize}
+                      bedrooms={property.bedrooms}
+                      bathrooms={property.bathrooms}
+                      parkingSpaces={property.parkingSpaces}
+                      internalPropertySize={property.internalPropertySize}
+                      externalPropertySize={property.externalPropertySize}
                     />
                   </Box>
                 </Box>
@@ -263,7 +242,7 @@ const ImageApproval: React.FC = () => {
             </CardContent>
 
             <CardContent sx={{ paddingTop: 0 }}>
-              {queuedImages.map((image) => (
+              {images.map((image) => (
                 <Box
                   key={image.imageId}
                   sx={{
