@@ -26,7 +26,7 @@ const UploadManagement = () => {
         const allCollections = await getAllCollections(token);
         const collectionsWithImages = await Promise.all(allCollections.map(async (collection) => {
           const fetchedImages = await getImagesByCollectionId(collection.id, token);
-          const pendingImages = fetchedImages.filter(img => img.imageStatus.toLowerCase() === "pending");
+          const pendingImages = fetchedImages.filter(img => img.imageStatus === "PENDING");
           return { ...collection, images: pendingImages };
         }));
 
@@ -41,26 +41,29 @@ const UploadManagement = () => {
   }, [token]);
 
   return (
-    <Box sx={{ padding: "20px", backgroundColor: "#e2eaf1", display: "flex", justifyContent: "center", alignItems: "flex-start", minHeight: "100vh" }}>
+    <Box sx={{ padding: "20px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "flex-start", minHeight: "100vh" }}>
       <Card sx={{
         backgroundColor: "transparent",
         borderRadius: "8px",
         boxShadow: "inset 4px 0 6px rgba(0, 0, 0, 0.3), inset 0 4px 6px rgba(0, 0, 0, 0.3), inset 1px 1px 3px rgba(0, 0, 0, 0.1)", 
         maxWidth: "900px",
-        paddingTop: "10px"
+        paddingTop: "15px"
     }}>
         <CardContent>
           {collections.map((collection) => (
             <Box key={collection.id} sx={{ marginBottom: "16px", boxShadow: 1, borderRadius: "8px", overflow: "hidden" }}>
               <ActionRequiredCard
                 imageUrl={collection.images[0]?.imageUrl || ""}
-                title={`COLLECTION ID ${collection.id} NEEDS REVIEW`}
-                description={`PROPERTY: ${collection.propertyAddress || "No address available"}`}
+                title={`Property ${collection.collectionId} requires review:`}
+                description={`Address: ${collection.propertyAddress || "No address available"}`}
                 submittedDateTime={
                   collection.images[0]
                     ? `LATEST UPLOAD: ${new Date(collection.images[0].uploadTime).toLocaleDateString()}`
                     : "Unknown"}
-                onButtonClick={() => navigate(`/image-approval/${collection.id}`)}
+                    onButtonClick={() => {
+                      console.log("Navigating to:", `/ImageApproval/${collection.id}`);
+                      navigate(`/ImageApproval/${collection.id}`);
+                    }}                    
                 cardType="Review"
               />
             </Box>
