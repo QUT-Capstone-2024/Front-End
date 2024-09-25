@@ -42,7 +42,13 @@ const UploadManagement = () => {
 
   return (
     <Box sx={{ padding: "20px", backgroundColor: "#e2eaf1", display: "flex", justifyContent: "center", alignItems: "flex-start", minHeight: "100vh" }}>
-      <Card sx={{ backgroundColor: "#eff7fe", padding: "16px", borderRadius: "8px", boxShadow: 3, maxWidth: "900px", margin: "0 auto" }}>
+      <Card sx={{
+        backgroundColor: "transparent",
+        borderRadius: "8px",
+        boxShadow: "inset 4px 0 6px rgba(0, 0, 0, 0.3), inset 0 4px 6px rgba(0, 0, 0, 0.3), inset 1px 1px 3px rgba(0, 0, 0, 0.1)", 
+        maxWidth: "900px",
+        paddingTop: "10px"
+    }}>
         <CardContent>
           {collections.map((collection) => (
             <Box key={collection.id} sx={{ marginBottom: "16px", boxShadow: 1, borderRadius: "8px", overflow: "hidden" }}>
