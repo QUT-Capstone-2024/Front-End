@@ -36,3 +36,4 @@ export {default as EditPropertyModalContent} from './EditPropertyModalContent';
 export {default as NumberInput} from './NumberInput';
 export { default as UserCard } from './UserCard';
 export { default as UpdateForm } from './UpdateUserForm';
+export { default as DeleteModalContent } from './DeleteModalContent';

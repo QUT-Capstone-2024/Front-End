@@ -1,5 +1,5 @@
 export interface Image {
-  imageId: string;
+  id: number;
   imageUrl: string;
   imageTag: string; 
   imageStatus: "UNTAGGED" | "PENDING" | "APPROVED" | "REJECTED" | "ARCHIVED";

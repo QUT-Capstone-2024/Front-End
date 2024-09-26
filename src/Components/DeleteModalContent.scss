@@ -1,0 +1,16 @@
+@import "../Styles/variables";
+
+.delete-content-container {
+  & h3 {
+    color: $error-color;
+    font-size: 20px;
+  }
+  & p {
+    color: $warning-color;
+    margin: 0;
+  }
+  & p:first-of-type {
+    font-weight: bold;
+    font-size: 20px;
+  }
+}

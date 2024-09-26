@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import CustomButton from './Buttons';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent'; // Import DialogContent
+import DialogContent from '@mui/material/DialogContent';
+import { useCheckAuth } from '../Hooks/useCheckAuth';
 
 type ModalProps = {
   open: boolean;
@@ -13,12 +14,14 @@ type ModalProps = {
   titleColour?: string;
   buttonLabel?: string;
   buttonType?: 'navButton' | 'helpButton' | 'warningButton' | 'errorButton' | 'successButton' | 'closeButton' | 'textOnly' | 'cancelButton' | 'settingsButton';
-  modalType?: 'oneButton' | 'twoButton' | 'timed' | 'editDetails' | 'editPhotos';
+  modalType?: 'oneButton' | 'twoButton' | 'timed' | 'editDetails' | 'editPhotos' | 'delete';
   style?: React.CSSProperties;
   contentColour?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm, children, contentColour = '#1f323e', modalType, style, title: label, titleColour: labelColour, buttonLabel, buttonType }) => {
+  const { userType } = useCheckAuth();
+  const isGod = userType === 'HARBINGER';
   
   useEffect(() => {
     let timerId: any;
@@ -38,6 +41,12 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, onConfirm, children, conte
       <DialogContent sx={{color: contentColour}}>
         {children}
       </DialogContent>
+      {modalType === 'delete' && (
+        <div className='modal-2-button-container'>
+          <CustomButton buttonType='errorButton' label={isGod ? 'Delete' : 'Remove'} onClick={onConfirm} />
+          <CustomButton buttonType='cancelButton' label='Cancel' onClick={onClose} />
+        </div>
+      )}
       {modalType === 'oneButton' && <CustomButton label={buttonLabel || 'Close'} onClick={onClose} />}
       {modalType === 'twoButton' && (
         <div className='modal-2-button-container'>

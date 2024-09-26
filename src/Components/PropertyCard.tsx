@@ -6,8 +6,20 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import UploadIcon from '@mui/icons-material/Upload';
-import { Dropdown, Spacer, Carousel, IconBar, CustomModal, EditPropertyModalContent as ModalContent, ActionRequiredCard, Popover, CustomButton } from "./index";
-import { getImagesByCollectionId } from '../Services';
+import { 
+  Dropdown, 
+  Spacer, 
+  Carousel, 
+  IconBar, 
+  CustomModal, 
+  EditPropertyModalContent, 
+  ActionRequiredCard, 
+  Popover, 
+  CustomButton,
+  DeleteModalContent,
+  CustomAlert,
+} from "./index";
+import { getImagesByCollectionId, deleteCollection, archiveCollection } from '../Services';
 import { Image } from "../types";
 import DefaultHouseImage from "../Images/house_demo_hero_image.png";
 import DefaultApartmentImage from "../Images/apartment_demo_hero_image.png";
@@ -39,14 +51,13 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   propertyType,
 }) => {
  
-  // Component state
   const [images, setImages] = useState<Image[]>([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const toggleModal = () => setModalOpen(!modalOpen);
-  
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const navigate = useNavigate();
   const token = useSelector((state: RootState) => state.user.token);
-  const { isAdmin } = useCheckAuth();
+  const { isAdmin, userType } = useCheckAuth();
+  const isGod = userType === 'HARBINGER';
   const defaultImage = propertyType === 'house' ? DefaultHouseImage : DefaultApartmentImage;
   const mostRecentImages = getMostRecentImagesByTagAndInstance(images);
   const mostRecentPhoto = getMostRecentPhoto(images);
@@ -54,11 +65,37 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   const noImagesAvailable = mostRecentImages.length === 0;
   const displayedImages = !noImagesAvailable ? mostRecentImages.map(image => image.imageUrl) : [defaultImage];
   const propertySlug = createSlugFromAddress(propertyAddress);
+  const [message, setMessage] = useState<string>('');
+  const [messageType, setMessageType] = useState<"info" | "warning" | "error" | "success">('info');
+
+  const toggleDetailsModal = () => setDetailsModalOpen(!detailsModalOpen);
+  const toggleDeleteModal = () => setDeleteModalOpen(!deleteModalOpen);
+
+  const handleRemoveProperty = async () => {
+    if (!collectionId || !token) toggleDeleteModal();
+
+    try {
+      isGod ? await deleteCollection(collectionId, token!) : await archiveCollection(collectionId, token!);
+      toggleDeleteModal();
+      setMessageType('success');
+      setMessage('Property removed successfully');
+      setTimeout(() => window.location.reload(), 2000);
+    } catch (error) {
+      setMessageType('error');
+      setMessage('Failed to remove property');
+    }
+    
+  };
+
+  const handleAlertClose = () => {
+    setMessage('')
+    setMessageType('info')
+  };
 
   const menuItems = [
-    { label: 'Edit Property Details', onClick: toggleModal },
+    { label: 'Edit Property Details', onClick: toggleDetailsModal },
     { label: 'Edit Property Photos', onClick: () => navigate(`/gallery/${propertySlug}`) },
-    { label: 'Remove Property', onClick: () => console.log('Remove clicked') },
+    { label: 'Remove Property', onClick: toggleDeleteModal },
   ];
 
   const popoverContent = (
@@ -87,7 +124,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         }
       }
     };
-
     fetchImages();
   }, [collectionId, token]);
 
@@ -115,11 +151,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             <img src={defaultImage} alt="Default" style={{ width: '600px', height: '300px'}} />
           </div>
         )}
-
-
-
-
-
 
       <CardContent>
         <IconBar bedrooms={bedrooms} bathrooms={bathrooms} parkingSpaces={parkingSpaces} internalPropertySize={internalPropertySize} externalPropertySize={externalPropertySize} />
@@ -157,18 +188,37 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
         )}
       </CardContent>
 
+      {/* Modal for editing property details */}
       <CustomModal
         modalType='editDetails'
-        open={modalOpen}
+        open={detailsModalOpen}
         onConfirm={() => console.log('Edit Confirmed')}
-        onClose={toggleModal}
+        onClose={toggleDetailsModal}
       >
-        <ModalContent
-          toggleModal={toggleModal}
+        <EditPropertyModalContent
+          toggleModal={toggleDetailsModal}
           propertyAddress={propertyAddress}
           propertyDescription={propertyDescription}
         />
       </CustomModal>
+      
+      {/* Modal for archiving/deleting property */}
+      <CustomModal
+        modalType='delete'
+        open={deleteModalOpen}
+        onConfirm={handleRemoveProperty}
+        onClose={toggleDeleteModal}
+      >
+        <DeleteModalContent />
+      </CustomModal>
+
+      {/* Handle all alerts for the component */}
+      <CustomAlert 
+        isVisible={message !== ''}
+        type={messageType}
+        message={message}
+        onClose={handleAlertClose}
+      />
     </Card>
   );
 };

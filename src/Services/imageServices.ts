@@ -1,7 +1,6 @@
 import { API_URL } from '../config/config';
 import { Image } from '../types';
 
-
 export const getImagesByCollectionId = async (collectionId: number, token: string): Promise<Image[]> => {
   const response = await fetch(`${API_URL}/images/collections/${collectionId}/images`, {
     method: 'GET',
@@ -54,6 +53,19 @@ export const uploadImage = async (
   }
 };
 
+export const archiveImageFromCollection = async (collectionId: number, imageId: number, token: string): Promise<void> => {
+  const response = await fetch(`${API_URL}/images/collections/${collectionId}/images/${imageId}/archive`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to remove image');
+  }
+};
 
 export const removeImageFromCollection = async (collectionId: number, imageId: number, token: string): Promise<void> => {
   const response = await fetch(`${API_URL}/images/collections/${collectionId}/images/${imageId}`, {
