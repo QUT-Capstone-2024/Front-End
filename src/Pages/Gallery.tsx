@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../Redux/store';
-import { Spacer, Dropdown, GalleryCard, CustomButton, CustomModal, EditImageModalContent as ModalContent } from '../Components';
+import { Spacer, Dropdown, GalleryCard, CustomButton, CustomModal, EditImageModalContent as ModalContent, DeleteModalContent, CustomAlert } from '../Components';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import UploadIcon from '@mui/icons-material/Upload';
 import Checkbox from '@mui/material/Checkbox'; // Import the Checkbox component
 import './Gallery.scss';
 import { useNavigate } from 'react-router-dom';
-import { getImagesByCollectionId, getCollectionById, removeImageFromCollection } from '../Services';
+import { getImagesByCollectionId, getCollectionById, removeImageFromCollection, archiveImageFromCollection } from '../Services';
 import { Image } from '../types';
 import { ImageTags } from '../Constants/ImageTags';
 import { saveAs } from 'file-saver';
@@ -19,6 +19,7 @@ const Gallery: React.FC = () => {
   const navigate = useNavigate();
   const [images, setImages] = useState<Image[]>([]);
   const [selectedImages, setSelectedImages] = useState<string[]>([]); // Track selected images by their tags
+  const [selectedImageIds, setSelectedImageIds] = useState<number[]>([]); // Track selected images by their ids
   const [propertyDetails, setPropertyDetails] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [removedCards, setRemovedCards] = useState<string[]>([]); // Track removed placeholder cards
@@ -26,12 +27,23 @@ const Gallery: React.FC = () => {
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const token = useSelector((state: RootState) => state.user.token);
   
-  const { isAdmin } = useCheckAuth();
+  const { userType } = useCheckAuth();
+  const isGod = userType === 'HARBINGER';
 
   // State for modal management
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImageTag, setModalImageTag] = useState<string | null>(null);
   const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [message, setMessage] = useState<string>('');
+  const [messageType, setMessageType] = useState<"info" | "warning" | "error" | "success">('info');
+
+  const toggleDeleteModal = () => setDeleteModalOpen(!deleteModalOpen);
+
+  const handleAlertClose = () => {
+    setMessage('')
+    setMessageType('info')
+  };
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
@@ -46,7 +58,6 @@ const Gallery: React.FC = () => {
   const fetchPropertyData = async () => {
     if (selectedPropertyId && token) {
       try {
-        console.log('Fetching updated property data...');
         const fetchedImages = await getImagesByCollectionId(selectedPropertyId, token);
         const fetchedPropertyDetails = await getCollectionById(selectedPropertyId, token);
         setImages(fetchedImages);
@@ -68,8 +79,8 @@ const Gallery: React.FC = () => {
       onClick: () => handleDownloadSelected() 
     },
     { 
-      label: isAdmin ? 'Remove Selected' : 'Request removal of Selected', 
-      onClick: () => handleRemoveSelected() 
+      label: isGod ? 'Delete Selected' : 'Remove Selected', 
+      onClick: () => toggleDeleteModal() 
     },
   ];
 
@@ -88,39 +99,58 @@ const Gallery: React.FC = () => {
       return;
     }
   
-    const selectedImageObjects = images.filter(image => selectedImages.includes(image.imageTag));
+    // Map selected image IDs to their corresponding image objects
+    const selectedImageObjects = images.filter(image => selectedImageIds.includes(Number(image.id)));
+  
+    if (selectedImageObjects.length === 0) {
+      console.error('No matching images found for selected IDs.');
+      return;
+    }
   
     for (const image of selectedImageObjects) {
-      const imageIdAsNumber = parseInt(image.imageId, 10); // Convert imageId to number
+      // Check if the imageId is valid
+      const imageIdAsNumber = Number(image.id);
   
       if (isNaN(imageIdAsNumber)) {
-        console.error('Invalid image ID, could not convert to number:', image.imageId);
+        console.error('Invalid image ID, could not convert to number:', image.id);
         continue;
       }
   
       try {
-        await removeImageFromCollection(selectedPropertyId, imageIdAsNumber, token!);
-        setImages((prevImages) => prevImages.filter(img => img.imageId !== image.imageId));
+        // Call the appropriate API function
+        if (isGod) {
+          await removeImageFromCollection(selectedPropertyId, imageIdAsNumber, token!);
+        } else {
+          await archiveImageFromCollection(selectedPropertyId, imageIdAsNumber, token!);
+        }
+  
+        // Update the state after successful removal
+        setImages((prevImages) => prevImages.filter(img => img.id !== image.id));
         setSelectedImages((prevSelected) => prevSelected.filter(tag => tag !== image.imageTag));
+        setSelectedImageIds((prevIds) => prevIds.filter(id => id !== imageIdAsNumber));
+        toggleDeleteModal();
       } catch (error) {
         console.error('Error removing image:', error);
       }
     }
   };
-
+  
+  
   // Function to handle selecting or deselecting an image
-  const handleSelectImage = (imageTag: string) => {
+  const handleSelectImage = (imageTag: string, imageId: number) => {
+    // If the image is already selected, deselect it
     if (selectedImages.includes(imageTag)) {
-      setSelectedImages(selectedImages.filter(tag => tag !== imageTag)); // Deselect the image
+      setSelectedImages(selectedImages.filter(tag => tag !== imageTag));
+      setSelectedImageIds(selectedImageIds.filter(id => id !== imageId));
     } else {
-      setSelectedImages([...selectedImages, imageTag]); // Select the image
+      setSelectedImages([...selectedImages, imageTag]);
+      setSelectedImageIds([...selectedImageIds, imageId]);
     }
   };
 
-  // Helper function to get the latest image by tag and instance number
   const getLatestImagesByTagAndInstance = (images: Image[]) => {
     const imageMap: { [tagInstance: string]: Image } = {};
-
+  
     images.forEach((image) => {
       const tagWithInstance = `${image.imageTag}-${image.instanceNumber}`;
       const existingImage = imageMap[tagWithInstance];
@@ -128,9 +158,9 @@ const Gallery: React.FC = () => {
         imageMap[tagWithInstance] = image;
       }
     });
-
-    return imageMap; // Return the latest image map by tag and instance
+    return imageMap;
   };
+  
 
   // Get the latest images
   const latestImages = getLatestImagesByTagAndInstance(images);
@@ -188,11 +218,6 @@ const Gallery: React.FC = () => {
     return uploadableCards;
   };
   
-  
-  
-  
-  
-
   const handleUpdate = (updatedImage: File | null, updatedTag: string, updatedDescription: string) => {
     fetchPropertyData();
     toggleModal();
@@ -231,7 +256,7 @@ const Gallery: React.FC = () => {
           {heroCard ? (
             <div className='hero-card-container'>
               <GalleryCard
-                key={heroCard.imageId}
+                key={heroCard.id}
                 image={heroCard.imageUrl}
                 imageTag="Hero Image (property front)"
                 imageStatus={heroCard.imageStatus as "UNTAGGED" | "PENDING" | "APPROVED" | "REJECTED" | "ARCHIVED"}
@@ -242,7 +267,7 @@ const Gallery: React.FC = () => {
               />
               <Checkbox
                 checked={selectedImages.includes('STREET')}
-                onChange={() => handleSelectImage('STREET')}
+                onChange={() => handleSelectImage('STREET', Number(heroCard.id))}
                 sx={{ alignSelf: 'flex-start' }}
               />
             </div>
@@ -261,9 +286,9 @@ const Gallery: React.FC = () => {
           {/* Render the other sorted cards */}
           <div className='other-cards-container'>
             {otherCards.map((imageData) => (
-              <div key={imageData.imageId} className='gallery-card-checkbox'> 
+              <div key={imageData.id} className='gallery-card-checkbox'> 
                 <GalleryCard
-                  key={imageData.imageId}
+                  key={imageData.id}
                   image={imageData.imageUrl}
                   imageTag={ImageTags.find(tag => tag.name === imageData.imageTag)?.displayName || imageData.imageTag}
                   imageStatus={imageData.imageStatus as "UNTAGGED" | "PENDING" | "APPROVED" | "REJECTED" | "ARCHIVED"}
@@ -275,7 +300,7 @@ const Gallery: React.FC = () => {
                 />
                 <Checkbox
                   checked={selectedImages.includes(imageData.imageTag)}
-                  onChange={() => handleSelectImage(imageData.imageTag)}
+                  onChange={() => handleSelectImage(imageData.imageTag, Number(imageData.id))}
                 />
               </div>
             ))}
@@ -301,6 +326,24 @@ const Gallery: React.FC = () => {
           onUpdate={handleUpdate} 
         />
       </CustomModal>
+
+      {/* Modal for archiving/deleting property */}
+      <CustomModal
+        modalType='delete'
+        open={deleteModalOpen}
+        onConfirm={handleRemoveSelected}
+        onClose={toggleDeleteModal}
+      >
+        <DeleteModalContent type='image' />
+      </CustomModal>
+
+      {/* Handle all alerts for the component */}
+      <CustomAlert 
+        isVisible={message !== ''}
+        type={messageType}
+        message={message}
+        onClose={handleAlertClose}
+      />
     </div>
   );
 };

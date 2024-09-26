@@ -88,7 +88,7 @@ export const updateCollection = async (id: number, updatedCollection: UpdateColl
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,  // Include the token in the request headers
+      'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify(updatedCollection),
   });
@@ -101,13 +101,28 @@ export const updateCollection = async (id: number, updatedCollection: UpdateColl
   return data;
 };
 
+// Archive a collection by ID
+export const archiveCollection = async (id: number, token: string): Promise<void> => {
+  const response = await fetch(`${API_URL}/collections/${id}/archive`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  });
 
-// Delete a collection by ID (ADMIN ONLY)
-export const deleteCollection = async (id: number): Promise<void> => {
+  if (!response.ok) {
+    throw new Error('Failed to archive collection');
+  }
+};
+
+// Delete a collection by ID (HARBINGER ONLY)
+export const deleteCollection = async (id: number, token: string): Promise<void> => {
   const response = await fetch(`${API_URL}/collections/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
     },
   });
 

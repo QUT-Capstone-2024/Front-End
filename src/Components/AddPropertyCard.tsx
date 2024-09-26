@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { searchCollectionsByAddress, updateCollection } from '../Services';
 import { Collection } from "../types";
-import { SearchBar, SmallDisplayCard, CustomModal } from ".";
+import { SearchBar, SmallDisplayCard, CustomModal, CustomAlert } from ".";
 import { getHeroImage } from '../HelperFunctions/utils';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import "./AddPropertyCard.scss";
@@ -18,7 +18,9 @@ const AddPropertyCard: React.FC<AddPropertyCardProps> = ({ title = 'Claim a prop
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [properties, setProperties] = useState<Collection[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<Collection | null>(null); // Track selected property
+  const [selectedProperty, setSelectedProperty] = useState<Collection | null>(null);
+  const [message, setMessage] = useState<string>('');
+  const [messageType, setMessageType] = useState<"info" | "warning" | "error" | "success">('info');
   const user = useSelector((state: any) => state.user);
 
   const toggleModal = (property?: Collection) => {
@@ -39,27 +41,35 @@ const AddPropertyCard: React.FC<AddPropertyCardProps> = ({ title = 'Claim a prop
     </div>
   );
 
+  const handleAlertClose = () => {
+    setMessage('')
+    setMessageType('info')
+  };
+
   const handleButtonClick = () => {
     setShowSearchBar(true);
   };
 
   const handleCardClick = async () => {
     if (!selectedProperty) return;
-    console.log('User object:', user);
     try {
-      console.log('Property selected:', selectedProperty);
       const token = user.token;
       if (!token) {
+        setMessage('No token available');
+        setMessageType('warning');
         throw new Error('No token available');
       }
       const updatedCollection = {
         user: { id: user.userDetails.id }
       };
-      const response = await updateCollection(selectedProperty.id, updatedCollection, token);
-      navigate('/Home');
-      console.log('Ownership updated successfully:', response);
+      await updateCollection(selectedProperty.id, updatedCollection, token);
+      toggleModal();
+      setMessageType('success');
+      setMessage('Property ownership claimed successfully');
+      setTimeout(() => window.location.reload(), 2000);
     } catch (error) {
-      console.error('Failed to update collection ownership:', error);
+      setMessage('Failed to update collection ownership');
+      setMessageType('error');
     }
   };
 
@@ -120,7 +130,13 @@ const AddPropertyCard: React.FC<AddPropertyCardProps> = ({ title = 'Claim a prop
         onClose={toggleModal} 
         children={modalContent} 
         modalType="twoButton" 
-        onConfirm={handleCardClick}  // Pass the confirmation action
+        onConfirm={handleCardClick}
+      />
+       <CustomAlert 
+        isVisible={message !== ''}
+        type={messageType}
+        message={message}
+        onClose={handleAlertClose}
       />
     </div>
   );
