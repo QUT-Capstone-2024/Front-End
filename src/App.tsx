@@ -34,7 +34,7 @@ const AppContent = () => {
         </Route>
 
         <Route element={<ProtectedRoute requiredAuthLevel={3} />}>
-          <Route path="/ImageApproval" element={<Pages.ImageApproval />} />
+          <Route path="/ImageApproval/:collectionId" element={<Pages.ImageApproval />} />
           <Route path="/UploadManagement" element={<Pages.UploadManagement />} />
         </Route>
 

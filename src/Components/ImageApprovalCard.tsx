@@ -5,7 +5,7 @@ interface ImageApprovalCardProps {
   image: string;
   imageTag: string;
   imageId: string;
-  imageStatus: "queued" | "approved" | "rejected";
+  imageStatus: "PENDING" | "APPROVED" | "REJECTED";
   rejectionReason?: string;
 };
 

@@ -7,6 +7,8 @@ export enum ApprovalStatus {
 
 // The main Collection interface based on the backend model
 export interface Collection {
+  address: string;
+  status: string;
   id: number;
   propertyAddress: string;
   propertyDescription: string;

@@ -3,22 +3,48 @@ import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
 import { Card, CardContent, Box, Typography } from '@mui/material';
 import { CustomButton, IconBar } from '../Components';
-
-// Test data
-import propertiesData from '../Test Data/sample_properties.json';
-import imagesData from '../Test Data/sample_images.json';
+import { getImagesByCollectionId, getCollectionById } from '../Services';
+import { useSelector } from "react-redux";
+import { RootState } from "../Redux/store";
 import houseDemoHeroImage from '../Images/house_demo_hero_image.png';
 
 const ImageApproval: React.FC = () => {
   const navigate = useNavigate();
-  const property = propertiesData.find(prop => prop.approvalStatus === 'queued');
-  const [queuedImages, setQueuedImages] = useState(() =>
-    imagesData.images.filter(image => image.imageStatus === 'queued')
-  );
+  const [queuedImages, setQueuedImages] = useState<any[]>([]);
+  const [propertyDetails, setPropertyDetails] = useState<any>(null); 
+  const [error, setError] = useState<string | null>(null);
+
+  const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
+  const token = useSelector((state: RootState) => state.user.token);
+
+  // Function to fetch property and images by property ID
+  const fetchPropertyData = async () => {
+    if (selectedPropertyId && token) {
+      try {
+        console.log('Fetching updated property data...');
+        
+        // Fetch images for the selected property (queued for approval)
+        const fetchedImages = await getImagesByCollectionId(selectedPropertyId, token);
+        
+        // Filter images that are pending approval
+        const queued = fetchedImages.filter((image: any) => image.imageStatus === 'PENDING');
+        setQueuedImages(queued);
+
+        // Fetch property details
+        const fetchedPropertyDetails = await getCollectionById(selectedPropertyId, token);
+        setPropertyDetails(fetchedPropertyDetails);
+
+        if (queued.length === 0) navigate(-1); // Redirect if no queued images
+      } catch (error) {
+        console.error('Error fetching property data:', error);
+        setError('Failed to fetch property data.');
+      }
+    }
+  };
 
   useEffect(() => {
-    if (queuedImages.length === 0) navigate(-1); // Redirect to previous page if no queued images
-  }, [queuedImages, navigate]);
+    fetchPropertyData();
+  }, [selectedPropertyId, token, navigate]);
 
   const handleImageAction = (imageId: string, action: 'approve' | 'reject' | 'edit') => {
     if (action === 'reject') {
@@ -40,31 +66,27 @@ const ImageApproval: React.FC = () => {
   return (
     <Box sx={{ padding: '20px', backgroundColor: '#e2eaf1', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minHeight: '100vh' }}>
       <Card sx={{ backgroundColor: '#eff7fe', padding: '20px', borderRadius: '8px', boxShadow: 1, width: '100%', maxWidth: '800px' }}>
-        {property && queuedImages.length > 0 && (
+        {propertyDetails && queuedImages.length > 0 && (
           <>
             <CardContent sx={{ paddingBottom: '16px' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                 <ArrowBackIcon sx={{ cursor: 'pointer', marginRight: '10px' }} onClick={() => navigate(-1)} />
                 <Typography variant="h4" color="primary" fontWeight="bold">
-                  PROPERTY: {property.collectionId.toUpperCase()}
+                  PROPERTY: {propertyDetails.collectionId.toUpperCase()}
                 </Typography>
               </Box>
 
               <Box sx={{ position: 'relative', width: '100%', borderRadius: '8px', overflow: 'hidden', mb: 2 }}>
-                <img src={houseDemoHeroImage} alt="Property" style={{ width: '100%', height: '375px', objectFit: 'cover' }} />
+                <img src={propertyDetails.imageUrl || houseDemoHeroImage} alt="Property" style={{ width: '100%', height: '375px', objectFit: 'cover' }} />
                 <Box sx={{ position: 'absolute', bottom: '40px', left: '20px', width: '90%', backgroundColor: 'rgba(255, 255, 255, 0.45)', padding: '20px', borderRadius: '12px' }}>
                   <Typography variant="h4" color="primary" fontWeight="bold">
-                    {property.propertyAddress.split(',')[0]}
+                    {propertyDetails.propertyAddress?.split(',')[0]}
                   </Typography>
                   <Typography variant="h5" color="primary">
-                    {property.propertyAddress.split(',')[1].trim()},{" "}{property.propertyAddress.split(',')[2].trim()}
+                    {propertyDetails.propertyAddress?.split(',')[1].trim()},{" "}{propertyDetails.propertyAddress?.split(',')[2].trim()}
                   </Typography>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '15px', alignItems: 'center', mt: 1 }}>
-                    <IconBar {...property} />
-                    <Box sx={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                      <CustomButton buttonType="successButton" label="View Property" />
-                      <CustomButton buttonType="successButton" label="Owner Details" />
-                    </Box>
+                    <IconBar {...propertyDetails} />
                   </Box>
                 </Box>
               </Box>
@@ -97,6 +119,7 @@ const ImageApproval: React.FC = () => {
             </CardContent>
           </>
         )}
+        {error && <Typography color="error">{error}</Typography>}
       </Card>
     </Box>
   );

@@ -101,6 +101,7 @@ export const updateCollection = async (id: number, updatedCollection: UpdateColl
   return data;
 };
 
+
 // Archive a collection by ID
 export const archiveCollection = async (id: number, token: string): Promise<void> => {
   const response = await fetch(`${API_URL}/collections/${id}/archive`, {
