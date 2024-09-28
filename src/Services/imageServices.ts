@@ -80,3 +80,35 @@ export const removeImageFromCollection = async (collectionId: number, imageId: n
     throw new Error('Failed to remove image');
   }
 };
+
+// Mock code to try test ways to update statuses for Image Approval Page
+export const updateImageStatus = async (
+  imageId: number,
+  action: "APPROVED" | "REJECTED",
+  comment: string,
+  token: string
+) => {
+  try {
+    const response = await fetch(`${API_URL}/images/${imageId}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: action,
+        comment,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update image status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("API error:", error);
+    throw error;
+  }
+};
+
