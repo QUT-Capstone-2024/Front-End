@@ -66,6 +66,7 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
         updateData,
         token!
       );
+      window.location.reload();
 
       console.log("Success:", updatedData);
       toggleModal(); // Close the modal

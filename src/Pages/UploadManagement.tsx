@@ -2,21 +2,44 @@ import React, { useEffect, useState } from "react";
 import { ActionRequiredCard } from "../Components";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Box, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { getImagesByCollectionId, getAllCollections } from "../Services";
 import { Collection, Image } from "../types";
+import { UseDispatch } from "react-redux";
+import { selectProperty } from "../Redux/Slices";
 
 // Extend the Collection type to include images array
 interface CollectionWithImages extends Collection {
   images: Image[];
 }
 
+// const selectedProperty = properties.find((property) => property.id === selectedPropertyId);
+
 const UploadManagement = () => {
   const navigate = useNavigate();
   const token = useSelector((state: RootState) => state.user.token);
 
   const [collections, setCollections] = useState<CollectionWithImages[]>([]);
+
+  const dispatch = useDispatch()
+
+  const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
+
+  const handleClick = (property: any) => {
+    dispatch(selectProperty({
+      propertyId: property.id,
+      propertyAddress: property.propertyAddress,
+      propertyDescription: property.propertyDescription,
+      propertySize: property.propertySize,
+      bedrooms: property.bedrooms,
+      bathrooms: property.bathrooms,
+      parkingSpaces: property.parkingSpaces,
+      propertyType: property.propertyType,
+      approvalStatus: property.approvalStatus,
+    }));
+    console.log([selectedPropertyId])
+  };
 
   useEffect(() => {
     const fetchCollectionsAndImages = async () => {
@@ -62,9 +85,8 @@ const UploadManagement = () => {
                     ? `LATEST UPLOAD: ${new Date(collection.images[0].uploadTime).toLocaleDateString()}`
                     : "Unknown"}
                     onButtonClick={() => {
-                      console.log("Navigating to:", `/ImageApproval/${collection.collectionId}`);
-                      navigate(`/ImageApproval/${collection.collectionId}`);
-                    }}                    
+                      handleClick(selectedPropertyId)
+                    }}           
                 cardType="Review"
               />
             </Box>
