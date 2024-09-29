@@ -655,8 +655,28 @@ html {
   overflow-y: hidden;
   background-color: $header-background;  
   backdrop-filter: blur(10px);
+  & .user-details {
+    flex-grow: 1;
+    text-align: center;
+    color: darken($primary-color, 5%);
+    font-size: 24px;
+    font-weight: bold;
+    & span {
+      margin-left: 2rem;
+      font-size: 16px;
+      font-weight: normal;
+      color: lighten($primary-color, 2%);
+    }
+  }
 }
 
+.centered-content {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+}
 
 ////////////////////////////////////////////////////////////////
 /// Navigation

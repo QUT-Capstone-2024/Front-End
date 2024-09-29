@@ -1,3 +1,4 @@
+import { Height } from '@mui/icons-material';
 import { createTheme } from '@mui/material/styles';
 
 declare module '@mui/material/styles/createPalette' {
@@ -119,6 +120,32 @@ const theme = createTheme({
           fontWeight: 'bold',
         }
       }
+    },
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          '&.slick-prev': {
+            fill: '#f27a31',
+            strokeWidth: 2,
+            stroke: '#ef4400',
+            strokeOpacity: 0.3,
+            '&:hover': {
+              fill: '#93cdfe',
+              stroke: '#1f323e',
+            },
+          },
+          '&.slick-next': {
+            fill: '#f27a31',
+            strokeWidth: 2,
+            stroke: '#ef4400',
+            strokeOpacity: 0.3,
+            '&:hover': {
+              fill: '#93cdfe',
+              stroke: '#1f323e',
+            },
+          },
+        },
+      },
     },
     MuiCheckbox: {
       styleOverrides: {
