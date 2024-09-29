@@ -81,34 +81,33 @@ export const removeImageFromCollection = async (collectionId: number, imageId: n
   }
 };
 
-// Mock code to try test ways to update statuses for Image Approval Page
-export const updateImageStatus = async (
-  imageId: number,
-  action: "APPROVED" | "REJECTED",
-  comment: string,
-  token: string
-) => {
-  try {
-    const response = await fetch(`${API_URL}/images/${imageId}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        status: action,
-        comment,
-      }),
-    });
+export const updateImageStatus = async (collectionId: number, imageId: number, status: "APPROVED" | "REJECTED", rejectionReason: string, token: string): Promise<void> => {
+  const body = JSON.stringify(
+    status === "REJECTED" && rejectionReason ? { status, rejectionReason } : { status }
+  );
 
-    if (!response.ok) {
-      throw new Error(`Failed to update image status: ${response.status}`);
+  const response = await fetch(`${API_URL}/images/collections/${collectionId}/images/${imageId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: body,
+  });
+
+  if (response.ok) {
+    // Handle 204 No Content or any other successful status with no JSON
+    if (response.status !== 204) {
+      try {
+        await response.json(); 
+      } catch {
+        // No need to log anything if there's no JSON response
+      }
     }
-
-    return await response.json();
-  } catch (error) {
-    console.error("API error:", error);
-    throw error;
+  } else {
+    const errorText = await response.text(); // Get response text for debugging
+    throw new Error(`Failed to update image status: ${errorText}`);
   }
 };
+
 
