@@ -16,7 +16,7 @@ export interface User {
 
 export interface UserWithId extends BaseUser {
   id: number; 
-  status: string;
+  status?: string;
 }
 
 export interface RegisterUser extends BaseUser {

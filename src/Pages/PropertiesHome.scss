@@ -1,3 +1,4 @@
+@import "../Styles/variables";
 
 .admin-home-container {
   display: flex;
@@ -42,4 +43,11 @@
   & h2 {
     text-align: left;
   }
+}
+
+.update-profile-section {
+  height: 100%;
+  width: 30%;
+  padding: 20px;
+  border-left: 1px solid $primary-color;
 }

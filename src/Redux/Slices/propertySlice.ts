@@ -6,6 +6,7 @@ interface PropertyState {
   propertySlug: string | null;
   propertyDescription?: string | null;
   propertySize?: number | null;
+  externalPropertySize?: number | null;
   bedrooms?: number | null;
   bathrooms?: number | null;
   parking?: number | null;
@@ -19,6 +20,7 @@ const initialState: PropertyState = {
   propertySlug: null,
   propertyDescription: null,
   propertySize: null,
+  externalPropertySize: null,
   bedrooms: null,
   bathrooms: null,
   parking: null,
@@ -40,6 +42,7 @@ const propertySlice = createSlice({
       propertyAddress: string;
       propertyDescription: string;
       propertySize: number;
+      externalPropertySize: number;
       bedrooms: number;
       bathrooms: number;
       parkingSpaces: number;
@@ -51,6 +54,7 @@ const propertySlice = createSlice({
       state.propertySlug = createPropertySlug(action.payload.propertyAddress); 
       state.propertyDescription = action.payload.propertyDescription;
       state.propertySize = action.payload.propertySize;
+      state.externalPropertySize = action.payload.externalPropertySize;
       state.bedrooms = action.payload.bedrooms;
       state.bathrooms = action.payload.bathrooms;
       state.parking = action.payload.parkingSpaces;

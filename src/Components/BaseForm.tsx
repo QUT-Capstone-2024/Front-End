@@ -7,6 +7,7 @@ type FieldConfig<T> = {
     label: string;
     type: string;
     required: boolean;
+    readOnly?: boolean;
     validator?: (value: string | boolean) => string | null;
 };
 
@@ -22,7 +23,7 @@ type BaseFormProps<T> = {
     withCancelButton?: boolean;
     buttonLabel?: string;
     onChange?: (values: T) => void;
-    onCancel?: () => void; // New prop for handling cancel in modals
+    onCancel?: () => void;
 };
 
 const BaseForm = <T extends Record<string, any>>({
@@ -37,7 +38,7 @@ const BaseForm = <T extends Record<string, any>>({
     withCancelButton = true,
     buttonLabel = 'Submit',
     onChange,
-    onCancel, // Add onCancel prop here
+    onCancel,
 }: BaseFormProps<T>) => {
     const [formData, setFormData] = useState<T>(initialValues);
     const [errors, setErrors] = useState<Partial<Record<keyof T, string | null>>>({});
@@ -99,7 +100,7 @@ const BaseForm = <T extends Record<string, any>>({
 
     return (
         <Container component="main" maxWidth="sm">
-            <Typography component="h1" variant="h5" sx={{ mt: 2, mb: 2, margin: 0 }}>
+            <Typography component="h1" variant="h5" sx={{ mt: 2, mb: 2, margin: 0, fontWeight: 'bold' }}>
                 {title}
             </Typography>
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -118,6 +119,9 @@ const BaseForm = <T extends Record<string, any>>({
                         onChange={handleChange}
                         error={!!errors[field.name]}
                         helperText={errors[field.name]}
+                        InputProps={{
+                            readOnly: field.readOnly || false,
+                        }}
                     />
                 ))}
 

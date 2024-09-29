@@ -177,17 +177,17 @@ const Gallery: React.FC = () => {
     const specs = [
       { key: 'bedrooms', tag: 'BEDROOM', displayName: 'Bedroom' },
       { key: 'bathrooms', tag: 'BATHROOM', displayName: 'Bathroom' },
-      { key: 'dinningRoom', tag: 'DINNING_ROOM', displayName: 'Dining Room', defaultCount: 1 },
+      { key: 'dinningRoom', tag: 'DINNING', displayName: 'Dining Room', defaultCount: 1 },
       { key: 'kitchen', tag: 'KITCHEN', displayName: 'Kitchen', defaultCount: 1 },
-      { key: 'livingRoom', tag: 'LIVING_ROOM', displayName: 'Living Room', defaultCount: 1 },
+      { key: 'livingRoom', tag: 'LIVINGROOM', displayName: 'Living Room', defaultCount: 1 },
     ];
   
     const tagToImageMap: { [key: string]: string } = {
       BEDROOM: Img.bedroom,
       BATHROOM: Img.bathroom,
-      DINNING_ROOM: Img.dinning,
+      DINNING: Img.dinning,
       KITCHEN: Img.kitchen,
-      LIVING_ROOM: Img.lounge,
+      LIVINGROOM: Img.lounge,
     };
   
     specs.forEach(({ key, tag, displayName, defaultCount }) => {

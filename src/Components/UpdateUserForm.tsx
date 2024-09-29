@@ -46,7 +46,9 @@ const adminFields: FieldConfig<UpdateFormData>[] = [
 // Define the form fields specifically for homepage profile edit (non-admin users)
 const EditProfileFields: FieldConfig<UpdateFormData>[] = [
   { name: "username", label: "User Name", type: "text", required: false },
-  { name: "email", label: "Email", type: "email", required: false, readOnly: true }, 
+  { name: "email", label: "Email", type: "email", required: false, readOnly: true },
+  { name: "password", label: "New Password", type: "password", required: false },
+  { name: "confirmPassword", label: "Confirm New Password", type: "password", required: false }, 
   { name: "phoneNumber", label: "Phone Number", type: "text", required: false }, 
 ];
 
@@ -132,13 +134,14 @@ const UpdateForm: React.FC<{
     <div>
       <CustomAlert message={errors} type="error" isVisible={showAlert} />
       <BaseForm<UpdateFormData>
-        title={isAdmin ? 'Update User' : 'Edit Profile Details'}
+        title={isAdmin ? 'Update User' : 'My Profile'}
         fields={isAdmin ? [...UpdateFields, ...adminFields] : EditProfileFields}
         initialValues={formData}
         onSubmit={handleUpdateSubmit}
         onChange={(updatedFormData) => setFormData(updatedFormData)}
         buttonLabel="Update"
         onCancel={onCancel}
+        withCancelButton={isAdmin? true : false}
       />
     </div>
   );
