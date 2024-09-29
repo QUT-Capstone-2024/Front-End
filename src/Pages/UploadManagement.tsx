@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ActionRequiredCard } from "../Components";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, Box, Typography } from "@mui/material";
+import { Card, CardContent, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { getImagesByCollectionId, getAllCollections } from "../Services";
 import { Collection, Image } from "../types";
-import { UseDispatch } from "react-redux";
 import { selectProperty } from "../Redux/Slices";
 
 // Extend the Collection type to include images array
@@ -14,19 +13,15 @@ interface CollectionWithImages extends Collection {
   images: Image[];
 }
 
-// const selectedProperty = properties.find((property) => property.id === selectedPropertyId);
-
 const UploadManagement = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const token = useSelector((state: RootState) => state.user.token);
-
+  const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const [collections, setCollections] = useState<CollectionWithImages[]>([]);
 
-  const dispatch = useDispatch()
-
-  const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
-
   const handleClick = (property: any) => {
+    console.log(property.id)
     dispatch(selectProperty({
       propertyId: property.id,
       propertyAddress: property.propertyAddress,
@@ -36,33 +31,43 @@ const UploadManagement = () => {
       bathrooms: property.bathrooms,
       parkingSpaces: property.parkingSpaces,
       propertyType: property.propertyType,
-      approvalStatus: property.approvalStatus,
+      approvalStatus: property.approvalStatus
     }));
-    console.log([selectedPropertyId])
+
+    navigate(`/ImageApproval/${selectedPropertyId}`)
   };
 
   useEffect(() => {
     const fetchCollectionsAndImages = async () => {
       if (!token) return;
-
+  
       try {
         // Retrieve all 'PENDING' properties
         const allCollections = await getAllCollections(token);
+  
         const collectionsWithImages = await Promise.all(allCollections.map(async (collection) => {
           const fetchedImages = await getImagesByCollectionId(collection.id, token);
+  
+          // Filter for images with 'PENDING' status
           const pendingImages = fetchedImages.filter(img => img.imageStatus === "PENDING");
+  
+          // Return the full collection object, including pending images
           return { ...collection, images: pendingImages };
         }));
-        // Filter by collections including at least 1 'PENDING' image
+  
+        // Filter out collections that have no pending images
         const filteredCollections = collectionsWithImages.filter(col => col.images.length > 0);
+  
+        // Save the full collection data with the pending images
         setCollections(filteredCollections);
       } catch (error) {
         console.error("Failed to fetch collections and images", error);
       }
     };
-
+  
     fetchCollectionsAndImages();
   }, [token]);
+  
 
   return (
     <Box sx={{ padding: "20px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "flex-start", minHeight: "100vh" }}>
@@ -85,7 +90,7 @@ const UploadManagement = () => {
                     ? `LATEST UPLOAD: ${new Date(collection.images[0].uploadTime).toLocaleDateString()}`
                     : "Unknown"}
                     onButtonClick={() => {
-                      handleClick(selectedPropertyId)
+                      handleClick(collection);
                     }}           
                 cardType="Review"
               />
