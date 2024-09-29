@@ -27,6 +27,7 @@ const UploadManagement = () => {
       propertyAddress: property.propertyAddress,
       propertyDescription: property.propertyDescription,
       propertySize: property.propertySize,
+      externalPropertySize: property.externalPropertySize,
       bedrooms: property.bedrooms,
       bathrooms: property.bathrooms,
       parkingSpaces: property.parkingSpaces,

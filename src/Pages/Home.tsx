@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../Redux/store';
 import { selectProperty } from '../Redux/Slices/propertySlice'; 
-import { getUserCollections, getAllCollections } from '../Services';
+import { getUserCollections, getAllCollections, getUserById } from '../Services';
 import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard, UpdateForm } from '../Components';
 import { useCheckAuth } from '../Hooks/useCheckAuth';
 import { getHeroImage } from '../HelperFunctions/utils';
 import './PropertiesHome.scss';
-import { UserWithId } from '../types/userTypes';
+import { UserWithId } from '../types';
+
 
 interface HomeProps {}
 
@@ -16,7 +17,6 @@ const Home: React.FC<HomeProps> = () => {
   const user = useSelector((state: RootState) => state.user);
   const userId = useSelector((state: RootState) => state.user.userDetails?.id);
   const token = useSelector((state: RootState) => state.user.token);
-  const userDetails = useSelector((state: RootState) => state.user.userDetails);
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const { isAdmin } = useCheckAuth();
 
@@ -24,27 +24,32 @@ const Home: React.FC<HomeProps> = () => {
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isNewUser, setIsNewUser] = useState<boolean>(false);   
+  const [isNewUser, setIsNewUser] = useState<boolean>(false); 
+  const [userFormData, setUserFormData] = useState<any>(null);
 
+
+  const handleUpdate = (id: number, updatedUser: Partial<UserWithId>) => {
+    console.log("Updated user:", id, updatedUser);
+
+    setUserFormData((prev: { id: number; }) => (prev && prev.id === id ? { ...prev, ...updatedUser } : prev));
+  };
+  
   useEffect(() => {
     const fetchUserDetails = async () => {
+      if (!token || !userId) {
+        setError('User not authenticated');
+        return;
+      }
       try {
-        const response = await fetch('http://localhost:8080/api/users/details', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            // Include auth headers if required
-          },
-        });
-        const data = await response.json();
-        console.log('Fetched user details:', data);
-        // Handle setting user details in state or Redux store
+        const fetchedUserDetails = await getUserById(userId, token);
+        setUserFormData(fetchedUserDetails);
       } catch (error) {
         console.error('Failed to fetch user details:', error);
       }
     };
   
     fetchUserDetails();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
 
@@ -80,6 +85,7 @@ const Home: React.FC<HomeProps> = () => {
             propertyAddress: fetchedCollections[0].propertyAddress,
             propertyDescription: fetchedCollections[0].propertyDescription,
             propertySize: fetchedCollections[0].propertySize,
+            externalPropertySize: fetchedCollections[0].externalPropertySize,
             bedrooms: fetchedCollections[0].bedrooms,
             bathrooms: fetchedCollections[0].bathrooms,
             parkingSpaces: fetchedCollections[0].parkingSpaces,
@@ -116,6 +122,7 @@ const Home: React.FC<HomeProps> = () => {
       propertyAddress: property.propertyAddress,
       propertyDescription: property.propertyDescription,
       propertySize: property.propertySize,
+      externalPropertySize: property.externalPropertySize,
       bedrooms: property.bedrooms,
       bathrooms: property.bathrooms,
       parkingSpaces: property.parkingSpaces,
@@ -171,7 +178,7 @@ const Home: React.FC<HomeProps> = () => {
             propertyType={selectedProperty.propertyType}
             propertyDescription={selectedProperty.propertyDescription}
             internalPropertySize={selectedProperty.propertySize}
-            externalPropertySize={0}
+            externalPropertySize={selectedProperty.externalPropertySize}
           />
         ) : (
           <div className="empty-property-card">
@@ -181,9 +188,10 @@ const Home: React.FC<HomeProps> = () => {
           </div>
         )}
         </div>
-        {!isAdmin && userDetails ? (
-          <div className="update-profile-section" style={{ width: '30%', padding: '20px', borderLeft: '1px solid #ccc' }}>
-            <UpdateForm user={userDetails as unknown as UserWithId} onUpdate={(id, updatedUser) => console.log('Updated:', id, updatedUser)} onCancel={() => console.log('Canceled')} />
+
+        {!isAdmin && user?.userDetails ? (
+          <div className="update-profile-section" >
+            <UpdateForm user={userFormData} onUpdate={handleUpdate} onCancel={() => null}/>
           </div>
         ) : null}
       </div>
@@ -193,6 +201,3 @@ const Home: React.FC<HomeProps> = () => {
 };
 
 export default Home;
-
-
-// Edit user profile bug - phone number not showing, email not read-only

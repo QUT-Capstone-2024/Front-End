@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { CustomButton, TextInput, NumberInput, Spacer } from "./";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../Redux/store";
 import { updateCollection } from "../Services";
+import { selectProperty } from "../Redux/Slices";
 
 interface EditPropertyModalContentProps {
   toggleModal: () => void;
@@ -14,8 +15,7 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
   toggleModal,
   propertyAddress,
 }) => {
-
-  // Access the updated property details from the Redux state
+  const dispatch = useDispatch();
   const propertyDetails = useSelector(
     (state: RootState) => state.currentProperty
   );
@@ -32,10 +32,11 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
   const [parkingSpaces, setParkingSpaces] = useState<number>(
     propertyDetails.parking || 0
   );
-  const [internalPropertySize, setInternalPropertySize] = useState<number>(
+  const [propertySize, setpropertySize] = useState<number>(
     propertyDetails.propertySize || 0
   );
-  const [externalPropertySize, setExternalPropertySize] = useState<number>(0);
+  const [externalPropertySize, setExternalPropertySize] = useState<number>(
+    propertyDetails.externalPropertySize || 0);
   const [description, setDescription] = useState<string>(
     propertyDetails.propertyDescription || ""
   );
@@ -45,8 +46,8 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
     setBedrooms(propertyDetails.bedrooms || 0);
     setBathrooms(propertyDetails.bathrooms || 0);
     setParkingSpaces(propertyDetails.parking || 0);
-    setInternalPropertySize(propertyDetails.propertySize || 0);
-    setExternalPropertySize(0); // Update if needed
+    setpropertySize(propertyDetails.propertySize || 0);
+    setExternalPropertySize(propertyDetails.externalPropertySize || 0);
     setDescription(propertyDetails.propertyDescription || "");
   }, [propertyDetails]);
 
@@ -55,7 +56,7 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
       bedrooms,
       bathrooms,
       parkingSpaces,
-      internalPropertySize,
+      propertySize,
       externalPropertySize,
       description,
     };
@@ -66,10 +67,23 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
         updateData,
         token!
       );
-      window.location.reload();
-
+      dispatch(
+        selectProperty({
+          propertyId: collectionID!,
+          propertyAddress: propertyDetails.propertyAddress!,
+          propertyDescription: description,
+          propertySize,
+          externalPropertySize,
+          bedrooms,
+          bathrooms,
+          parkingSpaces,
+          propertyType: propertyDetails.type!,
+          approvalStatus: propertyDetails.approvalStatus!,
+        })
+      );
       console.log("Success:", updatedData);
-      toggleModal(); // Close the modal
+      toggleModal();
+      window.location.reload();
     } catch (err) {
       console.error("Error updating property details:", err);
       alert("Failed to update the property details.");
@@ -123,9 +137,9 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
           <NumberInput
             label="Internal Property Size"
             icon="InternalPropertySize"
-            value={internalPropertySize}
+            value={propertySize}
             onChange={(event) =>
-              setInternalPropertySize(parseInt(event.target.value))
+              setpropertySize(parseInt(event.target.value))
             }
             editable={true}
           />

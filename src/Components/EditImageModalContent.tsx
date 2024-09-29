@@ -131,7 +131,7 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
           icon={<UploadIcon />}
           label="Upload Image" 
           onClick={handleUpdate}
-          disabled={selectedFile === null}
+          disabled={selectedFile === null || selectedCategoryKey === ''}
         />
         <CustomButton buttonType="cancelButton" label="Cancel" onClick={toggleModal} />
       </div>
