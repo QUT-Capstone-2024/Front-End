@@ -81,10 +81,21 @@ export const removeImageFromCollection = async (collectionId: number, imageId: n
   }
 };
 
-export const updateImageStatus = async (collectionId: number, imageId: number, status: "APPROVED" | "REJECTED", rejectionReason: string, token: string): Promise<void> => {
+export const updateImageStatus = async (
+  collectionId: number,
+  imageId: number,
+  status: "APPROVED" | "REJECTED",
+  rejectionReason: string,
+  token: string
+): Promise<void> => {
+  // Use 'imageStatus' instead of 'status' in the request body
   const body = JSON.stringify(
-    status === "REJECTED" && rejectionReason ? { status, rejectionReason } : { status }
+    status === "REJECTED" && rejectionReason
+      ? { imageStatus: status, rejectionReason } // Use 'imageStatus' and include rejectionReason if status is REJECTED
+      : { imageStatus: status } // Just 'imageStatus' for APPROVED
   );
+
+  console.log("Request body:", body);
 
   const response = await fetch(`${API_URL}/images/collections/${collectionId}/images/${imageId}`, {
     method: 'PUT',
@@ -96,16 +107,16 @@ export const updateImageStatus = async (collectionId: number, imageId: number, s
   });
 
   if (response.ok) {
-    // Handle 204 No Content or any other successful status with no JSON
-    if (response.status !== 204) {
-      try {
-        await response.json(); 
-      } catch {
-        // No need to log anything if there's no JSON response
-      }
+    console.log("Image status updated successfully.");
+    try {
+      const data = await response.json(); 
+      console.log("Response data:", data);
+    } catch (err) {
+      console.log("No JSON response or error:", err);
     }
   } else {
     const errorText = await response.text(); // Get response text for debugging
+    console.error(`Failed to update image status: ${errorText}`);
     throw new Error(`Failed to update image status: ${errorText}`);
   }
 };
