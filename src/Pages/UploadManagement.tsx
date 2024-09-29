@@ -23,13 +23,14 @@ const UploadManagement = () => {
       if (!token) return;
 
       try {
+        // Retrieve all 'PENDING' properties
         const allCollections = await getAllCollections(token);
         const collectionsWithImages = await Promise.all(allCollections.map(async (collection) => {
           const fetchedImages = await getImagesByCollectionId(collection.id, token);
           const pendingImages = fetchedImages.filter(img => img.imageStatus === "PENDING");
           return { ...collection, images: pendingImages };
         }));
-
+        // Filter by collections including at least 1 'PENDING' image
         const filteredCollections = collectionsWithImages.filter(col => col.images.length > 0);
         setCollections(filteredCollections);
       } catch (error) {
@@ -61,8 +62,8 @@ const UploadManagement = () => {
                     ? `LATEST UPLOAD: ${new Date(collection.images[0].uploadTime).toLocaleDateString()}`
                     : "Unknown"}
                     onButtonClick={() => {
-                      console.log("Navigating to:", `/ImageApproval/${collection.id}`);
-                      navigate(`/ImageApproval/${collection.id}`);
+                      console.log("Navigating to:", `/ImageApproval/${collection.collectionId}`);
+                      navigate(`/ImageApproval/${collection.collectionId}`);
                     }}                    
                 cardType="Review"
               />

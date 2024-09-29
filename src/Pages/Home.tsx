@@ -195,4 +195,4 @@ const Home: React.FC<HomeProps> = () => {
 export default Home;
 
 
-// Edit user profile bug - phone number not showing 
+// Edit user profile bug - phone number not showing, email not read-only

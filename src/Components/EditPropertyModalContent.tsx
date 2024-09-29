@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CustomButton, TextInput, NumberInput, Spacer } from "./";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { updateCollection } from "../Services";
 
@@ -14,7 +14,6 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
   toggleModal,
   propertyAddress,
 }) => {
-  const dispatch = useDispatch();
 
   // Access the updated property details from the Redux state
   const propertyDetails = useSelector(

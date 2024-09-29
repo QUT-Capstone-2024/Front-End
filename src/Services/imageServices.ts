@@ -80,3 +80,34 @@ export const removeImageFromCollection = async (collectionId: number, imageId: n
     throw new Error('Failed to remove image');
   }
 };
+
+export const updateImageStatus = async (collectionId: number, imageId: number, status: "APPROVED" | "REJECTED", rejectionReason: string, token: string): Promise<void> => {
+  const body = JSON.stringify(
+    status === "REJECTED" && rejectionReason ? { status, rejectionReason } : { status }
+  );
+
+  const response = await fetch(`${API_URL}/images/collections/${collectionId}/images/${imageId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: body,
+  });
+
+  if (response.ok) {
+    // Handle 204 No Content or any other successful status with no JSON
+    if (response.status !== 204) {
+      try {
+        await response.json(); 
+      } catch {
+        // No need to log anything if there's no JSON response
+      }
+    }
+  } else {
+    const errorText = await response.text(); // Get response text for debugging
+    throw new Error(`Failed to update image status: ${errorText}`);
+  }
+};
+
+
