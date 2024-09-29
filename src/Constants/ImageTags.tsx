@@ -3,9 +3,9 @@
 export const ImageTags = [
     { name: "BATHROOM", displayName: "Bathroom", key: 1 },
     { name: "BEDROOM", displayName: "Bedroom", key: 2 },
-    { name: "DINNING_ROOM", displayName: "Dining Room", key: 3 },
+    { name: "DINNING", displayName: "Dining Room", key: 3 },
     { name: "KITCHEN", displayName: "Kitchen", key: 4 },
-    { name: "LIVING_ROOM", displayName: "Living Room", key: 5 },
+    { name: "LIVINGROOM", displayName: "Living Room", key: 5 },
     { name: "STREET", displayName: "Front View", key: 6 }
 ];
 
@@ -33,9 +33,9 @@ export const generateImageTags = (propertyDetails: any) => {
     }
     
     // Static tags that don't have multiple instances
-    tags.push({ name: "DINNING_ROOM", displayName: "Dining Room", key: "DINNING_ROOM" });
+    tags.push({ name: "DINNING", displayName: "Dining Room", key: "DINNING" });
     tags.push({ name: "KITCHEN", displayName: "Kitchen", key: "KITCHEN" });
-    tags.push({ name: "LIVING_ROOM", displayName: "Living Room", key: "LIVING_ROOM" });
+    tags.push({ name: "LIVINGROOM", displayName: "Living Room", key: "LIVINGROOM" });
     tags.push({ name: "STREET", displayName: "Front View", key: "STREET" });
     return tags;
   };
