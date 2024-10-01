@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -31,6 +32,7 @@ const ImageApproval: React.FC = () => {
   const [isBulkReject, setIsBulkReject] = useState(false);
   const [currentRejectionReason, setCurrentRejectionReason] = useState("");
   const [currentRejectionImage, setCurrentRejectionImage] = useState<Image | null>(null);
+  const [rejectionError, setRejectionError] = useState<string | null>(null);
 
   const selectedPropertyId = useSelector((state: RootState) => state.currentProperty.selectedPropertyId);
   const token = useSelector((state: RootState) => state.user.token);
@@ -57,20 +59,29 @@ const ImageApproval: React.FC = () => {
     }
   };
 
-  const handleImageAction = async (imageId: number, action: "APPROVE" | "REJECT") => {
-    if (!selectedPropertyId || !token)
+  const handleImageAction = async (imageId: number, action: "APPROVE" | "REJECT", imageTag: string) => {
+    if (!selectedPropertyId || !token) {
       return setError("User is not authenticated or property is not selected.");
+    }
     try {
-      await updateImageStatus(selectedPropertyId, imageId, action === "APPROVE" ? "APPROVED" : "REJECTED", 
-      action === "REJECT" ? currentRejectionReason : "", token);
+      const status = action === "APPROVE" ? "APPROVED" : "REJECTED";
+      const rejectionReason = action === "REJECT" ? currentRejectionReason : "";
+  
+      // Call the API with the status and the updated tag
+      await updateImageStatus(selectedPropertyId, imageId, status, rejectionReason, token, imageTag);
+  
+      // Update the queued images state by removing the processed image
       setQueuedImages((prev) => prev.filter((img) => img.id !== imageId));
-      if (action === "REJECT") closeRejectionDialog();
+  
+      if (action === "REJECT") {
+        closeRejectionDialog();
+      }
       fetchPropertyData();
     } catch (error) {
-      setError("Failed to update image status.");
+      setError("Failed to update image status and tag.");
     }
   };
-
+  
   const handleBulkReject = () => {
     setIsBulkReject(true);
     setRejectionDialogOpen(true);
@@ -82,15 +93,26 @@ const ImageApproval: React.FC = () => {
   };
 
   const confirmRejection = async () => {
+    if (!currentRejectionReason.trim()) {
+      setRejectionError("Rejection comment is required");
+      return;
+    }
+    
+    setRejectionError(null); // Clear the error if valid
+    
     if (isBulkReject) {
-      await Promise.all(queuedImages.map((img) => handleImageAction(img.id, "REJECT")));
+      await Promise.all(
+        queuedImages.map((img) => handleImageAction(img.id, "REJECT", img.imageTag)) // Pass imageTag
+      );
       setIsBulkReject(false);
     } else if (currentRejectionImage) {
-      await handleImageAction(currentRejectionImage.id, "REJECT");
+      await handleImageAction(currentRejectionImage.id, "REJECT", currentRejectionImage.imageTag); // Pass imageTag
     }
+  
     closeRejectionDialog();
   };
-
+  
+ 
   const closeRejectionDialog = () => {
     setRejectionDialogOpen(false);
     setCurrentRejectionReason("");
@@ -101,7 +123,7 @@ const ImageApproval: React.FC = () => {
       return setError("User is not authenticated or property is not selected.");
     try {
       await Promise.all(queuedImages.map((img) => updateImageStatus(selectedPropertyId, img.id, action === "APPROVE" ? "APPROVED" : "REJECTED", 
-      action === "REJECT" ? prompt("Please enter a rejection comment for all images:") || "" : "", token)));
+      action === "REJECT" ? prompt("Please enter a rejection comment for all images:") || "" : "", token, img.imageTag)));
       setQueuedImages([]);
       fetchPropertyData();
     } catch (error) {
@@ -109,7 +131,15 @@ const ImageApproval: React.FC = () => {
     }
   };
 
-  const handleCategoryChange = (event: SelectChangeEvent<string>) => setCurrentImageTag(event.target.value);
+  const handleCategoryChange = (event: SelectChangeEvent<string>) => {
+    setCurrentImageTag(event.target.value);
+    if (imageToEdit) {
+      const updatedImage = { ...imageToEdit, imageTag: event.target.value };
+      setQueuedImages((prev) =>
+        prev.map((img) => (img.id === imageToEdit.id ? updatedImage : img))
+      );
+    }
+  };  
 
   const handleCategoryClick = (image: Image) => {
     setImageToEdit(image);
@@ -171,7 +201,7 @@ const ImageApproval: React.FC = () => {
                     {image.imageTag.toUpperCase()} <ArrowDropDownIcon sx={{ fontSize: "1rem", ml: 0.5 }} />
                   </Typography>
                   <Box sx={{ display: "flex", gap: "15px" }}>
-                    <CustomButton label="Approve" onClick={() => handleImageAction(image.id, "APPROVE")} />
+                    <CustomButton label="Approve" onClick={() => handleImageAction(image.id, "APPROVE", image.imageTag)} />
                     <CustomButton buttonType="cancelButton" label="Reject" onClick={() => handleRejectImage(image)} />
                   </Box>
                 </Box>
@@ -188,15 +218,34 @@ const ImageApproval: React.FC = () => {
           </Modal>
         )}
       </Card>
+      {/* Rejection Dialog */}
       <Dialog open={rejectionDialogOpen} onClose={closeRejectionDialog}>
         <DialogTitle>{isBulkReject ? "Reject All Images" : "Reject Image"}</DialogTitle>
         <DialogContent>
-          <DialogContentText>Please enter the reason for rejecting {isBulkReject ? "all images." : "this image."}</DialogContentText>
-          <TextField autoFocus margin="dense" id="rejectionReason" label="Rejection Reason" type="text" fullWidth variant="outlined" value={currentRejectionReason} onChange={(e) => setCurrentRejectionReason(e.target.value)} />
+          <DialogContentText>
+            Please enter the reason for rejecting {isBulkReject ? "all images." : "this image."}
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="rejectionReason"
+            label="Rejection Reason"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={currentRejectionReason}
+            onChange={(e) => setCurrentRejectionReason(e.target.value)}
+            error={Boolean(rejectionError)} // Show error state if there's an error
+            helperText={rejectionError} // Display error message
+          />
         </DialogContent>
         <DialogActions>
           <CustomButton label="Cancel" onClick={closeRejectionDialog} buttonType="cancelButton" />
-          <CustomButton label="Submit" onClick={confirmRejection} />
+          <CustomButton
+            label="Submit"
+            onClick={confirmRejection}
+            disabled={!currentRejectionReason.trim()} // Disable the button if no rejection reason is entered
+          />
         </DialogActions>
       </Dialog>
 
