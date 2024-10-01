@@ -9,6 +9,8 @@ type StatusStampProps = {
 const StatusStamp: React.FC<StatusStampProps> = ({ status, className }) => {
   const getStatusColor = () => {
     switch (status) {
+      case 'UNTAGGED':
+        return 'gray';
       case 'APPROVED':
         return '#1f323e';
       case 'PENDING':
@@ -24,6 +26,8 @@ const StatusStamp: React.FC<StatusStampProps> = ({ status, className }) => {
     switch (status) {
       case 'APPROVED':
         return 'APPROVED';
+      case 'UNTAGGED':
+        return 'PENDING';
       case 'PENDING':
         return 'PENDING';
       case 'REJECTED':

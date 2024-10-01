@@ -136,10 +136,19 @@ const Home: React.FC<HomeProps> = () => {
 
   if (isNewUser) {
     return (
-      <div className="new-user-container">
-        <h2>Welcome to VisionCORE!</h2>
-        <p>{user.userDetails?.name}, it looks like you don't have any properties yet.<br />Let's fix that by clicking below.</p>
-        <AddPropertyCard />
+      <div>
+        <div className="new-user-container">
+          <h2>Welcome to VisionCORE!</h2>
+          <p>{user.userDetails?.name}, it looks like you don't have any properties yet.<br />Let's fix that by clicking below.</p>
+          <AddPropertyCard />
+        </div>
+        <div>
+          {!isAdmin && user?.userDetails ? (
+            <div className="update-profile-section" >
+              <UpdateForm user={userFormData} onUpdate={handleUpdate} onCancel={() => null}/>
+            </div>
+          ) : null}
+        </div>
       </div>
     );
   }
