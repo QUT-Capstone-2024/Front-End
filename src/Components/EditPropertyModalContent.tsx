@@ -37,7 +37,7 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
   );
   const [externalPropertySize, setExternalPropertySize] = useState<number>(
     propertyDetails.externalPropertySize || 0);
-  const [description, setDescription] = useState<string>(
+  const [propertyDescription, setPropertyDescription] = useState<string>(
     propertyDetails.propertyDescription || ""
   );
 
@@ -48,7 +48,7 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
     setParkingSpaces(propertyDetails.parking || 0);
     setpropertySize(propertyDetails.propertySize || 0);
     setExternalPropertySize(propertyDetails.externalPropertySize || 0);
-    setDescription(propertyDetails.propertyDescription || "");
+    setPropertyDescription(propertyDetails.propertyDescription || "");
   }, [propertyDetails]);
 
   const handleUpdate = async () => {
@@ -58,7 +58,7 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
       parkingSpaces,
       propertySize,
       externalPropertySize,
-      description,
+      propertyDescription,
     };
 
     try {
@@ -71,7 +71,7 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
         selectProperty({
           propertyId: collectionID!,
           propertyAddress: propertyDetails.propertyAddress!,
-          propertyDescription: description,
+          propertyDescription: propertyDescription,
           propertySize,
           externalPropertySize,
           bedrooms,
@@ -161,8 +161,8 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
           <TextInput
             size="large"
             label="Description"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
+            value={propertyDescription}
+            onChange={(event) => setPropertyDescription(event.target.value)}
           />
         </div>
       </form>

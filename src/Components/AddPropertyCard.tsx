@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { searchCollectionsByAddress, updateCollection } from '../Services';
 import { Collection } from "../types";
@@ -14,9 +13,9 @@ interface AddPropertyCardProps {
 }
 
 const AddPropertyCard: React.FC<AddPropertyCardProps> = ({ title = 'Claim a property', text = 'Find your home' }) => {
-  const navigate = useNavigate();
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [properties, setProperties] = useState<Collection[]>([]);
+  const [query, setQuery] = useState<string>('');
   const [showModal, setShowModal] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Collection | null>(null);
   const [message, setMessage] = useState<string>('');
@@ -78,6 +77,7 @@ const AddPropertyCard: React.FC<AddPropertyCardProps> = ({ title = 'Claim a prop
   };
 
   const handleSearch = async (query: string) => {
+    setQuery(query);
     try {
       const token = user.token;
       if (!token) {
@@ -117,13 +117,13 @@ const AddPropertyCard: React.FC<AddPropertyCardProps> = ({ title = 'Claim a prop
                 propertyType={property.propertyType}
                 propertyAddress={property.propertyAddress}
                 key={property.id}
-                onClick={() => toggleModal(property)}  // Pass selected property to modal
+                onClick={() => toggleModal(property)} 
               />
             ))}
           </div>
         </>
       ) : (
-        <p style={{ textAlign: 'center' }}>No properties found</p>
+        <p style={{ textAlign: 'center' }}>{query === '' ? 'Start typing to find your property' : 'No properties found'}</p>
       )}
       <CustomModal 
         open={showModal} 

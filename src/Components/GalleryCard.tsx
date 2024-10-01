@@ -8,7 +8,7 @@ interface GalleryCardProps {
   cardType: "hero" | "gallery";
   image?: string | null;
   imageTag: string;
-  imageInstance?: number; // New prop to handle the instance number
+  imageInstance?: number;
   imageStatus: "UNTAGGED" | "PENDING" | "APPROVED" | "REJECTED" | "ARCHIVED";
   rejectionReason?: string;
   imageComments?: string;
@@ -19,7 +19,7 @@ interface GalleryCardProps {
 const GalleryCard: React.FC<GalleryCardProps> = ({
   image,
   imageTag,
-  imageInstance, // Accept the instance number as a prop
+  imageInstance,
   imageStatus,
   rejectionReason,
   cardType = 'gallery',
@@ -46,11 +46,11 @@ const GalleryCard: React.FC<GalleryCardProps> = ({
   
     if (updatedImage) {
       const imageUrl = URL.createObjectURL(updatedImage);
-      setUploadedImage(imageUrl);  // Updates the uploaded image state
+      setUploadedImage(imageUrl);
     }
   
-    toggleModal();  // Close the modal
-    setPopoverVisible(false);  // Close the popover
+    toggleModal();
+    setPopoverVisible(false);
   };
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({
   return (
     <div ref={cardRef} className="gallery-card">
       <div className="gallery-image-container"> 
-        {imageStatus !== 'APPROVED' && image && <StatusStamp status={imageStatus} className={`stamp ${cardType}`} />}
+        {imageStatus !== 'APPROVED' && image && !isPlaceholder && <StatusStamp status={imageStatus} className={`stamp ${cardType}`} />}
         
         {uploadedImage ? (
           <img className={`${cardType} gallery-card-image`} src={uploadedImage} alt={imageTag} />
@@ -128,9 +128,8 @@ const GalleryCard: React.FC<GalleryCardProps> = ({
         />
       </div>
 
-      {/* Image tag with instance number */}
       <div className="gallery-card-tag">
-        <p>{displayTag(imageTag)}</p> {/* Include instance number if it exists */}
+        <p>{displayTag(imageTag)}</p>
       </div>
 
       <CustomModal

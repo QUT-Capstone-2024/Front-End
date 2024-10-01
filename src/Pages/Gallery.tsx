@@ -4,7 +4,7 @@ import { RootState } from '../Redux/store';
 import { Spacer, Dropdown, GalleryCard, CustomButton, CustomModal, EditImageModalContent as ModalContent, DeleteModalContent, CustomAlert } from '../Components';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import UploadIcon from '@mui/icons-material/Upload';
-import Checkbox from '@mui/material/Checkbox'; // Import the Checkbox component
+import Checkbox from '@mui/material/Checkbox';
 import './Gallery.scss';
 import { useNavigate } from 'react-router-dom';
 import { getImagesByCollectionId, getCollectionById, removeImageFromCollection, archiveImageFromCollection } from '../Services';
@@ -86,11 +86,20 @@ const Gallery: React.FC = () => {
 
   // Function to handle image download
   const handleDownloadSelected = () => {
-    const selectedImageObjects = images.filter(image => selectedImages.includes(image.imageTag));
-    selectedImageObjects.forEach((image) => {
-      saveAs(image.imageUrl, `${image.imageTag}.jpg`); // Download each selected image using file-saver
+    const selectedImageObjects = images.filter(image => selectedImageIds.includes(image.id));
+
+    selectedImageObjects.forEach((image, index) => {
+      setTimeout(() => {
+        const link = document.createElement('a');
+        link.href = image.imageUrl;
+        link.download = `${image.imageTag}-${image.id}.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up the DOM after the download
+      }, index * 500);
     });
   };
+
 
   // Function to handle image removal
   const handleRemoveSelected = async () => {
@@ -137,16 +146,14 @@ const Gallery: React.FC = () => {
   
   
   // Function to handle selecting or deselecting an image
-  const handleSelectImage = (imageTag: string, imageId: number) => {
-    // If the image is already selected, deselect it
-    if (selectedImages.includes(imageTag)) {
-      setSelectedImages(selectedImages.filter(tag => tag !== imageTag));
-      setSelectedImageIds(selectedImageIds.filter(id => id !== imageId));
-    } else {
-      setSelectedImages([...selectedImages, imageTag]);
-      setSelectedImageIds([...selectedImageIds, imageId]);
-    }
-  };
+  const handleSelectImage = (imageId: number) => {
+  // If the image is already selected, deselect it
+  if (selectedImageIds.includes(imageId)) {
+    setSelectedImageIds(selectedImageIds.filter(id => id !== imageId));
+  } else {
+    setSelectedImageIds([...selectedImageIds, imageId]);
+  }
+};
 
   const getLatestImagesByTagAndInstance = (images: Image[]) => {
     const imageMap: { [tagInstance: string]: Image } = {};
@@ -266,8 +273,8 @@ const Gallery: React.FC = () => {
                 imageDate={heroCard.uploadTime.split('T')[0]}
               />
               <Checkbox
-                checked={selectedImages.includes('STREET')}
-                onChange={() => handleSelectImage('STREET', Number(heroCard.id))}
+                checked={selectedImageIds.includes(heroCard.id)}
+                onChange={() => handleSelectImage(Number(heroCard.id))}
                 sx={{ alignSelf: 'flex-start' }}
               />
             </div>
@@ -299,8 +306,8 @@ const Gallery: React.FC = () => {
                   imageInstance={imageData.instanceNumber}
                 />
                 <Checkbox
-                  checked={selectedImages.includes(imageData.imageTag)}
-                  onChange={() => handleSelectImage(imageData.imageTag, Number(imageData.id))}
+                  checked={selectedImageIds.includes(imageData.id)}
+                  onChange={() => handleSelectImage(Number(imageData.id))}
                 />
               </div>
             ))}

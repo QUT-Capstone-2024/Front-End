@@ -21,7 +21,7 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
   const [descriptionText, setDescriptionText] = useState(description);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [previewImageUrl, setPreviewImageUrl] = useState<string>(image); // New state for image preview
+  const [previewImageUrl, setPreviewImageUrl] = useState<string>(image);
 
   // Access userId, collectionId, and token from Redux state
   const userId = useSelector((state: RootState) => state.user.userDetails?.id);
@@ -83,6 +83,7 @@ const EditImageModalContent: React.FC<EditImageModalContentProps> = ({ image, im
 
         // Close the modal
         toggleModal();
+        window.location.reload();
       } catch (error) {
         setUploadStatus('Upload failed');
         console.error('Upload error:', error);

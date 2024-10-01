@@ -47,13 +47,7 @@ const initialValues: RegisterFormData = {
 
 const checkboxLabel = (
   // eslint-disable-next-line jsx-a11y/anchor-is-valid
-  <a
-    href="#"
-    onClick={(e) => {
-      e.preventDefault();
-      window.open("/terms-and-conditions", "_blank");
-    }}
-  >
+  <a href="https://www.corelogic.com.au/legals/end-user-terms" target="_blank" rel="noreferrer">
     I agree to the terms and conditions
   </a>
 );
