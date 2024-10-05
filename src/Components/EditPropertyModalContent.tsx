@@ -81,7 +81,6 @@ const EditPropertyModalContent: React.FC<EditPropertyModalContentProps> = ({
           approvalStatus: propertyDetails.approvalStatus!,
         })
       );
-      console.log("Success:", updatedData);
       toggleModal();
       window.location.reload();
     } catch (err) {

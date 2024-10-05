@@ -42,7 +42,6 @@ const ImageApproval: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
   const [heroImageUrl, setHeroImageUrl] = useState<string>(DefaultHouseImage);
-  console.log('hero',heroImageUrl);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [imageToEdit, setImageToEdit] = useState<Image | null>(null);
   const [currentImageTag, setCurrentImageTag] = useState<string>("");

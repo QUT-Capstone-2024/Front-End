@@ -99,7 +99,6 @@ const UpdateForm: React.FC<{
 
   // Handle form submission
   const handleUpdateSubmit = async () => {
-    console.log("Form data on submit:", formData);
     if (formData.password && formData.password !== formData.confirmPassword) {
       setShowAlert(true);
       setErrors("Passwords do not match. Please try again.");

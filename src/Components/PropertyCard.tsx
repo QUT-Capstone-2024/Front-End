@@ -127,8 +127,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
     fetchImages();
   }, [collectionId, token]);
 
-  console.log(propertySlug);
-
 
   return (
     <Card sx={{ padding: 0, margin: 0, width: '100%', maxWidth: '600px', height: 'auto', borderRadius: '8px', backgroundColor: '#eff7fe', boxShadow: 5 }}>

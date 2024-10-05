@@ -85,8 +85,6 @@ const RegisterForm: React.FC = () => {
         userRole: "EXTERNAL",
         propertyIds: formData.propertyIds,
       });
-
-      console.log("Registration successful:", data);
       navigate("/");
     } catch (error) {
       console.error("Registration failed:", error);

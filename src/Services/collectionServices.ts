@@ -30,8 +30,6 @@ export const getUserCollections = async (userId: number, token: string): Promise
       'Authorization': `Bearer ${token}`,
     },
   });
-
-  console.log('Response:', response.status);
   if (!response.ok) {
     if (response.status === 404) {
       throw new Error('User has no collections (404)'); 
