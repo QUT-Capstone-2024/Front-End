@@ -22,13 +22,13 @@ export const fetchWithToken = async (
     // Check for 401 errors and handle expired tokens
     if (response.status === 401) {
       const errorText = await response.text();
-      console.log('Error message from server:', errorText);
+      console.error('Error message from server:', errorText);
 
       if (errorText.includes('Token has expired')) {
-        console.log('Token expired, logging out...');
+        console.error('Token expired, logging out...');
         logoutUser(); // Implement your logout logic here (clearing token, redirecting, etc.)
       } else {
-        console.log('Unauthorized access');
+        console.error('Unauthorized access');
       }
 
       throw new Error(`Failed request: ${errorText}`);
@@ -51,7 +51,6 @@ export const fetchWithToken = async (
 
 // Utility for logging out the user
 export const logoutUser = () => {
-  console.log('Logging out the user...');
   localStorage.removeItem('userToken'); // Clear token from storage
   window.location.href = '/login'; // Redirect to login page
 };

@@ -29,8 +29,6 @@ const Home: React.FC<HomeProps> = () => {
 
 
   const handleUpdate = (id: number, updatedUser: Partial<UserWithId>) => {
-    console.log("Updated user:", id, updatedUser);
-
     setUserFormData((prev: { id: number; }) => (prev && prev.id === id ? { ...prev, ...updatedUser } : prev));
   };
   
@@ -95,7 +93,7 @@ const Home: React.FC<HomeProps> = () => {
         }
 
       } catch (err: any) {
-        console.log(err.message.includes('404'));
+        console.error(err.message.includes('404'));
         if (err.message && err.message.includes('404')) {
         setIsNewUser(true);  // Assume new user if 404
         } else {

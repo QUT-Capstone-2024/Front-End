@@ -21,7 +21,6 @@ const UploadManagement = () => {
   const [collections, setCollections] = useState<CollectionWithImages[]>([]);
 
   const handleClick = (property: any) => {
-    console.log(property.id)
     dispatch(selectProperty({
       propertyId: property.id,
       propertyAddress: property.propertyAddress,

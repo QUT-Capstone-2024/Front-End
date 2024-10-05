@@ -35,10 +35,6 @@ export const uploadImage = async (
   formData.append('tag', tag);
   formData.append('description', description);
   formData.append('instanceNumber', instanceNumber.toString());
-
-  formData.forEach((value, key) => {
-    console.log(`${key}: ${value}`);
-  });
   
   const response = await fetch(`${API_URL}/images/upload`, {
     method: 'POST',
@@ -105,7 +101,6 @@ export const updateImageStatus = async (
   });
 
   if (response.ok) {
-    console.log("Image status and tag updated successfully.");
     try {
       const data = await response.json();
       console.log("Response data:", data);
