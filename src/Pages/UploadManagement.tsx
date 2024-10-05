@@ -71,17 +71,18 @@ const UploadManagement = () => {
   
 
   return (
-    <Box sx={{ padding: "20px", backgroundColor: "transparent", display: "flex", justifyContent: "center", alignItems: "flex-start", minHeight: "100vh" }}>
+    <Box sx={{ backgroundColor: "transparent", display: "flex", flexDirection: 'column', alignItems: "center", minHeight: "100vh" }}>
+      <h2 style={{ marginTop: '2rem', marginBottom: '1rem', color: '#0b517d'}}>These Properties require manual approval of some images ...</h2>
       <Card sx={{
         backgroundColor: "transparent",
         borderRadius: "8px",
         boxShadow: "inset 4px 0 6px rgba(0, 0, 0, 0.3), inset 0 4px 6px rgba(0, 0, 0, 0.3), inset 1px 1px 3px rgba(0, 0, 0, 0.1)", 
         maxWidth: "900px",
-        paddingTop: "15px"
+        paddingTop: "10px"
     }}>
         <CardContent>
           {collections.map((collection) => (
-            <Box key={collection.id} sx={{ marginBottom: "16px", boxShadow: 1, borderRadius: "8px", overflow: "hidden" }}>
+            <Box key={collection.id} sx={{ marginBottom: "10px", boxShadow: 3, borderRadius: "8px", overflow: "hidden" }}>
               <ActionRequiredCard
                 imageUrl={collection.images[0]?.imageUrl || ""}
                 title={`Property ${collection.collectionId} requires review:`}

@@ -124,9 +124,10 @@
 .edit-icon {
   position: absolute !important;
   bottom: 4px !important;
-  color: $primary-color;
+  color: $info-color;
   cursor: pointer;
   z-index: 1001;
+  transition: all 0.1s ease-in-out;
   &:hover {
     color: $hover-color;
     transform: scale(1.2);
@@ -212,4 +213,58 @@
       transform: scale(1.1);
     }
   }
+}
+
+.image-approval-card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.image-approval-card {
+  display: flex;
+  border: $border-primary;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow-light;
+  background: $background-default;
+  width: 80%;
+  margin: auto;
+  .image-approval-buttons {
+    margin-left: auto;
+    margin-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+}
+
+.edit-image-button {
+  transition: all 0.1s ease-in-out;
+  background-color: transparent !important;
+  color: $info-color !important;
+  box-shadow: none !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  margin-left: 0.1vw !important;
+  &:hover {
+    color: $hover-color !important;
+  }
+}
+
+.all-buttons-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 10px 0;
+}
+
+.approval-hero-image {
+  width: auto;
+  height: 375px;
+  object-fit: contain;
+  object-position: center;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow-light;
 }

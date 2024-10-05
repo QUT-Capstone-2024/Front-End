@@ -51,6 +51,14 @@
     -webkit-backdrop-filter: blur(1px);
     overflow-y: hidden;
   }
+  &.approval {
+    height: 99%;
+    width: 100%;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow-light;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
 }
 
 .popover-content {
@@ -79,6 +87,15 @@
     }
     & p {
       padding: 0rem 1.5rem 0rem 1.5rem;
+    }
+  }
+  &.approval-hero {
+    font-size: 1.3rem;
+    text-align: center;
+    color: $success-color;
+    & span {
+      font-weight: 600;
+      color: $info-color;
     }
   }
 }

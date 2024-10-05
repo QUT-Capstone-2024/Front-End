@@ -6,6 +6,7 @@ html, body {
   margin: 0; /* Remove default margin */
   padding: 0; /* Remove padding */
   box-sizing: border-box;
+  overflow-y: visible;
 }
 
 body {
@@ -225,9 +226,11 @@ html {
 }
 
 .MuiButton-root.button {
+  font-size: 18px;
   background-color: $branding-color;
   color: white;
   border-radius: 10px;
+  min-width: 100px;
 
   &.disabled {
     background-color: $background-lighter;
@@ -313,6 +316,7 @@ html {
 
 .MuiButton-root.cancelButton {
   background-color: white;
+  font-size: 18px;
   color: $primary-color;
   border: $primary-color 1px solid;
   border-radius: 10px;

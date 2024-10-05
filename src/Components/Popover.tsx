@@ -5,7 +5,7 @@ interface PopoverProps {
   content: React.ReactNode;
   visible: boolean;
   onClose?: () => void;
-  type?: 'gallery' | 'hero' | 'property-card' | 'thumbnail';
+  type?: 'gallery' | 'hero' | 'property-card' | 'thumbnail' | 'approval';
 }
 
 const Popover: React.FC<PopoverProps> = ({ content, visible, onClose, type = 'gallery' }) => {
