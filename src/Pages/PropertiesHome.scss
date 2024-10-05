@@ -4,11 +4,10 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  justify-content: flex-start;
-
-  margin-left: 5%;
+  justify-content: center;
+  margin: auto;
   gap: 10rem;
-  width: 80vw;
+  width: 100%;
 }
 
 .property-card-container {
@@ -50,4 +49,20 @@
   width: 30%;
   padding: 20px;
   border-left: 1px solid $primary-color;
+}
+
+@media screen and (max-width: 768px) {
+  .admin-home-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .property-card-container, .update-profile-section {
+    width: 100%;
+  }
+
+  .update-profile-section {
+    border-left: none;
+  }
+  
 }

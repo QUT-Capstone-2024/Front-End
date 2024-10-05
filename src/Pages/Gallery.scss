@@ -44,20 +44,23 @@ $padding: 5rem;
 .button-container {
   display: flex;
   justify-content: space-between;
-  padding: 0 $padding - 3rem;
+  padding: 0 3rem;
   align-items: center;
 }
 
 .back-arrow {
   color: $branding-color;
   transition: all 0.3s ease-in-out;
-
+  margin-right: 40px;
+  margin-bottom: 20px;
   &:hover {
     background-color: transparent;
     color: $primary-color;
     font-size: 28px;
   }
 }
+
+
 
 .address {
   text-align: left;

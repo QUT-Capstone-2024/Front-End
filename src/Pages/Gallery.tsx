@@ -14,6 +14,7 @@ import { saveAs } from 'file-saver';
 import { JSX } from 'react/jsx-runtime';
 import { useCheckAuth } from '../Hooks/useCheckAuth';
 import * as Img from '../Images';
+import { Typography } from '@mui/material';
 
 const Gallery: React.FC = () => {
   const navigate = useNavigate();
@@ -233,21 +234,32 @@ const Gallery: React.FC = () => {
   //////////////////////////////////////// RENDER
   return (
     <div className='gallery-container'>
-      <Spacer />
+      <Spacer height={1}/>
+      {propertyDetails?.propertyAddress && 
       <div className="button-container">
         <ArrowBackIcon className='back-arrow' onClick={() => navigate(-1)} />
+        <div style={{ display: "flex", marginBottom: "20px", flexDirection: 'column', marginRight: 'auto'}}>
+          <Typography variant="h5" color="primary" fontWeight="bold">
+            {propertyDetails.propertyAddress?.split(",")[0]}
+          </Typography>
+          <Typography variant="h5" color="primary">
+              {propertyDetails.propertyAddress?.split(",")[1].trim()}, {propertyDetails.propertyAddress?.split(",")[2].trim()}
+          </Typography>
+        </div>
         <Dropdown
           buttonLabel="Settings"
           menuItems={menuItems}
           settingsButton
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        />
+          />
       </div>
+      }
 
       {propertyDetails && (
         <>
-          <h2 className='address'>{propertyDetails.propertyAddress}</h2>
+      
+     
 
           {/* Upload Button */}
           <CustomButton 
@@ -255,7 +267,7 @@ const Gallery: React.FC = () => {
             icon={<UploadIcon />}
             label="Upload an Image" 
             onClick={() => openModalForUpload("HERO_IMAGE")}
-            style={{ height: '40px', width: '200px', margin: '1rem 5rem' }} 
+            style={{ height: '40px', width: '300px', margin: '1rem 5rem' }} 
           />
           <Spacer height={0.5}/>
 

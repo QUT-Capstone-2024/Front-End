@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import ProtectedRoute from './HelperFunctions/ProtectedRoute';
 import * as Pages from './Pages';
-import { Header, Footer } from './Components';
+import { Header } from './Components';
 import { ThemeProvider } from '@mui/material';
 import theme from './Theme';
 import './Styles/global.scss';

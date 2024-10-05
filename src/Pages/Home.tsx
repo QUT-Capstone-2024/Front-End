@@ -175,7 +175,7 @@ const Home: React.FC<HomeProps> = () => {
               ))}
           </div>
         </div>
-        <div style={{ marginTop: '10px', width: '60%' }}>
+        <div style={{ marginTop: '10px' }}>
         {selectedProperty ? (
           <PropertyCard
             propertyAddress={selectedProperty.propertyAddress}
