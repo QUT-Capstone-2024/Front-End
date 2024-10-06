@@ -129,7 +129,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
 
 
   return (
-    <Card sx={{ padding: 0, margin: 0, width: '100%', maxWidth: '600px', height: 'auto', borderRadius: '8px', backgroundColor: '#eff7fe', boxShadow: 5 }}>
+    <Card className='property-container'>
       <div className="address-title">
         <Typography variant="h5" sx={{ margin: '10px', maxWidth: '80%' }}>
           {propertyAddress}
@@ -164,7 +164,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             <Spacer height={1} />
             <ActionRequiredCard
               imageUrl={mostRecentPhoto.imageUrl}
-              title="Most Recent Photo Update"
+              title="Recent Images"
               submittedDateTime={new Date(mostRecentPhoto.uploadTime).toLocaleDateString()}
               description=""
               onButtonClick={() => navigate(`/gallery/${propertySlug}`)}
@@ -178,7 +178,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
             <Spacer height={1} />
             <ActionRequiredCard
               imageUrl={mostRecentPendingImage.imageUrl}
-              title="Images Needing Attention"
+              title="Pending Images"
               submittedDateTime={new Date(mostRecentPendingImage.uploadTime).toLocaleDateString()}
               description=""
               onButtonClick={() => navigate(`/ImageApproval/${collectionId}`)}

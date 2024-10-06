@@ -102,19 +102,74 @@ html {
   justify-content: center;
   align-items: center;
   gap: 5px;
-  padding: 10px;
+  align-self: flex-start;
   border: none;
   border-radius: 10px;
-  width: 30%;
   max-width: 300px;
-  margin-left: 40px;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 2000px) {
+  .property-search-container {
+    margin: 0 5% !important;
+  }
+  .selected-property-container {
+    margin: 0 5% !important;
+  }
+}
+
+////////////////////////////////////////////////////////////////
+/// Carousel
+.carousel-container {
+  width: 100%;
+  padding-top: 5px; 
+  height: auto;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: $success-color;
 }
 
 
 ////////////////////////////////////////////////////////////////
 // Cards
+.css-bhp9pd-MuiPaper-root-MuiCard-root {
+  margin: 0 auto !important;
+}
+
 .property-details-container {
   color: $success-color; 
+}
+
+.selected-property-container {
+  margin: 0 auto;
+  
+}
+
+@media screen and (max-width: 780px) {
+  .selected-property-container {
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+.property-container {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: $border-radius !important;
+  background-color: $background-lighter !important;
+  box-shadow: $box-shadow-light !important;
+}
+
+@media screen and (max-width: 780px) {
+  .property-details-container {
+    font-size: 24px;
+  }
+  .property-container {
+    width: 90%;
+  }  
 }
 
 .address-title {
@@ -138,6 +193,19 @@ html {
   }
 }
 
+@media screen and (max-width: 780px) {
+  .scrollable-list-container {
+    height: auto;
+    max-height: 40vh;
+    border-radius: $border-radius;   
+    &.users{
+      height: auto;
+      width: 95%; 
+      border-radius: $border-radius;   
+    }
+  }  
+}
+
 .user-page-container {
   display: flex;
   margin-top: 4rem;
@@ -149,6 +217,17 @@ html {
   & h4 {
     margin: 20px 0px 0px 0px;
   }
+}
+
+@media screen and (max-width: 780px) {
+  .user-page-container {
+    flex-direction: column;
+    margin: 40px 5px;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+  
 }
 
 .small-display-card-container {
@@ -217,13 +296,44 @@ html {
 }
 
 ////////////////////////////////////////////////////////////////
-// Buttons
+// Buttons & Icons
+
 .css-bq05nv-MuiSvgIcon-root {
   transition: all 0.1s ease-in-out;
   &:hover {
     transform: scale(1.05);
   }
 }
+
+@media (hover: none) {
+  .MuiButton-root {
+    &:hover {
+      background-color: inherit; /* Neutralize the hover background color */
+      color: inherit; /* Prevent color change */
+    }
+  }
+
+  .MuiIconButton-root {
+    &:hover {
+      background-color: inherit; /* Prevent color change on touch devices */
+      color: inherit; /* Neutralize the color change */
+    }
+  }
+}
+
+@media (hover: none) {
+  .MuiButton-root:focus, .MuiButton-root:active {
+    background-color: inherit;
+    color: inherit;
+  }
+
+  .MuiIconButton-root:focus, .MuiIconButton-root:active {
+    background-color: inherit;
+    color: inherit;
+  }
+}
+
+
 
 .MuiButton-root.button {
   font-size: 18px;
@@ -262,9 +372,28 @@ html {
   z-index: 1;
   padding: 0px;
   transition: all 0.1s ease-in-out;
-
   &:hover {
     background-color: $primary-color;
+  }
+}
+
+.MuiIconButton-root.rejectButton {
+  color: $primary-color;
+  background-color: transparent;
+  padding: 0px;
+  transition: all 0.1s ease-in-out;
+  &:hover {
+    background-color: $primary-color;
+  }
+}
+
+.MuiIconButton-root.approveButton {
+  color: $branding-color;
+  background-color: transparent;
+  padding: 0px;
+  transition: all 0.1s ease-in-out;
+  &:hover {
+    color: $branding-color;
   }
 }
 
@@ -735,43 +864,40 @@ html {
 ////////////////////////////////////////////////////////////////
 /// Viewport specific styles
 // Mobile styles
-@media (max-width: 780px) {
-  body {
-  }
-}
-
 .mobile-only {
   @media screen and (min-width: 780px) {
-    display: none;  
+    display: none !important;  
   }
 }
 
 // Tablet styles
 @media (min-width: 781px) and (max-width: 900px) {
   body {
+    display: none !important;  
   }
 }
 
 .mobile-tablet-only {
   @media screen and (min-width: 900px) {
-    display: none;  
+    display: none !important;  
   }
 }
 
 // Desktop styles
-@media (min-width: 901px) {
-  body {
-  }
-}
-
 .tablet-desktop-only {
   @media screen and (max-width: 780px) {
-    display: none;  
+    display: none !important;  
   }
 }
 
 .desktop-only {
   @media screen and (max-width: 900px) {
-    display: none;  
+    display: none !important;  
+  }
+}
+
+.wide-screen-only {
+  @media screen and (max-width: 2000px) {
+    display: none !important;  
   }
 }

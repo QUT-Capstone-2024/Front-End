@@ -18,19 +18,19 @@ const IconBar: React.FC<IconBarProps> = ({ bedrooms, bathrooms, parkingSpaces, i
   return (
   <>
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '16px 0' }} className="property-details-container">
-        <KingBedIcon sx={{ margin: '0 8px', fontSize: 24}} />
+        <KingBedIcon sx={{ margin: '0 8px', fontSize: {xs: 30, sm: 24}}} />
         <span style={{ paddingRight: '1rem'}}>{bedrooms}</span>
 
-        <BathtubIcon sx={{ margin: '0 8px', fontSize: 24 }} />
+        <BathtubIcon sx={{ margin: '0 8px', fontSize: {xs: 30, sm: 24}}} />
         <span style={{ paddingRight: '1rem'}}>{bathrooms}</span>
 
-        <DirectionsCarIcon sx={{ margin: '0 8px', fontSize: 24 }} />
+        <DirectionsCarIcon sx={{ margin: '0 8px', fontSize: {xs: 30, sm: 24}}} />
         <span style={{ paddingRight: '1rem'}}>{parkingSpaces}</span>
 
-        <CropFreeIcon sx={{ margin: '0 8px', fontSize: 24 }} />
+        <CropFreeIcon sx={{ margin: '0 8px', fontSize: {xs: 30, sm: 24}}} />
         <span style={{ paddingRight: '1rem'}}>{internalPropertySize}</span>
 
-        <AspectRatioIcon sx={{ margin: '0 8px', fontSize: 24 }} />
+        <AspectRatioIcon sx={{ margin: '0 8px', fontSize: {xs: 30, sm: 24}}} />
         <span style={{ paddingRight: '1rem'}}>{externalPropertySize}</span>
     </Box>
   </>

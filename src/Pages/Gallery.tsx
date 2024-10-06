@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import { getImagesByCollectionId, getCollectionById, removeImageFromCollection, archiveImageFromCollection } from '../Services';
 import { Image } from '../types';
 import { ImageTags } from '../Constants/ImageTags';
-import { saveAs } from 'file-saver';
 import { JSX } from 'react/jsx-runtime';
 import { useCheckAuth } from '../Hooks/useCheckAuth';
 import * as Img from '../Images';
@@ -237,12 +236,25 @@ const Gallery: React.FC = () => {
       <Spacer height={1}/>
       {propertyDetails?.propertyAddress && 
       <div className="button-container">
-        <ArrowBackIcon className='back-arrow' onClick={() => navigate(-1)} />
+        <ArrowBackIcon
+          sx={{
+            cursor: "pointer",
+            marginRight: {
+              xs: '3rem', // no marginRight on extra-small and small screens (up to 600px)
+              sm: '5rem', // no marginRight on small screens (600px to 780px)
+              md: "12rem", // marginRight applies on medium screens and larger (780px and above)
+            },
+            marginBottom: "25px",
+            stroke: "#f27a31",
+            strokeWidth: 2,
+          }}
+          onClick={() => navigate(-1)}
+        />
         <div style={{ display: "flex", marginBottom: "20px", flexDirection: 'column', marginRight: 'auto'}}>
           <Typography variant="h5" color="primary" fontWeight="bold">
             {propertyDetails.propertyAddress?.split(",")[0]}
           </Typography>
-          <Typography variant="h5" color="primary">
+          <Typography variant="h5" color="primary" className='tablet-desktop-only'>
               {propertyDetails.propertyAddress?.split(",")[1].trim()}, {propertyDetails.propertyAddress?.split(",")[2].trim()}
           </Typography>
         </div>
@@ -258,16 +270,13 @@ const Gallery: React.FC = () => {
 
       {propertyDetails && (
         <>
-      
-     
-
           {/* Upload Button */}
           <CustomButton 
             withIcon='right'
             icon={<UploadIcon />}
             label="Upload an Image" 
             onClick={() => openModalForUpload("HERO_IMAGE")}
-            style={{ height: '40px', width: '300px', margin: '1rem 5rem' }} 
+            style={{ height: '40px', width: '300px', margin: '1rem auto' }} 
           />
           <Spacer height={0.5}/>
 

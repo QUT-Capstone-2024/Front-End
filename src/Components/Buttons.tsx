@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button, IconButton, Tooltip } from '@mui/material';
-import {Help as HelpIcon, Close as CloseIcon, Settings as SettingsIcon, Upload as UploadIcon } from '@mui/icons-material';
+import {Help as HelpIcon, Close as CloseIcon, Settings as SettingsIcon, Upload as UploadIcon, Check as CheckIcon } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 
 
 type ButtonProps = {
-  buttonType?: 'navButton' | 'helpButton' | 'warningButton' | 'errorButton' | 'successButton' | 'closeButton' | 'textOnly' | 'cancelButton' | 'settingsButton' | 'uploadButton' | 'removeButton';
+  buttonType?: 'navButton' | 'helpButton' | 'warningButton' | 'errorButton' | 'successButton' | 'closeButton' | 'textOnly' | 'cancelButton' | 'settingsButton' | 'uploadButton' | 'removeButton' | 'rejectButton' | 'approveButton';
   label: string;
   withTooltip?: boolean;
   tooltipText?: string;
@@ -58,6 +58,20 @@ const CustomButton: React.FC<ButtonProps> = ({ buttonType, label, withIcon, icon
       return (
           <IconButton sx={ style } onClick={onClick} className={buttonType}>
             <UploadIcon sx={{ fontSize: '36px' }}/>
+          </IconButton>
+      );
+
+    case 'rejectButton':
+      return (
+          <IconButton sx={ style } onClick={onClick} className={buttonType}>
+            <CloseIcon sx={{ fontSize: '36px', strokeWidth: 2, stroke: '#93cdfe' }}/>
+          </IconButton>
+      );
+
+    case 'approveButton':
+      return (
+          <IconButton sx={ style } onClick={onClick} className={buttonType}>
+            <CheckIcon sx={{ fontSize: '36px', strokeWidth: 2, stroke: '#f27a31' }}/>
           </IconButton>
       );
      

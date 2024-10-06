@@ -84,15 +84,9 @@ const UploadManagement = () => {
             <Box key={collection.id} sx={{ marginBottom: "10px", boxShadow: 3, borderRadius: "8px", overflow: "hidden" }}>
               <ActionRequiredCard
                 imageUrl={collection.images[0]?.imageUrl || ""}
-                title={`Property ${collection.collectionId} requires review:`}
-                description={`Address: ${collection.propertyAddress || "No address available"}`}
-                submittedDateTime={
-                  collection.images[0]
-                    ? `LATEST UPLOAD: ${new Date(collection.images[0].uploadTime).toLocaleDateString()}`
-                    : "Unknown"}
-                    onButtonClick={() => {
-                      handleClick(collection);
-                    }}           
+                title=''
+                description={`${collection.propertyAddress || "No address available"}`}
+                onButtonClick={() => {handleClick(collection)}}           
                 cardType="Review"
               />
             </Box>

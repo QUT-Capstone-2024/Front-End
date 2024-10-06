@@ -1,6 +1,5 @@
 import React from 'react';
 import { SmallDisplayCard, SearchBar, Spacer } from '../Components';
-// TODO: api call to fetch all properties in the search
 import data from '../Test Data/sample_properties.json'; // This is placeholder data for testing the ui
 
 interface PropertySearchProps {};

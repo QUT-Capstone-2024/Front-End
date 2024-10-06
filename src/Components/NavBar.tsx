@@ -114,10 +114,10 @@ const Navbar: React.FC<NavbarProps> = ({ open, onClose }) => {
             isActive={isLocationActive('/Logout')} 
             onClick={toggleModal}
           />
-          <CustomButton 
+          {/* <CustomButton 
             buttonType='helpButton' 
             label='Help' 
-          />
+          /> */}
         </Box>
       </Drawer>
 
