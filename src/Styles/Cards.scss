@@ -64,8 +64,8 @@
   &.hero {
     height: $hero-image-size;
     width: $hero-image-size;
-    max-width: 100%;
-    max-height: 100%;
+    max-width: none;
+    max-height: none;
     box-shadow: $box-shadow-heavy;
   }
   &.modal {
@@ -112,6 +112,20 @@
     margin: 2px 0px;
     padding: 1px 0px;
   }
+}
+
+.user-search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 600px) {
+  .user-card-container {
+    width: 100%;
+
+  }
+  
 }
 
 
@@ -267,4 +281,21 @@
   object-position: center;
   border-radius: $border-radius;
   box-shadow: $box-shadow-light;
+}
+
+@media screen and (max-width: 600px) {
+  .approval-hero-image {
+    width: 350px !important;
+    height: auto; /* Let the height adjust automatically to maintain the aspect ratio */
+  }
+}
+
+// Media queries
+@media screen and (max-width: 780px) {
+  .image-approval-card {
+    width: 100%;
+  } 
+  .all-buttons-container {
+    flex-direction: column;
+  } 
 }

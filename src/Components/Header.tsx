@@ -25,7 +25,7 @@ const Header: React.FC<HeaderProps> = () => {
   return (
     <div className='header'>
       <Logo logoSize='small' noText clickable={true} onClick={() => navigate('/home')} />
-      <div className='user-details'>{userName}<span>{userType}</span></div>
+      <div className='user-details'>{userName}<span className='tablet-desktop-only'>{userType}</span></div>
       <NavBarToggle onClick={toggleNav} />
       <NavBar open={navOpen} onClose={() => setNavOpen(false)}/>
     </div>

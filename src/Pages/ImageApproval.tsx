@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  Close as CloseIcon, 
+  Check as CheckIcon, 
+  Edit as EditIcon, 
+  ArrowBack as ArrowBackIcon 
+} from '@mui/icons-material';
+import {
   Card,
   CardContent,
   Box,
@@ -26,8 +32,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
 import { Collection, Image } from "../types";
 import { ImageTags } from "../Constants/ImageTags";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import EditIcon from "@mui/icons-material/Edit";
 import DefaultHouseImage from "../Images/house_demo_hero_image.png";
 import DefaultApartmentImage from "../Images/apartment_demo_hero_image.png";
 
@@ -48,6 +52,7 @@ const ImageApproval: React.FC = () => {
   const [propertyCategories, setPropertyCategories] = useState<string[]>([]);
   const [rejectionDialogOpen, setRejectionDialogOpen] = useState(false);
   const [isBulkReject, setIsBulkReject] = useState(false);
+  console.log(isBulkReject);
   const [currentRejectionReason, setCurrentRejectionReason] = useState("");
   const [currentRejectionImage, setCurrentRejectionImage] =
     useState<Image | null>(null);
@@ -135,6 +140,7 @@ const ImageApproval: React.FC = () => {
   };
 
   const handleRejectImage = (image: Image) => {
+    setIsBulkReject(false);
     setCurrentRejectionImage(image);
     setRejectionDialogOpen(true);
   };
@@ -239,12 +245,13 @@ const ImageApproval: React.FC = () => {
   return (
     <Box
       sx={{
-        padding: "20px",
+        padding: {
+          sm: 0,
+          md: '20px'},
         backgroundColor: "#e2eaf1",
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start",
-        minHeight: "100vh",
       }}
     >
       <Card
@@ -264,9 +271,14 @@ const ImageApproval: React.FC = () => {
                 <ArrowBackIcon
                   sx={{
                     cursor: "pointer",
-                    marginRight: "12rem",
+                    marginRight: {
+                      xs: '5rem', // no marginRight on extra-small and small screens (up to 600px)
+                      sm: '5rem', // no marginRight on small screens (600px to 780px)
+                      md: "12rem", // marginRight applies on medium screens and larger (780px and above)
+                    },
                     marginBottom: "25px",
-                    color: "#f27a31",
+                    stroke: "#f27a31",
+                    strokeWidth: 2,
                   }}
                   onClick={() => navigate(-1)}
                 />
@@ -282,7 +294,7 @@ const ImageApproval: React.FC = () => {
                   <Typography variant="h5" color="primary" fontWeight="bold">
                     {propertyDetails.propertyAddress?.split(",")[0]}
                   </Typography>
-                  <Typography variant="h5" color="primary">
+                  <Typography variant="h5" color="primary" className="tablet-desktop-only">
                     {propertyDetails.propertyAddress?.split(",")[1].trim()},{" "}
                     {propertyDetails.propertyAddress?.split(",")[2].trim()}
                   </Typography>
@@ -305,7 +317,27 @@ const ImageApproval: React.FC = () => {
                 externalPropertySize={0}
               />
 
-              <div className="all-buttons-container">
+              {/* Mobile buttons */}
+              <div className="all-buttons-container mobile-only">
+                <CustomButton
+                  label="Approve All"
+                  withIcon="right"
+                  icon={<CheckIcon style={{ marginLeft: '40px',  strokeWidth: 2, stroke: 'white'}}/>}
+                  onClick={() => handleBulkAction("APPROVE")}
+                  style={{ width: '100%' }}
+                />
+                <CustomButton
+                  label="Reject All"
+                  withIcon="right"
+                  icon={<CloseIcon style={{ marginLeft: '40px',  strokeWidth: 2, stroke: '#93cdfe'}}/>}
+                  buttonType="cancelButton"
+                  onClick={handleBulkReject}
+                  style={{ width: '100%' }}
+                />
+              </div>
+
+              {/* Desktop / Tablet buttons */}
+              <div className="all-buttons-container tablet-desktop-only">
                 <CustomButton
                   label="Approve All"
                   onClick={() => handleBulkAction("APPROVE")}
@@ -330,16 +362,32 @@ const ImageApproval: React.FC = () => {
                   />
                   <CustomButton
                     className="edit-image-button"
-                    label={image.imageTag.toUpperCase()}
+                    label={image.imageTag.replace(/dinning/gi, 'dining').toUpperCase()}
                     withIcon="right"
                     icon={
                       <EditIcon
-                        sx={{ marginLeft: "5px", marginBottom: "6px" }}
+                        sx={{ marginLeft: "5px", marginBottom: "6px", stroke: "#1f323e", strokeWidth: 2 }}
                       />
                     }
                     onClick={() => handleCategoryClick(image)}
                   />
-                  <div className="image-approval-buttons">
+                  {/* Mobile buttons */}
+                   <div className="image-approval-buttons mobile-only">
+                    <CustomButton
+                      label="Approve"
+                      buttonType="approveButton"
+                      onClick={() =>
+                        handleImageAction(image.id, "APPROVE", image.imageTag)
+                      }
+                    />
+                    <CustomButton
+                      buttonType="rejectButton"
+                      label="Reject"
+                      onClick={() => handleRejectImage(image)}
+                    />
+                  </div>
+                  {/* Desktop / tablet buttons */}
+                  <div className="image-approval-buttons tablet-desktop-only">
                     <CustomButton
                       label="Approve"
                       onClick={() =>

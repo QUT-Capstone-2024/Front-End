@@ -3,9 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../Redux/store';
 import { selectProperty } from '../Redux/Slices/propertySlice'; 
 import { getUserCollections, getAllCollections, getUserById } from '../Services';
-import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard, UpdateForm } from '../Components';
+import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard, UpdateForm, CustomButton } from '../Components';
 import { useCheckAuth } from '../Hooks/useCheckAuth';
 import { getHeroImage } from '../HelperFunctions/utils';
+import { 
+  Add as PlusIcon,
+  Remove as MinusIcon,
+  AccountCircle as UserIcon,
+  Close as CloseIcon,
+} from '@mui/icons-material';
 import './PropertiesHome.scss';
 import { UserWithId } from '../types';
 
@@ -26,6 +32,8 @@ const Home: React.FC<HomeProps> = () => {
   const [error, setError] = useState<string | null>(null);
   const [isNewUser, setIsNewUser] = useState<boolean>(false); 
   const [userFormData, setUserFormData] = useState<any>(null);
+  const [showSearch, setShowSearch] = useState<boolean>(false);
+  const [showProfile, setShowProfile] = useState<boolean>(false);
 
 
   const handleUpdate = (id: number, updatedUser: Partial<UserWithId>) => {
@@ -137,12 +145,12 @@ const Home: React.FC<HomeProps> = () => {
       <div>
         <div className="new-user-container">
           <h2>Welcome to VisionCORE!</h2>
-          <p>{user.userDetails?.name}, it looks like you don't have any properties yet.<br />Let's fix that by clicking below.</p>
+          <p>{user.userDetails?.name}, claim a property below to get started ...</p>
           <AddPropertyCard />
         </div>
         <div>
           {!isAdmin && user?.userDetails ? (
-            <div className="update-profile-section" >
+            <div className="update-profile-section wide-screen-only" >
               <UpdateForm user={userFormData} onUpdate={handleUpdate} onCancel={() => null}/>
             </div>
           ) : null}
@@ -156,51 +164,126 @@ const Home: React.FC<HomeProps> = () => {
       <Spacer height={2} />
       <div className="admin-home-container">
         <div className="property-search-container">
-          {isAdmin && <SearchBar placeholder="Search for a property" onSearch={(query) => console.log(query)} />}
-          {!isAdmin && <AddPropertyCard />}
-          <Spacer height={1} />
-          <h2 className="left">{isAdmin ? 'All Properties' : 'My Properties'}</h2>
-          <Spacer height={0.5} />
-          <div className='scrollable-list-container'>
-          {properties.map((property: any) => (
-                <SmallDisplayCard
-                  image={getHeroImageForProperty(property)}
-                  propertyType={property.propertyType}
-                  propertyAddress={property.propertyAddress}
-                  key={property.id}
-                  onClick={() => handleCardClick(property)}
-                />
-              ))}
+
+          {/* Mobile / Tablet claim button */}
+          {!isAdmin && 
+            <div className='mobile-tablet-only'>
+              <Spacer height={1} />
+              <AddPropertyCard />
+            </div>
+          }
+
+          {/* Mobile / Tablet Search */}
+          <div className='mobile-tablet-only' style={{ display: 'flex', alignItems: 'center', gap: '20px'}}>
+            <CustomButton
+                buttonType='successButton'
+                label={isAdmin? 'Find a property' : 'Show my properties'}
+                withIcon='right'
+                icon={!showSearch ?
+                  <PlusIcon sx={{ marginLeft: '10px' }}/>
+                    :
+                  <MinusIcon sx={{ marginLeft: '10px' }}/>
+                }
+                onClick={() => setShowSearch(!showSearch)}
+                style={{ width: '260px', height: '40px' }}
+            />
+            {showProfile ?
+              <CloseIcon 
+                onClick={() => setShowProfile(!showProfile)}
+                style={{ fontSize: '42px', color: '#f27a31' }}
+              />
+              :
+              <UserIcon 
+                onClick={() => setShowProfile(!showProfile)}
+                style={{ fontSize: '42px', color: '#93cdfe' }}/>
+            }
           </div>
-        </div>
-        <div style={{ marginTop: '10px' }}>
-        {selectedProperty ? (
-          <PropertyCard
-            propertyAddress={selectedProperty.propertyAddress}
-            collectionId={selectedProperty.id}
-            bedrooms={selectedProperty.bedrooms}
-            bathrooms={selectedProperty.bathrooms}
-            parkingSpaces={selectedProperty.parkingSpaces ?? 0}
-            approvalStatus={selectedProperty.approvalStatus}
-            propertyType={selectedProperty.propertyType}
-            propertyDescription={selectedProperty.propertyDescription}
-            internalPropertySize={selectedProperty.propertySize}
-            externalPropertySize={selectedProperty.externalPropertySize}
-          />
-        ) : (
-          <div className="empty-property-card">
-            <Spacer height={2} />
-            <h2>No property selected</h2>
-            <div>Select a property to view details</div>
+
+          <div 
+            className='mobile-tablet-only'
+            style={{ display: showSearch ? 'block' : 'none' }}
+          >
+            <Spacer height={1} />
+            {isAdmin && <SearchBar placeholder="Search for a property" onSearch={(query) => console.log(query)} />}
+            <Spacer height={1} />
+            <h2>{isAdmin ? 'All Properties' : 'My Properties'}</h2>
+            <Spacer height={0.5} />
+            <div className='scrollable-list-container'>
+            {properties.map((property: any) => (
+                  <SmallDisplayCard
+                    image={getHeroImageForProperty(property)}
+                    propertyType={property.propertyType}
+                    propertyAddress={property.propertyAddress}
+                    key={property.id}
+                    onClick={() => handleCardClick(property)}
+                  />
+                ))}
+            </div>
           </div>
-        )}
+
+          {/* Mobile / Tablet User Profile */}
+          {!isAdmin && showProfile && user?.userDetails ? (
+            <div className="update-profile-section mobile-tablet-only" >
+              <UpdateForm user={userFormData} onUpdate={handleUpdate} onCancel={() => null}/>
+            </div>
+          ) 
+          : 
+          null}
+
+
+          {/* Desktop search */}
+          <div className='desktop-only'>
+            {isAdmin && <SearchBar placeholder="Search for a property" onSearch={(query) => console.log(query)} />}
+            {/* Desktop claim button */}
+            {!isAdmin && <AddPropertyCard />}
+            <Spacer height={1} />
+            <h2>{isAdmin ? 'All Properties' : 'My Properties'}</h2>
+            <Spacer height={0.5} />
+            <div className='scrollable-list-container'>
+            {properties.map((property: any) => (
+                  <SmallDisplayCard
+                    image={getHeroImageForProperty(property)}
+                    propertyType={property.propertyType}
+                    propertyAddress={property.propertyAddress}
+                    key={property.id}
+                    onClick={() => handleCardClick(property)}
+                  />
+                ))}
+          </div>
+          </div>
         </div>
 
-        {!isAdmin && user?.userDetails ? (
-          <div className="update-profile-section" >
-            <UpdateForm user={userFormData} onUpdate={handleUpdate} onCancel={() => null}/>
-          </div>
-        ) : null}
+        {/* Property Card */}
+        <div className='selected-property-container'>
+          {selectedProperty ? (
+              <PropertyCard
+                propertyAddress={selectedProperty.propertyAddress}
+                collectionId={selectedProperty.id}
+                bedrooms={selectedProperty.bedrooms}
+                bathrooms={selectedProperty.bathrooms}
+                parkingSpaces={selectedProperty.parkingSpaces ?? 0}
+                approvalStatus={selectedProperty.approvalStatus}
+                propertyType={selectedProperty.propertyType}
+                propertyDescription={selectedProperty.propertyDescription}
+                internalPropertySize={selectedProperty.propertySize}
+                externalPropertySize={selectedProperty.externalPropertySize}
+              />
+            ) : (
+              <div className="empty-property-card">
+                <Spacer height={2} />
+                <h2>No property selected</h2>
+                <div>Select a property to view details</div>
+              </div>
+            )}
+            </div>
+
+          {!isAdmin && user?.userDetails ? (
+            <div className="update-profile-section wide-screen-only" >
+              <UpdateForm user={userFormData} onUpdate={handleUpdate} onCancel={() => null}/>
+            </div>
+          ) 
+          : 
+          null}
       </div>
       <Spacer height={4} />
     </div>

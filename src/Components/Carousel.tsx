@@ -51,18 +51,19 @@ const Carousel: React.FC<CarouselProps> = ({ images, settings, height = '300px',
   };
 
   return (
-    <Box sx={{ width, height }} {...rest}>
+    <Box className='carousel-container' sx={{}} {...rest}>
       <Slider {...defaultSettings}>
         {images.map((image, index) => (
-          <Box key={index} sx={{ height, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Box key={index} sx={{ height: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <img 
               src={image} 
               alt={`carousel-${index}`} 
               style={{ 
                 width: '100%', 
-                height: '100%', 
-                objectFit: 'cover',
-                objectPosition: 'center'
+                height: 'auto', 
+                objectFit: 'contain',
+                objectPosition: 'center',
+                maxHeight: height,
               }} 
             />
           </Box>

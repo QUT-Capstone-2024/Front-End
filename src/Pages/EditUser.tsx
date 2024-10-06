@@ -3,8 +3,13 @@ import { getAllUsers, deleteUser, updateUser, archiveUser } from '../Services';
 import { UserWithId } from '../types';
 import { RootState } from '../Redux/store';
 import { useSelector } from 'react-redux';
-import { UserCard, SearchBar, Spacer, CategorySelector } from '../Components';
-import RefreshIcon from '@mui/icons-material/Refresh';
+import { UserCard, SearchBar, Spacer, CategorySelector, CustomButton } from '../Components';
+import { 
+    Search as SearchIcon, 
+    Refresh as RefreshIcon, 
+    Add as PlusIcon,
+    Remove as MinusIcon
+} from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import { useCheckAuth } from '../Hooks/useCheckAuth';
 
@@ -19,6 +24,7 @@ const UsersPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedUserType, setSelectedUserType] = useState<string>('All');
     const [selectedUserStatus, setSelectedUserStatus] = useState<string>('All');
+    const [showSearch, setShowSearch] = useState<boolean>(false);
     const { userType } = useCheckAuth();
     const isGod = userType === 'HARBINGER';
 
@@ -118,7 +124,53 @@ const UsersPage: React.FC = () => {
 
     return (
         <div className='user-page-container'>
-            <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+
+            {/* Mobile / Tablet Search */}
+            <div style={{ display: 'flex', gap: '40px'}}>
+                <CustomButton
+                    buttonType='successButton'
+                    className='mobile-tablet-only'
+                    label='Find a user'
+                    withIcon='right'
+                    icon={!showSearch ?
+                        <PlusIcon sx={{ marginLeft: '10px' }}/>
+                            :
+                        <MinusIcon sx={{ marginLeft: '10px' }}/>
+                    }
+                    onClick={() => setShowSearch(!showSearch)}
+                />
+                <IconButton className='mobile-tablet-only' style={{ justifySelf: 'end'}} onClick={fetchUsers}>
+                    <RefreshIcon className='refresh-icon'/>
+                </IconButton>
+            </div>
+
+            <div 
+                className='user-search-container mobile-tablet-only'
+                style={{ display: showSearch ? 'block' : 'none' }}
+            >
+                <Spacer height={0.5} />
+                <h4 style={{marginBottom: '10px'}}>Search by email or name</h4>
+                <div style={{display: 'flex', gap: '1rem'}}>
+                    <SearchBar onSearch={handleSearch} placeholder='Start typing ...'/>
+                </div>
+                <h4 style={{marginBottom: '10px'}}>Search by user type</h4>
+                <CategorySelector 
+                    label=""
+                    value={selectedUserType}
+                    onChange={(event) => setSelectedUserType(event.target.value)}
+                    options={userTypeOptions}
+                />
+                <h4 style={{marginBottom: '10px'}}>Search by user status</h4>
+                <CategorySelector 
+                    label=""
+                    value={selectedUserStatus}
+                    onChange={(event) => setSelectedUserStatus(event.target.value)}
+                    options={userStatusOptions}
+                />
+            </div>
+
+            {/* Desktop Search */}
+            <div className='user-search-container desktop-only'>
                 <h4>Search by email or name</h4>
                 <div style={{display: 'flex', gap: '1rem'}}>
                     <SearchBar onSearch={handleSearch} placeholder='Start typing ...'/>
@@ -141,7 +193,12 @@ const UsersPage: React.FC = () => {
                     options={userStatusOptions}
                 />
             </div>
+
+            <Spacer height={0.5} className='mobile-tablet-only'/>
+
             <div>
+                <h2 className='mobile-tablet-only'>Users</h2>
+                <Spacer height={1} className='mobile-tablet-only'/>
                 <div className='scrollable-list-container users'>
                     {filteredUsers.map(user => (
                         <div key={user.id}>

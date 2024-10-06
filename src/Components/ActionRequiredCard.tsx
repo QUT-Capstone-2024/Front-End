@@ -1,12 +1,11 @@
 import React from 'react';
 import { Card, CardContent, CardMedia, Typography, Box } from '@mui/material';
 import { CustomButton } from './index';
-import theme from '../Theme';
 
 interface ActionRequiredCardProps {
   imageUrl: string;
   title: string;
-  submittedDateTime: string;
+  submittedDateTime?: string;
   description: string;
   onButtonClick: () => void;
   cardType?: 'Update' | 'Review';
@@ -34,7 +33,7 @@ const ActionRequiredCard: React.FC<ActionRequiredCardProps> = ({ imageUrl, title
           </Typography>
         </CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px 16px' }}>
-          <CustomButton label={cardType === 'Review' ? 'Review' : 'View' } onClick={onButtonClick} style={{width: '80px'}}/>
+          <CustomButton label={cardType === 'Review' ? 'Review' : 'View' } onClick={onButtonClick} />
         </Box>
       </Box>
     </Card>
