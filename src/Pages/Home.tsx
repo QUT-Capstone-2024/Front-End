@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../Redux/store';
 import { selectProperty } from '../Redux/Slices/propertySlice'; 
-import { getUserCollections, getAllCollections, getUserById } from '../Services';
+import { getUserCollections, getAllCollections, getUserById, searchCollectionsByAddress } from '../Services';
 import { PropertyCard, SmallDisplayCard, SearchBar, Spacer, AddPropertyCard, UpdateForm, CustomButton } from '../Components';
 import { useCheckAuth } from '../Hooks/useCheckAuth';
 import { getHeroImage } from '../HelperFunctions/utils';
@@ -35,6 +35,23 @@ const Home: React.FC<HomeProps> = () => {
   const [showSearch, setShowSearch] = useState<boolean>(false);
   const [showProfile, setShowProfile] = useState<boolean>(false);
 
+   
+  
+  const handleSearch = async (query: string) => {
+    if (!query) return;
+    if (!token) {
+      setError('User not authenticated');
+      return;
+    }
+    try {
+      const results = await searchCollectionsByAddress(query, token);
+      setProperties(results);
+    } catch (err) {
+      setError('Failed to fetch properties');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleUpdate = (id: number, updatedUser: Partial<UserWithId>) => {
     setUserFormData((prev: { id: number; }) => (prev && prev.id === id ? { ...prev, ...updatedUser } : prev));
@@ -204,7 +221,7 @@ const Home: React.FC<HomeProps> = () => {
             style={{ display: showSearch ? 'block' : 'none' }}
           >
             <Spacer height={1} />
-            {isAdmin && <SearchBar placeholder="Search for a property" onSearch={(query) => console.log(query)} />}
+            {isAdmin && <SearchBar placeholder="Search for a property" onSearch={handleSearch} />}
             <Spacer height={1} />
             <h2>{isAdmin ? 'All Properties' : 'My Properties'}</h2>
             <Spacer height={0.5} />
@@ -233,7 +250,7 @@ const Home: React.FC<HomeProps> = () => {
 
           {/* Desktop search */}
           <div className='desktop-only'>
-            {isAdmin && <SearchBar placeholder="Search for a property" onSearch={(query) => console.log(query)} />}
+            {isAdmin && <SearchBar placeholder="Search for a property" onSearch={handleSearch} />}
             {/* Desktop claim button */}
             {!isAdmin && <AddPropertyCard />}
             <Spacer height={1} />

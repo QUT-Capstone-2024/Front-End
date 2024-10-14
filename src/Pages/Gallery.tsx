@@ -255,7 +255,7 @@ const Gallery: React.FC = () => {
             {propertyDetails.propertyAddress?.split(",")[0]}
           </Typography>
           <Typography variant="h5" color="primary" className='tablet-desktop-only'>
-              {propertyDetails.propertyAddress?.split(",")[1].trim()}, {propertyDetails.propertyAddress?.split(",")[2].trim()}
+              {propertyDetails?.propertyAddress?.split(",")[1]?.trim()}, {propertyDetails?.propertyAddress?.split(",")[2]?.trim()}
           </Typography>
         </div>
         <Dropdown
