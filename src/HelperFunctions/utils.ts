@@ -45,14 +45,51 @@ export const getMostRecentImagesByTagAndInstance = (images: Image[]): Image[] =>
   return mostRecentImages;
 };
 
+// Helper function to get the most recent image for each tag
+export const getMostRecentImagesByTagAndInstanceNotRejected = (images: Image[]): Image[] => {
+  const imageMap: { [key: string]: Image } = {};
+
+  const filteredImages = images.filter(image => image.imageStatus !== "REJECTED");
 
 
+  filteredImages.forEach((image) => {
+    // Combine the tag and instanceNumber as a unique key
+    const tagWithInstance = `${image.imageTag}-${image.instanceNumber || 0}`;
+    
+    // If no image exists for this tag-instance combo or the new image is more recent, update the map
+    if (!imageMap[tagWithInstance] || new Date(image.uploadTime).getTime() > new Date(imageMap[tagWithInstance].uploadTime).getTime()) {
+      imageMap[tagWithInstance] = image;
+    }
+  });
+
+  const mostRecentImages = Object.values(imageMap);
+
+  // Sorting function to ensure STREET is always first, then by tag and instance
+  mostRecentImages.sort((a, b) => {
+    // Always prioritize the STREET image first
+    if (a.imageTag === 'STREET') return -1;
+    if (b.imageTag === 'STREET') return 1;
+
+    // Sort alphabetically by imageTag
+    if (a.imageTag < b.imageTag) return -1;
+    if (a.imageTag > b.imageTag) return 1;
+
+    // If imageTags are the same, sort by instanceNumber
+    const instanceA = a.instanceNumber || 0;
+    const instanceB = b.instanceNumber || 0;
+    return instanceA - instanceB;
+  });
+
+  return mostRecentImages;
+};
 
 // Helper function to get the most recent photo update
 export const getMostRecentPhoto = (images: Image[]): Image | null => {
   if (images.length === 0) return null;
   return images.sort((a, b) => new Date(b.uploadTime).getTime() - new Date(a.uploadTime).getTime())[0];
 };
+
+
 
 // Helper function to get the most recent image needing attention (PENDING)
 export const getMostRecentPendingImage = (images: Image[]): Image | null => {

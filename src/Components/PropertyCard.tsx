@@ -24,7 +24,7 @@ import { Image } from "../types";
 import DefaultHouseImage from "../Images/house_demo_hero_image.png";
 import DefaultApartmentImage from "../Images/apartment_demo_hero_image.png";
 import { useCheckAuth } from "../Hooks/useCheckAuth";
-import { getMostRecentImagesByTagAndInstance, getMostRecentPhoto, getMostRecentPendingImage, createSlugFromAddress } from "../HelperFunctions/utils";
+import { getMostRecentImagesByTagAndInstance, getMostRecentPhoto, getMostRecentPendingImage, createSlugFromAddress, getMostRecentImagesByTagAndInstanceNotRejected } from "../HelperFunctions/utils";
 
 type PropertyCardProps = {
   propertyAddress: string;
@@ -59,7 +59,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   const { isAdmin, userType } = useCheckAuth();
   const isGod = userType === 'HARBINGER';
   const defaultImage = propertyType === 'house' ? DefaultHouseImage : DefaultApartmentImage;
-  const mostRecentImages = getMostRecentImagesByTagAndInstance(images);
+  const mostRecentImages = getMostRecentImagesByTagAndInstanceNotRejected(images);
   const mostRecentPhoto = getMostRecentPhoto(images);
   const mostRecentPendingImage = getMostRecentPendingImage(images);
   const noImagesAvailable = mostRecentImages.length === 0;
